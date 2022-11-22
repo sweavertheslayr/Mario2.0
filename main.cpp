@@ -1500,7 +1500,7 @@ int main()
 				0,
 				WHITE);
 		}
-		else if (!window.levelSelect)
+		else if (window.levelSelect)
 		{
 
 		}
