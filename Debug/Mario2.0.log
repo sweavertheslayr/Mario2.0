@@ -1,0 +1,37 @@
+﻿  main.cpp
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(110,19): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(451,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(509,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(664,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(806,33): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(806,19): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(816,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(817,33): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(828,35): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(829,41): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(949,117): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(950,118): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(951,119): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(952,120): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(953,119): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(954,32): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1003,84): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1013,84): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1055,84): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1171,55): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1182,66): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1198,42): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1232,33): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1257,33): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1354,29): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1355,58): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1368,28): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1369,57): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1384,25): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1385,25): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1392,29): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1393,29): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1398,58): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1465,25): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\spenc\source\repos\Mario2.0\main.cpp(1466,25): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  Mario2.0.vcxproj -> C:\Users\spenc\source\repos\Mario2.0\Debug\Mario2.0.exe
