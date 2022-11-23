@@ -5,7 +5,7 @@
 struct Window {
 	float width = 0;
 	float height = 0;
-	//change?
+	//change? chnange
 	int mobCount = 0;
 
 	int blocksWide = 0;
