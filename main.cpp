@@ -5,7 +5,7 @@
 struct Window {
 	float width = 0;
 	float height = 0;
-	//ur mom yes probably
+	//change?
 	int mobCount = 0;
 
 	int blocksWide = 0;
