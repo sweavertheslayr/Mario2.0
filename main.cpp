@@ -851,22 +851,22 @@ int main()
 
 		//MAKE MOBS
 		
-		////goombas
-		//for (int i = 0; i < 30; i++)
-		//{
-		//	for (int j = (player.iPosX); j < window.blocksWide + window.renderPosX / window.blockHeight; j++)
-		//	{
-		//		if (level.currentScene[i][j] == 'G')
-		//		{
-		//			level.currentScene[i][j] = ' ';
-		//			mob[window.mobCount].posX = (j) * window.blockHeight;
-		//			mob[window.mobCount].posY = (i - 4) * window.blockHeight;
-		//			mob[window.mobCount].mob = 0;
-		//			mob[window.mobCount].type = level.type;
-		//			window.mobCount += 1;
-		//		}
-		//	}
-		//}
+		//goombas
+		for (int i = 0; i < 30; i++)
+		{
+			for (int j = (player.iPosX); j < window.blocksWide + window.renderPosX / window.blockHeight; j++)
+			{
+				if (level.currentScene[i][j] == 'G')
+				{
+					level.currentScene[i][j] = ' ';
+					mob[window.mobCount].posX = (j) * window.blockHeight;
+					mob[window.mobCount].posY = (i - 4) * window.blockHeight;
+					mob[window.mobCount].mob = 0;
+					mob[window.mobCount].type = level.type;
+					window.mobCount += 1;
+				}
+			}
+		}
 
 		//MOB INFO
 		
@@ -1168,23 +1168,11 @@ int main()
 		if (player.posX >= window.width / 2)
 		{
 			window.renderPosX += player.posX - window.width / 2;
-
-			for (int i = 0; i < window.mobCount; i++)
-			{
-				mob[i].posX -= player.posX - window.width / 2;
-			}
-			
 			player.posX = window.width / 2;
 		}
 		if (player.posX <= window.width / (level.size) && window.renderPosX > 0)
 		{
 			window.renderPosX += player.posX - window.width / (level.size);
-
-			for (int i = 0; i < window.mobCount; i++)
-			{
-				mob[i].posX -= player.posX - window.width / (level.size);
-			}
-
 			player.posX = window.width / (level.size);
 		}
 
@@ -1487,7 +1475,7 @@ int main()
 				DrawTexturePro(
 					mob[i].texture,
 					Rectangle{ mob[i].mob * 16, (mob[i].frame * 32), 16, 32 },
-					Rectangle{ mob[i].posX, mob[i].posY, (32 * window.scale), (64 * window.scale) },
+					Rectangle{ mob[i].posX - window.renderPosX, mob[i].posY, (32 * window.scale), (64 * window.scale) },
 					Vector2{ 0, 0 },
 					0,
 					WHITE);
