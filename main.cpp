@@ -21,7 +21,7 @@ struct Window {
 	float scale = 0;
 
 	bool pause = false;
-	bool levelSelect = true;
+	bool levelSelect = false;
 	bool exit = false;
 
 	const char* title = "Super Mario Bros";
