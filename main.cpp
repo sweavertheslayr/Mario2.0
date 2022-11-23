@@ -5,7 +5,6 @@
 struct Window {
 	float width = 0;
 	float height = 0;
-	//change? chnange raveesh i think it worked
 	int mobCount = 0;
 
 	int blocksWide = 0;
@@ -114,7 +113,7 @@ struct Player {
 	bool justJumped = false;
 	bool isTurning = false;
 	bool isDucking = false;
-	float tall = 1;
+	float tall = 0;
 }player;
 
 struct Scenery
@@ -858,26 +857,16 @@ int main()
 		//	{
 		//		if (level.currentScene[i][j] == 'G')
 		//		{
-		//			std::cout << "yes";
 		//			level.currentScene[i][j] = ' ';
-		//			mob[window.mobCount].posX = j * window.blockHeight;
-		//			mob[window.mobCount].posY = (i) * window.blockHeight;
+		//			mob[window.mobCount].posX = (j) * window.blockHeight;
+		//			mob[window.mobCount].posY = (i - 4) * window.blockHeight;
 		//			mob[window.mobCount].mob = 0;
 		//			mob[window.mobCount].type = level.type;
+		//			window.mobCount += 1;
 		//		}
 		//	}
 		//}
 
-
-		for (int i = 0; i <= window.mobCount; i++)
-		{
-			mob[i].frame = 0;
-			mob[i].updateTime = 1.0 / 6.0;
-			mob[i].posX = window.width /2;
-			mob[i].posY = window.width;
-			mob[i].velocity = -30;
-		}
-		
 		//MOB INFO
 		
 		//set mob
@@ -1179,18 +1168,18 @@ int main()
 		{
 			window.renderPosX += player.posX - window.width / 2;
 
-			for (int i = 0; i <= window.mobCount; i++)
+			for (int i = 0; i < window.mobCount; i++)
 			{
 				mob[i].posX -= player.posX - window.width / 2;
 			}
-
+			
 			player.posX = window.width / 2;
 		}
 		if (player.posX <= window.width / (level.size) && window.renderPosX > 0)
 		{
 			window.renderPosX += player.posX - window.width / (level.size);
 
-			for (int i = 0; i <= window.mobCount; i++)
+			for (int i = 0; i < window.mobCount; i++)
 			{
 				mob[i].posX -= player.posX - window.width / (level.size);
 			}
@@ -1490,7 +1479,7 @@ int main()
 		{
 			outputLevel();
 
-			for (int i = 0; i <= window.mobCount; i++)
+			for (int i = 0; i < window.mobCount; i++)
 			{
 				std::cout << mob[i].posX << " " << mob[i].posY << std::endl;
 
