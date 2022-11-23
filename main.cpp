@@ -5,7 +5,7 @@
 struct Window {
 	float width = 0;
 	float height = 0;
-	//change? chnange raveesh i think it worked
+	//change? chnange raveesh i think it worked indeed
 	int mobCount = 0;
 
 	int blocksWide = 0;
@@ -114,7 +114,7 @@ struct Player {
 	bool justJumped = false;
 	bool isTurning = false;
 	bool isDucking = false;
-	float tall = 1;
+	float tall = 0;
 }player;
 
 struct Scenery
