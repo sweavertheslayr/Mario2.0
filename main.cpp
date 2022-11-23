@@ -5,7 +5,7 @@
 struct Window {
 	float width = 0;
 	float height = 0;
-	//Yes most likely
+	//Yes most likely I believe so
 	int mobCount = 0;
 
 	int blocksWide = 0;
