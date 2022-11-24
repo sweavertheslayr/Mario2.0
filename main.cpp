@@ -26,7 +26,7 @@ struct Window {
 	const char* title = "Super Mario Bros";
 }window;
 
-struct badGuy {
+struct BadGuy {
 	float mob = 0;
 	float type = 0;
 
@@ -37,12 +37,12 @@ struct badGuy {
 	int iPosY = 0;
 
 	float velocity = 0;
-	float speed = -15;
+	float speed = 0;
 
-	Texture2D texture = LoadTexture("DevAssets/mobSheet.png");
+	Texture2D texture;
 
 	float runningTime = 0;
-	float updateTime = 1.0 / 4.0;
+	float updateTime = 1.0 / 6.0;
 
 	float frame = 0;
 
@@ -51,7 +51,7 @@ struct badGuy {
 	bool collideL = false;
 
 	bool direction = true;
-};
+}reset, mob[30];
 
 struct Block {
 	Texture2D texture;
@@ -80,6 +80,8 @@ struct Player {
 	int iPosXLD = 0;
 	int iPosXC = 0;
 	int iPosY = 0;
+
+	int lives = 3;
 
 	//jump
 	int tempVelocity = 0;
@@ -113,7 +115,7 @@ struct Player {
 	bool justJumped = false;
 	bool isTurning = false;
 	bool isDucking = false;
-	float tall = 0;
+	float tall = 1;
 }player;
 
 struct Scenery
@@ -178,10 +180,10 @@ struct Levels {
 	"                                                                                                                                                                                                                                                     ",
 	"                    7               0                               7                 0                              7                0                              7            0                                                                  ",
 	"                             3                           7                   3                            7                  3                            7                  3                            7                                          ",
-	"                                                                                 G G                                                                                                                                                                 ",
+	"                                                                                 G                                                                                                                                                                   ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
-	"                       G                                                                                                                                                                                                                             ",
+	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                             ,.m                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
@@ -800,6 +802,21 @@ void outputLevel()
 	}
 }
 
+void restartLevel(BadGuy mob[30])
+{
+	emptyArray(level.current);
+	emptyArray(level.currentScene);
+	setArray(1);
+	findSize(level.current);
+	window.renderPosX = 0;
+
+	window.mobCount = 0;
+
+	player.posX = window.blockHeight * 4;
+
+	player.posY = window.blockHeight * 7;
+}
+
 int main()
 {
 	InitWindow(window.width, window.height, window.title);
@@ -820,7 +837,10 @@ int main()
 	setArray(1);
 	findSize(level.current);
 
-	badGuy mob[30];
+	for (int i = 0; i < 30; i++)
+	{
+		mob[i].texture = LoadTexture("DevAssets/mobSheet.png");
+	}
 
 	window.scale = (window.height / (508 + ((level.size - 16) * 16)));
 	window.blockHeight = window.height/level.size;
@@ -832,7 +852,6 @@ int main()
 	player.posY = window.blockHeight * 7;
 	SetTargetFPS(60);
 	const float gravity = 2200;
-
 
 
 	while (!window.exit)
@@ -939,82 +958,27 @@ int main()
 			//ANIMATE
 			if (mob[i].runningTime >= mob[i].updateTime)
 			{
-				mob[i].frame++;
+				if (mob[i].direction)
+				{
+					mob[i].frame++;
+
+					if (mob[i].frame > 1)
+					{
+						mob[i].frame = 0;
+					}
+				}
+				else
+				{
+					mob[i].frame++;
+
+					if (mob[i].frame > 3)
+					{
+						mob[i].frame = 2;
+					}
+				}
 				mob[i].runningTime = 0;
 			}
 		}
-		//MOB INFO		  else
-		//{
-			//set mob		  	mob[i].speed = 20;
-			//for (int i = 0; }i <= window.mobCount; i++)
-		//{
-		//	//POSITION
-		//	mob[i].posX += mob[i].speed * window.dT;
-		//	mob[i].posY += mob[i].velocity * window.dT;
-		//
-		//	mob[i].iPosX = (mob[i].posX / window.blockHeight) - (window.renderPosX / window.blockHeight);
-		//	mob[i].iPosY = (mob[i].posY / window.blockHeight);
-		//
-		//
-		//	//COLLISION
-		//
-		//	//down
-		//	if (level.current[mob[i].iPosY + 1][mob[i].iPosX] == ' ')
-		//	{
-		//		mob[i].collideD = false;
-		//	}
-		//	else
-		//	{
-		//		mob[i].collideD = true;
-		//		mob[i].posY = mob[i].iPosY * window.blockHeight;
-		//	}
-		//
-		//	//right
-		//	if (level.current[mob[i].iPosY + 1][mob[i].iPosX + 1] == ' ')
-		//	{
-		//		mob[i].collideR = false;
-		//	}
-		//	else
-		//	{
-		//		mob[i].collideR = true;
-		//		mob[i].direction = false;
-		//	}
-		//
-		//	//left
-		//	if (level.current[mob[i].iPosY + 1][mob[i].iPosX - 1] == ' ')
-		//	{
-		//		mob[i].collideL = false;
-		//	}
-		//	else
-		//	{
-		//		mob[i].collideL = true;
-		//		mob[i].direction = true;
-		//	}
-		//
-		//
-		//	//MOVEMENT
-		//
-		//	//down
-		//	if (!mob[i].collideD)
-		//	{
-		//		mob[i].velocity += gravity * window.dT;
-		//	}
-		//	else
-		//	{
-		//		mob[i].velocity = 0;
-		//		//mob[i].posY = mob[i].iPosY - 1;
-		//	}
-		//
-		//	//right + left
-		//	if (mob[i].direction)
-		//	{
-		//		mob[i].speed = -20;
-		//	}
-		//	else
-		//	{
-		//		mob[i].speed = 20;
-		//	}
-		//}
 
 
 		//PLAYER INFO
@@ -1538,6 +1502,13 @@ int main()
 		}
 
 
+		//DEATH
+		if (player.collideD && (level.current[player.iPosY + (level.currentSize - 21)][player.iPosXD] == '-' || level.current[player.iPosY + (level.currentSize - 21)][player.iPosXLD] == '-'))
+		{
+			player.lives--;
+			restartLevel(mob);
+		}
+
 		//OUTPUT LEVEL
 		if (!window.pause && !window.levelSelect)
 		{
@@ -1547,7 +1518,7 @@ int main()
 			{
 				DrawTexturePro(
 					mob[i].texture,
-					Rectangle{ (mob[i].type) * 16, ((mob[i].mob + mob[i].frame) * 32), 16, 32 },
+					Rectangle{ (mob[i].type + mob[i].frame) * 16, ((mob[i].mob) * 32), 16, 32 },
 					Rectangle{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8, (32 * window.scale), (64 * window.scale) },
 					Vector2{ 0, 0 },
 					0,
