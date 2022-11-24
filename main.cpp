@@ -125,7 +125,7 @@ struct Player {
 	bool justJumped = false;
 	bool isTurning = false;
 	bool isDucking = false;
-	float tall = 1;
+	float tall = 0;
 }player;
 
 struct Scenery
