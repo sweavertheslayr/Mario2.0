@@ -30,6 +30,9 @@ struct BadGuy {
 	float mob = 0;
 	float type = 0;
 
+	float width = 16;
+	float height = 16;
+
 	float posX = 0;
 	float posY = 2 * window.blockHeight;
 
@@ -50,7 +53,11 @@ struct BadGuy {
 	bool collideR = false;
 	bool collideL = false;
 
+	bool hit = false;
+
 	bool direction = true;
+
+	bool loaded = true;
 }reset, mob[30];
 
 struct Block {
@@ -99,6 +106,7 @@ struct Player {
 	bool collideL = false;
 	bool collideU = false;
 	bool collideD = true;
+	bool collision = false;
 
 	//animation
 	float width = 32;
@@ -242,8 +250,8 @@ struct Levels {
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
-	"                          K                                                                                                                                                   ",
-	"                            G                                                                                                                                                 ",
+	"   K                                                                                                                                                                          ",
+	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
@@ -292,6 +300,8 @@ struct Levels {
 	"%%%%%%%%%%%%%%%%%                                                                                                               %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%                                                                                                               %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%                                                                                                               %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+	"%%%%%%%%%%%%%%%%%                                                                                                               %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+	"%%%%%%%%%%%%%%%%%                                                                                                               %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%---------------------------------------------------------------------------------------------------------------%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
 	};
 
@@ -314,11 +324,13 @@ struct Levels {
 	"                            ppp        7  ppppp               pp                                                                              OO                              ",
 	"           7                ppp     7     ppppp               pp              ppp     7                                              7      OOOO                              ",
 	"  ,.m                       ppp      ppp  ppppp           7   pp              ppp  7                    pppppp                    7         OOOO            cccvcvccccccccccccccc",
-	"                                     ppp  ppppp               pp              ppp                       pppppp                            OOOOOO                              ",
+	"              G                      ppp  ppppp               pp              ppp                       pppppp                            OOOOOO                              ",
 	"                          pppppp     ppp  ppppp               pp        p     ppp                       pppppp      pp    pp              OOOOOO                              ",
 	" xcvcx                    pppppp     ppp  ppppp7              pp        p  7  ppp                       pppppp      pp    pp              OOOOOO            nnbnbnbnnnnnnnnnnnnnn",
 	"                          pppppp     ppp  ppppp               pp        p     ppp            7    pp    pppppp      pp    pp7             OOOO7O         O                    ",
 	"                    pp    pppppp  p  ppp  ppppp     pp                  p     ppp                 pp    pppppp      pp    pp    ############################################# ",
+	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
+	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
 	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
 	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
 	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
@@ -802,7 +814,7 @@ void outputLevel()
 	}
 }
 
-void restartLevel(BadGuy mob[30])
+void restartLevel()
 {
 	emptyArray(level.current);
 	emptyArray(level.currentScene);
@@ -810,11 +822,19 @@ void restartLevel(BadGuy mob[30])
 	findSize(level.current);
 	window.renderPosX = 0;
 
+	for (int i = 0; i < window.mobCount; i++)
+	{
+		mob[i].hit = false;
+		mob[i].loaded = true;
+	}
+
 	window.mobCount = 0;
 
 	player.posX = window.blockHeight * 4;
 
 	player.posY = window.blockHeight * 7;
+
+	player.collision = false;
 }
 
 int main()
@@ -834,7 +854,7 @@ int main()
 
 	emptyArray(level.current);
 	emptyArray(level.currentScene);
-	setArray(2);
+	setArray(3);
 	findSize(level.current);
 
 	for (int i = 0; i < 30; i++)
@@ -897,86 +917,136 @@ int main()
 
 		for (int i = 0; i < window.mobCount; i++)
 		{
-			//POSITION
-			mob[i].posX += mob[i].speed * window.dT;
-			mob[i].posY += mob[i].velocity * window.dT;
-			mob[i].runningTime += window.dT;
-			
-			if ((mob[i].posX / window.blockHeight) - (window.renderPosX / window.blockHeight) > 0)
+			if (mob[i].loaded)
 			{
+				//POSITION
+				mob[i].posX += mob[i].speed * window.dT;
+				mob[i].posY += mob[i].velocity * window.dT;
+				mob[i].runningTime += window.dT;
+
 				mob[i].iPosX = (mob[i].posX / window.blockHeight);
-			}
-			mob[i].iPosY = (mob[i].posY / window.blockHeight);
-		
-			//COLLISION
 
-			//down
-			if (level.current[mob[i].iPosY + 1][mob[i].iPosX] == ' ')
-			{
-				mob[i].collideD = false;
-			}
-			else
-			{
-				mob[i].collideD = true;
-				mob[i].posY = mob[i].iPosY * window.blockHeight;
-			}
+				mob[i].iPosY = (mob[i].posY / window.blockHeight);
 
-			//right
-			if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ')
-			{
-				mob[i].direction = true;
-			}
+				//COLLISION
 
-			//left
-			if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ')
-			{
-				mob[i].direction = false;
-			}
-
-			//MOVEMENT
-
-			//down
-			if (!mob[i].collideD)
-			{
-				mob[i].velocity += gravity * window.dT;
-			}
-			else
-			{
-				mob[i].velocity = 0;
-			}
-
-			//right + left
-			if (mob[i].direction)
-			{
-				mob[i].speed = -80;
-			}
-			else
-			{
-				mob[i].speed = 80;
-			}
-
-			//ANIMATE
-			if (mob[i].runningTime >= mob[i].updateTime)
-			{
-				if (mob[i].direction)
+				//down
+				if (level.current[mob[i].iPosY + 1][mob[i].iPosX] == ' ')
 				{
-					mob[i].frame++;
-
-					if (mob[i].frame > 1)
-					{
-						mob[i].frame = 0;
-					}
+					mob[i].collideD = false;
 				}
 				else
 				{
-					mob[i].frame++;
+					mob[i].collideD = true;
+					mob[i].posY = mob[i].iPosY * window.blockHeight;
+				}
 
-					if (mob[i].frame > 3)
+				//right
+				if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ')
+				{
+					mob[i].direction = true;
+				}
+
+				//left
+				if (mob[i].iPosX == 0)
+				{
+					mob[i].loaded = false;;
+				}
+				else
+				{
+					if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ')
 					{
-						mob[i].frame = 2;
+						mob[i].direction = false;
 					}
 				}
-				mob[i].runningTime = 0;
+
+
+				//CHARACTER COLLISION
+
+				//player
+				if (!mob[i].hit)
+				{
+					Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - (4.2 * window.blockHeight) - 8, mob[i].width * window.scale * 1.4, mob[i].height * window.scale };
+					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY, player.width * window.scale, player.height * window.scale };
+
+					if (CheckCollisionRecs(boxCollider, playerCollider))
+					{
+						mob[i].hit = true;
+						player.velocity = player.jumpVelocity;
+					}
+					else
+					{
+						Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
+						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY, player.width * window.scale, player.height * window.scale };
+
+						if (CheckCollisionRecs(boxCollider, playerCollider))
+						{
+							player.collision = true;
+						}
+					}
+				}
+
+				//other mobs
+				Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
+				Rectangle boxCollider2{ mob[i - 1].posX - (1 * window.blockHeight), mob[i - 1].posY - (4 * window.blockHeight) - 8, mob[i - 1].width * window.scale * 2, mob[i - 1].height * window.scale * 2 };
+
+				if (CheckCollisionRecs(boxCollider, boxCollider2))
+				{
+					mob[i].direction = false;
+					mob[i - 1].direction = true;
+				}
+
+				//MOVEMENT
+
+				//down
+				if (!mob[i].collideD)
+				{
+					mob[i].velocity += gravity * window.dT;
+				}
+				else
+				{
+					mob[i].velocity = 0;
+				}
+
+				//right + left
+				if (mob[i].direction)
+				{
+					mob[i].speed = -80;
+				}
+				else
+				{
+					mob[i].speed = 80;
+				}
+
+				//ANIMATE
+				if (mob[i].runningTime >= mob[i].updateTime)
+				{
+					if (mob[i].direction)
+					{
+						mob[i].frame++;
+
+						if (mob[i].frame > 1)
+						{
+							mob[i].frame = 0;
+						}
+					}
+					else
+					{
+						mob[i].frame++;
+
+						if (mob[i].frame > 3)
+						{
+							mob[i].frame = 2;
+						}
+					}
+					mob[i].runningTime = 0;
+				}
+				if (mob[i].hit)
+				{
+					mob[i].frame = 4;
+					mob[i].speed = 0;
+					mob[i].velocity = 0;
+				}
 			}
 		}
 
@@ -1506,7 +1576,13 @@ int main()
 		if (player.collideD && (level.current[player.iPosY + (level.currentSize - 21)][player.iPosXD] == '-' || level.current[player.iPosY + (level.currentSize - 21)][player.iPosXLD] == '-'))
 		{
 			player.lives--;
-			restartLevel(mob);
+			restartLevel();
+		}
+		
+		if (player.collision)
+		{
+			player.lives--;
+			restartLevel();
 		}
 
 		//OUTPUT LEVEL
