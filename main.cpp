@@ -5,7 +5,6 @@
 struct Window {
 	float width = 0;
 	float height = 0;
-	//change? chnange
 	int mobCount = 0;
 
 	int blocksWide = 0;
@@ -27,9 +26,12 @@ struct Window {
 	const char* title = "Super Mario Bros";
 }window;
 
-struct badGuy {
+struct BadGuy {
 	float mob = 0;
 	float type = 0;
+
+	float width = 16;
+	float height = 16;
 
 	float posX = 0;
 	float posY = 2 * window.blockHeight;
@@ -38,12 +40,12 @@ struct badGuy {
 	int iPosY = 0;
 
 	float velocity = 0;
-	float speed = 40;
+	float speed = 0;
 
-	Texture2D texture = LoadTexture("DevAssets/mobSheet.png");
+	Texture2D texture;
 
 	float runningTime = 0;
-	float updateTime = 1.0 / 4.0;
+	float updateTime = 1.0 / 6.0;
 
 	float frame = 0;
 
@@ -51,8 +53,12 @@ struct badGuy {
 	bool collideR = false;
 	bool collideL = false;
 
+	bool hit = false;
+
 	bool direction = true;
-};
+
+	bool loaded = true;
+}reset, mob[30];
 
 struct Block {
 	Texture2D texture;
@@ -82,6 +88,8 @@ struct Player {
 	int iPosXC = 0;
 	int iPosY = 0;
 
+	int lives = 3;
+
 	//jump
 	int tempVelocity = 0;
 	int velocity = 0;
@@ -98,6 +106,7 @@ struct Player {
 	bool collideL = false;
 	bool collideU = false;
 	bool collideD = true;
+	bool collision = false;
 
 	//animation
 	float width = 32;
@@ -175,19 +184,19 @@ struct Levels {
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
-	"                                                                                 G G                                                                                                                                                                 ",
+	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                    7               0                               7                 0                              7                0                              7            0                                                                  ",
 	"                             3                           7                   3                            7                  3                            7                  3                            7                                          ",
+	"                                                                                 G                                                                                                                                                                   ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
-	"                                                                                                                                                                                                                                                     ",
-	"                       G                 G           G G                                           G G      K       G G      G G  G G                                           G G                          ,.m                                     ",
-	"                                                                                                                                                                                                                                                     ",
+	"                                                                                                                                                                                                             ,.m                                     ",
+	"                    M                                                                                                                                                                                                                                ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                            xcvcx                                    ",
-	" 1          2    5      6                  9      1          2    5       6                 9     1          2    5      6                  9      1            6  5      6                        1     O                                           ",
+	" 1          2    5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1     O                                           ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
@@ -241,10 +250,10 @@ struct Levels {
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
+	"           G K                                                                                                                                                                ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
-	"                                    G                                                                                                                                         ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
@@ -291,6 +300,8 @@ struct Levels {
 	"%%%%%%%%%%%%%%%%%                                                                                                               %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%                                                                                                               %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%                                                                                                               %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+	"%%%%%%%%%%%%%%%%%                                                                                                               %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+	"%%%%%%%%%%%%%%%%%                                                                                                               %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%---------------------------------------------------------------------------------------------------------------%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
 	};
 
@@ -313,11 +324,13 @@ struct Levels {
 	"                            ppp        7  ppppp               pp                                                                              OO                              ",
 	"           7                ppp     7     ppppp               pp              ppp     7                                              7      OOOO                              ",
 	"  ,.m                       ppp      ppp  ppppp           7   pp              ppp  7                    pppppp                    7         OOOO            cccvcvccccccccccccccc",
-	"                                     ppp  ppppp               pp              ppp                       pppppp                            OOOOOO                              ",
+	"              G                      ppp  ppppp               pp              ppp                       pppppp                            OOOOOO                              ",
 	"                          pppppp     ppp  ppppp               pp        p     ppp                       pppppp      pp    pp              OOOOOO                              ",
 	" xcvcx                    pppppp     ppp  ppppp7              pp        p  7  ppp                       pppppp      pp    pp              OOOOOO            nnbnbnbnnnnnnnnnnnnnn",
 	"                          pppppp     ppp  ppppp               pp        p     ppp            7    pp    pppppp      pp    pp7             OOOO7O         O                    ",
 	"                    pp    pppppp  p  ppp  ppppp     pp                  p     ppp                 pp    pppppp      pp    pp    ############################################# ",
+	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
+	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
 	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
 	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
 	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
@@ -801,6 +814,29 @@ void outputLevel()
 	}
 }
 
+void restartLevel()
+{
+	emptyArray(level.current);
+	emptyArray(level.currentScene);
+	setArray(1);
+	findSize(level.current);
+	window.renderPosX = 0;
+
+	for (int i = 0; i < window.mobCount; i++)
+	{
+		mob[i].hit = false;
+		mob[i].loaded = true;
+	}
+
+	window.mobCount = 0;
+
+	player.posX = window.blockHeight * 4;
+
+	player.posY = window.blockHeight * 7;
+
+	player.collision = false;
+}
+
 int main()
 {
 	InitWindow(window.width, window.height, window.title);
@@ -821,7 +857,10 @@ int main()
 	setArray(1);
 	findSize(level.current);
 
-	badGuy mob[30];
+	for (int i = 0; i < 30; i++)
+	{
+		mob[i].texture = LoadTexture("DevAssets/mobSheet.png");
+	}
 
 	window.scale = (window.height / (508 + ((level.size - 16) * 16)));
 	window.blockHeight = window.height/level.size;
@@ -835,10 +874,8 @@ int main()
 	const float gravity = 2200;
 
 
-
 	while (!window.exit)
 	{
-
 		SetExitKey(KEY_Y);
 		window.dT = GetFrameTime();
 
@@ -850,106 +887,167 @@ int main()
 		block.runningTime += window.dT;
 
 		//MAKE MOBS
-		
-		////goombas
-		//for (int i = 0; i < 30; i++)
-		//{
-		//	for (int j = (player.iPosX); j < window.blocksWide + window.renderPosX / window.blockHeight; j++)
-		//	{
-		//		if (level.currentScene[i][j] == 'G')
-		//		{
-		//			std::cout << "yes";
-		//			level.currentScene[i][j] = ' ';
-		//			mob[window.mobCount].posX = j * window.blockHeight;
-		//			mob[window.mobCount].posY = (i) * window.blockHeight;
-		//			mob[window.mobCount].mob = 0;
-		//			mob[window.mobCount].type = level.type;
-		//		}
-		//	}
-		//}
-
-
-		for (int i = 0; i <= window.mobCount; i++)
+		for (int i = 0; i < 30; i++)
 		{
-			mob[i].frame = 0;
-			mob[i].updateTime = 1.0 / 6.0;
-			mob[i].posX = window.width /2;
-			mob[i].posY = window.width;
-			mob[i].velocity = -30;
+			for (int j = (player.iPosX); j < window.blocksWide + window.renderPosX / window.blockHeight; j++)
+			{
+				//goombas
+				if (level.currentScene[i][j] == 'G')
+				{
+					level.currentScene[i][j] = ' ';
+					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+					mob[window.mobCount].posY = (i) * window.blockHeight;
+					mob[window.mobCount].mob = 0;
+					mob[window.mobCount].type = level.type;
+					window.mobCount += 1;
+				}
+				//koopas
+				else if (level.currentScene[i][j] == 'K')
+				{
+					level.currentScene[i][j] = ' ';
+					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+					mob[window.mobCount].posY = (i) * window.blockHeight;
+					mob[window.mobCount].mob = 3;
+					mob[window.mobCount].type = level.type;
+					window.mobCount += 1;
+				}
+			}
 		}
-		
-		//MOB INFO
-		
-		//set mob
-		//for (int i = 0; i <= window.mobCount; i++)
-		//{
-		//	//POSITION
-		//	mob[i].posX += mob[i].speed * window.dT;
-		//	mob[i].posY += mob[i].velocity * window.dT;
-		//
-		//	mob[i].iPosX = (mob[i].posX / window.blockHeight) - (window.renderPosX / window.blockHeight);
-		//	mob[i].iPosY = (mob[i].posY / window.blockHeight);
-		//
-		//
-		//	//COLLISION
-		//
-		//	//down
-		//	if (level.current[mob[i].iPosY + 1][mob[i].iPosX] == ' ')
-		//	{
-		//		mob[i].collideD = false;
-		//	}
-		//	else
-		//	{
-		//		mob[i].collideD = true;
-		//		mob[i].posY = mob[i].iPosY * window.blockHeight;
-		//	}
-		//
-		//	//right
-		//	if (level.current[mob[i].iPosY + 1][mob[i].iPosX + 1] == ' ')
-		//	{
-		//		mob[i].collideR = false;
-		//	}
-		//	else
-		//	{
-		//		mob[i].collideR = true;
-		//		mob[i].direction = false;
-		//	}
-		//
-		//	//left
-		//	if (level.current[mob[i].iPosY + 1][mob[i].iPosX - 1] == ' ')
-		//	{
-		//		mob[i].collideL = false;
-		//	}
-		//	else
-		//	{
-		//		mob[i].collideL = true;
-		//		mob[i].direction = true;
-		//	}
-		//
-		//
-		//	//MOVEMENT
-		//
-		//	//down
-		//	if (!mob[i].collideD)
-		//	{
-		//		mob[i].velocity += gravity * window.dT;
-		//	}
-		//	else
-		//	{
-		//		mob[i].velocity = 0;
-		//		//mob[i].posY = mob[i].iPosY - 1;
-		//	}
-		//
-		//	//right + left
-		//	if (mob[i].direction)
-		//	{
-		//		mob[i].speed = -20;
-		//	}
-		//	else
-		//	{
-		//		mob[i].speed = 20;
-		//	}
-		//}
+
+		for (int i = 0; i < window.mobCount; i++)
+		{
+			if (mob[i].loaded && !window.pause)
+			{
+				//POSITION
+				mob[i].posX += mob[i].speed * window.dT;
+				mob[i].posY += mob[i].velocity * window.dT;
+				mob[i].runningTime += window.dT;
+
+				mob[i].iPosX = (mob[i].posX / window.blockHeight);
+
+				mob[i].iPosY = (mob[i].posY / window.blockHeight);
+
+				//COLLISION
+
+				//down
+				if (level.current[mob[i].iPosY + 1][mob[i].iPosX] == ' ')
+				{
+					mob[i].collideD = false;
+				}
+				else
+				{
+					mob[i].collideD = true;
+					mob[i].posY = mob[i].iPosY * window.blockHeight;
+				}
+
+				//right
+				if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ')
+				{
+					mob[i].direction = true;
+				}
+
+				//left
+				if (mob[i].iPosX == 0)
+				{
+					mob[i].loaded = false;;
+				}
+				else
+				{
+					if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ')
+					{
+						mob[i].direction = false;
+					}
+				}
+
+
+				//CHARACTER COLLISION
+
+				//player
+				if (!mob[i].hit)
+				{
+					Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - (4.2 * window.blockHeight) - 8, mob[i].width * window.scale * 1.4, mob[i].height * window.scale };
+					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY, player.width * window.scale, player.height * window.scale };
+
+					if (CheckCollisionRecs(boxCollider, playerCollider))
+					{
+						mob[i].hit = true;
+						player.velocity = player.jumpVelocity;
+					}
+					else
+					{
+						Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
+						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY, player.width * window.scale, player.height * window.scale };
+
+						if (CheckCollisionRecs(boxCollider, playerCollider))
+						{
+							player.collision = true;
+						}
+					}
+				}
+
+				//other mobs
+				Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
+				Rectangle boxCollider2{ mob[i - 1].posX - (1 * window.blockHeight), mob[i - 1].posY - (4 * window.blockHeight) - 8, mob[i - 1].width * window.scale * 2, mob[i - 1].height * window.scale * 2 };
+
+				if (CheckCollisionRecs(boxCollider, boxCollider2))
+				{
+					mob[i].direction = false;
+					mob[i - 1].direction = true;
+				}
+
+				//MOVEMENT
+
+				//down
+				if (!mob[i].collideD)
+				{
+					mob[i].velocity += gravity * window.dT;
+				}
+				else
+				{
+					mob[i].velocity = 0;
+				}
+
+				//right + left
+				if (mob[i].direction)
+				{
+					mob[i].speed = -80;
+				}
+				else
+				{
+					mob[i].speed = 80;
+				}
+
+				//ANIMATE
+				if (mob[i].runningTime >= mob[i].updateTime)
+				{
+					if (mob[i].direction)
+					{
+						mob[i].frame++;
+
+						if (mob[i].frame > 1)
+						{
+							mob[i].frame = 0;
+						}
+					}
+					else
+					{
+						mob[i].frame++;
+
+						if (mob[i].frame > 3)
+						{
+							mob[i].frame = 2;
+						}
+					}
+					mob[i].runningTime = 0;
+				}
+				if (mob[i].hit)
+				{
+					mob[i].frame = 4;
+					mob[i].speed = 0;
+					mob[i].velocity = 0;
+				}
+			}
+		}
 
 
 		//PLAYER INFO
@@ -962,7 +1060,7 @@ int main()
 		player.iPosXC = (player.posX - (16 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
 		player.iPosY = (player.posY) / window.blockHeight;
 
-		if (player.tall == 0)
+		if (player.tall == 0 || player.isDucking)
 		{
 			player.spriteHeight = 1;
 		}
@@ -1178,23 +1276,11 @@ int main()
 		if (player.posX >= window.width / 2)
 		{
 			window.renderPosX += player.posX - window.width / 2;
-
-			for (int i = 0; i <= window.mobCount; i++)
-			{
-				mob[i].posX -= player.posX - window.width / 2;
-			}
-
 			player.posX = window.width / 2;
 		}
 		if (player.posX <= window.width / (level.size) && window.renderPosX > 0)
 		{
 			window.renderPosX += player.posX - window.width / (level.size);
-
-			for (int i = 0; i <= window.mobCount; i++)
-			{
-				mob[i].posX -= player.posX - window.width / (level.size);
-			}
-
 			player.posX = window.width / (level.size);
 		}
 
@@ -1373,6 +1459,11 @@ int main()
 
 		if (player.collideU && level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'o')
 		{
+			if (player.collideU && level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'M')
+			{
+
+			}
+
 			level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'q';
 			block.selectedX = player.iPosXC;
 			block.selectedY = player.iPosY - player.spriteHeight + (level.currentSize - 21);
@@ -1485,19 +1576,34 @@ int main()
 		}
 
 
+		//DEATH
+		if (player.collideD && (level.current[player.iPosY + (level.currentSize - 21)][player.iPosXD] == '-' || level.current[player.iPosY + (level.currentSize - 21)][player.iPosXLD] == '-'))
+		{
+			player.lives--;
+			restartLevel();
+		}
+		
+		if (player.collision && player.tall == 0)
+		{
+			player.lives--;
+			restartLevel();
+		}
+		else if (player.collision)
+		{
+			player.tall = 0;
+		}
+
 		//OUTPUT LEVEL
 		if (!window.pause && !window.levelSelect)
 		{
 			outputLevel();
 
-			for (int i = 0; i <= window.mobCount; i++)
+			for (int i = 0; i < window.mobCount; i++)
 			{
-				std::cout << mob[i].posX << " " << mob[i].posY << std::endl;
-
 				DrawTexturePro(
 					mob[i].texture,
-					Rectangle{ mob[i].mob * 16, (mob[i].frame * 32), 16, 32 },
-					Rectangle{ mob[i].posX, mob[i].posY, (32 * window.scale), (64 * window.scale) },
+					Rectangle{ (mob[i].frame) * 16, ((mob[i].mob + mob[i].type) * 32), 16, 32 },
+					Rectangle{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8, (32 * window.scale), (64 * window.scale) },
 					Vector2{ 0, 0 },
 					0,
 					WHITE);
