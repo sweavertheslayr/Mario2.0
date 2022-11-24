@@ -250,7 +250,7 @@ struct Levels {
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
-	"   K                                                                                                                                                                          ",
+	"           G K                                                                                                                                                                ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
@@ -876,7 +876,6 @@ int main()
 
 	while (!window.exit)
 	{
-
 		SetExitKey(KEY_Y);
 		window.dT = GetFrameTime();
 
@@ -917,7 +916,7 @@ int main()
 
 		for (int i = 0; i < window.mobCount; i++)
 		{
-			if (mob[i].loaded)
+			if (mob[i].loaded && !window.pause)
 			{
 				//POSITION
 				mob[i].posX += mob[i].speed * window.dT;
