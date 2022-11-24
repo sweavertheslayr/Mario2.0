@@ -115,7 +115,7 @@ struct Player {
 	bool justJumped = false;
 	bool isTurning = false;
 	bool isDucking = false;
-	float tall = 1;
+	float tall = 0;
 }player;
 
 struct Scenery
@@ -242,10 +242,10 @@ struct Levels {
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
+	"                          K                                                                                                                                                   ",
+	"                            G                                                                                                                                                 ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                    G                                                                                                                                         ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
@@ -834,7 +834,7 @@ int main()
 
 	emptyArray(level.current);
 	emptyArray(level.currentScene);
-	setArray(1);
+	setArray(2);
 	findSize(level.current);
 
 	for (int i = 0; i < 30; i++)
@@ -991,7 +991,7 @@ int main()
 		player.iPosXC = (player.posX - (16 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
 		player.iPosY = (player.posY) / window.blockHeight;
 
-		if (player.tall == 0)
+		if (player.tall == 0 || player.isDucking)
 		{
 			player.spriteHeight = 1;
 		}
@@ -1518,7 +1518,7 @@ int main()
 			{
 				DrawTexturePro(
 					mob[i].texture,
-					Rectangle{ (mob[i].type + mob[i].frame) * 16, ((mob[i].mob) * 32), 16, 32 },
+					Rectangle{ (mob[i].frame) * 16, ((mob[i].mob + mob[i].type) * 32), 16, 32 },
 					Rectangle{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8, (32 * window.scale), (64 * window.scale) },
 					Vector2{ 0, 0 },
 					0,
