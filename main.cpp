@@ -123,7 +123,7 @@ struct Player {
 	bool justJumped = false;
 	bool isTurning = false;
 	bool isDucking = false;
-	float tall = 0;
+	float tall = 1;
 }player;
 
 struct Scenery
@@ -193,7 +193,7 @@ struct Levels {
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                             ,.m                                     ",
-	"                                                                                                                                                                                                                                                     ",
+	"                    M                                                                                                                                                                                                                                ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                            xcvcx                                    ",
 	" 1          2    5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1     O                                           ",
@@ -854,7 +854,7 @@ int main()
 
 	emptyArray(level.current);
 	emptyArray(level.currentScene);
-	setArray(3);
+	setArray(1);
 	findSize(level.current);
 
 	for (int i = 0; i < 30; i++)
@@ -1460,6 +1460,11 @@ int main()
 
 		if (player.collideU && level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'o')
 		{
+			if (player.collideU && level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'M')
+			{
+
+			}
+
 			level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'q';
 			block.selectedX = player.iPosXC;
 			block.selectedY = player.iPosY - player.spriteHeight + (level.currentSize - 21);
@@ -1579,10 +1584,14 @@ int main()
 			restartLevel();
 		}
 		
-		if (player.collision)
+		if (player.collision && player.tall == 0)
 		{
 			player.lives--;
 			restartLevel();
+		}
+		else if (player.collision)
+		{
+			player.tall = 0;
 		}
 
 		//OUTPUT LEVEL
