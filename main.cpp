@@ -5,7 +5,6 @@
 struct Window {
 	float width = 0;
 	float height = 0;
-	//change? chnange raveesh i think it worked
 	int mobCount = 0;
 
 	int blocksWide = 0;
@@ -38,7 +37,7 @@ struct badGuy {
 	int iPosY = 0;
 
 	float velocity = 0;
-	float speed = 40;
+	float speed = -15;
 
 	Texture2D texture = LoadTexture("DevAssets/mobSheet.png");
 
@@ -175,19 +174,19 @@ struct Levels {
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
-	"                                                                                 G G                                                                                                                                                                 ",
+	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                    7               0                               7                 0                              7                0                              7            0                                                                  ",
 	"                             3                           7                   3                            7                  3                            7                  3                            7                                          ",
+	"                                                                                 G G                                                                                                                                                                 ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
-	"                                                                                                                                                                                                                                                     ",
-	"                                                                                                                                                                                                                                                     ",
-	"                       G                 G           G G                                           G G      K       G G      G G  G G                                           G G                          ,.m                                     ",
+	"                       G                                                                                                                                                                                                                             ",
+	"                                                                                                                                                                                                             ,.m                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                            xcvcx                                    ",
-	" 1          2    5      6                  9      1          2    5       6                 9     1          2    5      6                  9      1            6  5      6                        1     O                                           ",
+	" 1          2    5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1     O                                           ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
@@ -858,8 +857,8 @@ int main()
 				if (level.currentScene[i][j] == 'G')
 				{
 					level.currentScene[i][j] = ' ';
-					mob[window.mobCount].posX = (j) * window.blockHeight;
-					mob[window.mobCount].posY = (i - 4) * window.blockHeight;
+					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+					mob[window.mobCount].posY = (i) * window.blockHeight;
 					mob[window.mobCount].mob = 0;
 					mob[window.mobCount].type = level.type;
 					window.mobCount += 1;
@@ -868,8 +867,8 @@ int main()
 				else if (level.currentScene[i][j] == 'K')
 				{
 					level.currentScene[i][j] = ' ';
-					mob[window.mobCount].posX = (j)*window.blockHeight;
-					mob[window.mobCount].posY = (i - 4) * window.blockHeight;
+					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+					mob[window.mobCount].posY = (i) * window.blockHeight;
 					mob[window.mobCount].mob = 3;
 					mob[window.mobCount].type = level.type;
 					window.mobCount += 1;
@@ -877,12 +876,77 @@ int main()
 			}
 		}
 
-
-
-		//MOB INFO
+		for (int i = 0; i < window.mobCount; i++)
+		{
+			//POSITION
+			mob[i].posX += mob[i].speed * window.dT;
+			mob[i].posY += mob[i].velocity * window.dT;
+			mob[i].runningTime += window.dT;
+			
+			if ((mob[i].posX / window.blockHeight) - (window.renderPosX / window.blockHeight) > 0)
+			{
+				mob[i].iPosX = (mob[i].posX / window.blockHeight);
+			}
+			mob[i].iPosY = (mob[i].posY / window.blockHeight);
 		
-		//set mob
-		//for (int i = 0; i <= window.mobCount; i++)
+			//COLLISION
+
+			//down
+			if (level.current[mob[i].iPosY + 1][mob[i].iPosX] == ' ')
+			{
+				mob[i].collideD = false;
+			}
+			else
+			{
+				mob[i].collideD = true;
+				mob[i].posY = mob[i].iPosY * window.blockHeight;
+			}
+
+			//right
+			if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ')
+			{
+				mob[i].direction = true;
+			}
+
+			//left
+			if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ')
+			{
+				mob[i].direction = false;
+			}
+
+			//MOVEMENT
+
+			//down
+			if (!mob[i].collideD)
+			{
+				mob[i].velocity += gravity * window.dT;
+			}
+			else
+			{
+				mob[i].velocity = 0;
+			}
+
+			//right + left
+			if (mob[i].direction)
+			{
+				mob[i].speed = -80;
+			}
+			else
+			{
+				mob[i].speed = 80;
+			}
+
+			//ANIMATE
+			if (mob[i].runningTime >= mob[i].updateTime)
+			{
+				mob[i].frame++;
+				mob[i].runningTime = 0;
+			}
+		}
+		//MOB INFO		  else
+		//{
+			//set mob		  	mob[i].speed = 20;
+			//for (int i = 0; }i <= window.mobCount; i++)
 		//{
 		//	//POSITION
 		//	mob[i].posX += mob[i].speed * window.dT;
@@ -1483,8 +1547,8 @@ int main()
 			{
 				DrawTexturePro(
 					mob[i].texture,
-					Rectangle{ mob[i].type * 16, (mob[i].mob * 32), 16, 32 },
-					Rectangle{ mob[i].posX - window.renderPosX, mob[i].posY - (8), (32 * window.scale), (64 * window.scale) },
+					Rectangle{ (mob[i].type) * 16, ((mob[i].mob + mob[i].frame) * 32), 16, 32 },
+					Rectangle{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8, (32 * window.scale), (64 * window.scale) },
 					Vector2{ 0, 0 },
 					0,
 					WHITE);
