@@ -58,8 +58,6 @@ struct BadGuy {
 	bool direction = true;
 
 	bool loaded = true;
-
-	bool hostile = false;
 }reset, mob[30];
 
 struct Block {
@@ -195,7 +193,7 @@ struct Levels {
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                             ,.m                                     ",
-	"                     M                                                                                                                                                                                                                               ",
+	"                    M                                                                                                                                                                                                                                ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                            xcvcx                                    ",
 	" 1          2    5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1     O                                           ",
@@ -901,7 +899,6 @@ int main()
 					mob[window.mobCount].posY = (i) * window.blockHeight;
 					mob[window.mobCount].mob = 0;
 					mob[window.mobCount].type = level.type;
-					mob[i].hostile = true;
 					window.mobCount += 1;
 				}
 				//koopas
@@ -912,18 +909,6 @@ int main()
 					mob[window.mobCount].posY = (i) * window.blockHeight;
 					mob[window.mobCount].mob = 3;
 					mob[window.mobCount].type = level.type;
-					mob[i].hostile = true;
-					window.mobCount += 1;
-				}
-				//mushroom
-				if (level.currentScene[i][j] == 'M')
-				{
-					level.currentScene[i][j] = ' ';
-					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
-					mob[window.mobCount].posY = (i)*window.blockHeight;
-					mob[window.mobCount].mob = 0;
-					mob[window.mobCount].type = level.type;
-					mob[i].hostile = false;
 					window.mobCount += 1;
 				}
 			}
@@ -943,6 +928,7 @@ int main()
 				mob[i].iPosY = (mob[i].posY / window.blockHeight);
 
 				//COLLISION
+
 
 				//down
 				if (level.current[mob[i].iPosY + 1][mob[i].iPosX] == ' ')
@@ -1001,16 +987,13 @@ int main()
 				}
 
 				//other mobs
-				if (mob[i].hostile)
-				{
-					Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
-					Rectangle boxCollider2{ mob[i - 1].posX - (1 * window.blockHeight), mob[i - 1].posY - (4 * window.blockHeight) - 8, mob[i - 1].width * window.scale * 2, mob[i - 1].height * window.scale * 2 };
+				Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
+				Rectangle boxCollider2{ mob[i - 1].posX - (1 * window.blockHeight), mob[i - 1].posY - (4 * window.blockHeight) - 8, mob[i - 1].width * window.scale * 2, mob[i - 1].height * window.scale * 2 };
 
-					if (CheckCollisionRecs(boxCollider, boxCollider2))
-					{
-						mob[i].direction = false;
-						mob[i - 1].direction = true;
-					}
+				if (CheckCollisionRecs(boxCollider, boxCollider2))
+				{
+					mob[i].direction = false;
+					mob[i - 1].direction = true;
 				}
 
 				//MOVEMENT
