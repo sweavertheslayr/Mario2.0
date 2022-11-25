@@ -55,14 +55,13 @@ struct BadGuy {
 	bool collideD = false;
 	bool collideR = false;
 	bool collideL = false;
+	bool hostile = false;
 
 	bool hit = false;
 
 	bool direction = true;
 
 	bool loaded = true;
-
-	bool hostile = false;
 }reset, mob[30];
 
 struct Block {
@@ -128,7 +127,7 @@ struct Player {
 	bool justJumped = false;
 	bool isTurning = false;
 	bool isDucking = false;
-	float tall = 0;
+	float tall = 1;
 }player;
 
 struct Scenery
@@ -950,6 +949,7 @@ int main()
 				mob[i].iPosY = (mob[i].posY / window.blockHeight);
 
 				//COLLISION
+
 
 				//down
 				if (level.current[mob[i].iPosY + 1][mob[i].iPosXD] == ' ')
