@@ -19,6 +19,8 @@ struct Window {
 	float dT = GetFrameTime();
 	float scale = 0;
 
+	int renderPosDistance = 32;
+
 	bool pause = false;
 	bool levelSelect = false;
 	bool exit = false;
@@ -37,6 +39,7 @@ struct BadGuy {
 	float posY = 2 * window.blockHeight;
 
 	int iPosX = 0;
+	int iPosXD = 0;
 	int iPosY = 0;
 
 	float velocity = 0;
@@ -888,10 +891,12 @@ int main()
 		player.runningTime += window.dT;
 		block.runningTime += window.dT;
 
+		window.renderPosDistance = player.iPosX - (player.posX / window.blockHeight) + 4;
+
 		//MAKE MOBS
 		for (int i = 0; i < 30; i++)
 		{
-			for (int j = (player.iPosX); j < window.blocksWide + window.renderPosX / window.blockHeight; j++)
+			for (int j = (window.renderPosDistance); j < window.blocksWide + window.renderPosX / window.blockHeight; j++)
 			{
 				//goombas
 				if (level.currentScene[i][j] == 'G')
@@ -924,6 +929,7 @@ int main()
 					mob[window.mobCount].mob = 6;
 					mob[window.mobCount].type = level.type;
 					mob[window.mobCount].hostile = false;
+					mob[window.mobCount].direction = false;
 					window.mobCount += 1;
 				}
 			}
@@ -938,14 +944,15 @@ int main()
 				mob[i].posY += mob[i].velocity * window.dT;
 				mob[i].runningTime += window.dT;
 
-				mob[i].iPosX = (mob[i].posX / window.blockHeight);
+				mob[i].iPosX = ((mob[i].posX) / window.blockHeight);
+				mob[i].iPosXD = ((mob[i].posX) / window.blockHeight) - 0.5;
 
 				mob[i].iPosY = (mob[i].posY / window.blockHeight);
 
 				//COLLISION
 
 				//down
-				if (level.current[mob[i].iPosY + 1][mob[i].iPosX] == ' ')
+				if (level.current[mob[i].iPosY + 1][mob[i].iPosXD] == ' ')
 				{
 					mob[i].collideD = false;
 				}
