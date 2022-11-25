@@ -19,6 +19,8 @@ struct Window {
 	float dT = GetFrameTime();
 	float scale = 0;
 
+	int renderPosDistance = 32;
+
 	bool pause = false;
 	bool levelSelect = false;
 	bool exit = false;
@@ -37,6 +39,7 @@ struct BadGuy {
 	float posY = 2 * window.blockHeight;
 
 	int iPosX = 0;
+	int iPosXD = 0;
 	int iPosY = 0;
 
 	float velocity = 0;
@@ -124,7 +127,7 @@ struct Player {
 	bool justJumped = false;
 	bool isTurning = false;
 	bool isDucking = false;
-	float tall = 1;
+	float tall = 0;
 }player;
 
 struct Scenery
@@ -190,11 +193,11 @@ struct Levels {
 	"                    7               0                               7                 0                              7                0                              7            0                                                                  ",
 	"                             3                           7                   3                            7                  3                            7                  3                            7                                          ",
 	"                                                                                 G                                                                                                                                                                   ",
-	"                                                                                                                                                                                                                                                     ",
+	"                                                                                                               w                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                             ,.m                                     ",
-	"                     l                                                                                                                                                                                                                               ",
+	"                      w                                                         w                                                                                                                                                                    ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                            xcvcx                                    ",
 	" 1          2    5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1     O                                           ",
@@ -887,10 +890,12 @@ int main()
 		player.runningTime += window.dT;
 		block.runningTime += window.dT;
 
+		window.renderPosDistance = player.iPosX - (player.posX / window.blockHeight) + 4;
+
 		//MAKE MOBS
 		for (int i = 0; i < 30; i++)
 		{
-			for (int j = (player.iPosX); j < window.blocksWide + window.renderPosX / window.blockHeight; j++)
+			for (int j = (window.renderPosDistance); j < window.blocksWide + window.renderPosX / window.blockHeight; j++)
 			{
 				//goombas
 				if (level.currentScene[i][j] == 'G')
@@ -923,6 +928,7 @@ int main()
 					mob[window.mobCount].mob = 6;
 					mob[window.mobCount].type = level.type;
 					mob[window.mobCount].hostile = false;
+					mob[window.mobCount].direction = false;
 					window.mobCount += 1;
 				}
 			}
@@ -937,7 +943,8 @@ int main()
 				mob[i].posY += mob[i].velocity * window.dT;
 				mob[i].runningTime += window.dT;
 
-				mob[i].iPosX = (mob[i].posX / window.blockHeight);
+				mob[i].iPosX = ((mob[i].posX) / window.blockHeight);
+				mob[i].iPosXD = ((mob[i].posX) / window.blockHeight) - 0.5;
 
 				mob[i].iPosY = (mob[i].posY / window.blockHeight);
 
@@ -945,7 +952,7 @@ int main()
 
 
 				//down
-				if (level.current[mob[i].iPosY + 1][mob[i].iPosX] == ' ')
+				if (level.current[mob[i].iPosY + 1][mob[i].iPosXD] == ' ')
 				{
 					mob[i].collideD = false;
 				}
@@ -1494,7 +1501,11 @@ int main()
 			block.selectedY = player.iPosY - player.spriteHeight + (level.currentSize - 21);
 			block.runningTime = 0;
 			block.velocity = block.shiftHeight;
-			level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'M';
+
+			if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'w')
+			{
+				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'M';
+			}
 		}
 
 
