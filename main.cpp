@@ -921,7 +921,7 @@ int main()
 					level.currentScene[i][j] = ' ';
 					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 					mob[window.mobCount].posY = (i)*window.blockHeight;
-					mob[window.mobCount].mob = 0;
+					mob[window.mobCount].mob = 6;
 					mob[window.mobCount].type = level.type;
 					mob[window.mobCount].hostile = false;
 					window.mobCount += 1;
@@ -1005,18 +1005,21 @@ int main()
 					Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
 					for (int j = 0; j < window.mobCount; j++)
 					{
-						Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale * 2, mob[j].height * window.scale * 2 };
-						if (CheckCollisionRecs(boxCollider, boxCollider2))
+						if (mob[j].hostile)
 						{
-							if (i < j)
+							Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale * 2, mob[j].height * window.scale * 2 };
+							if (CheckCollisionRecs(boxCollider, boxCollider2))
 							{
-								mob[i].direction = true;
-								mob[j].direction = false;
-							}
-							if (i > j)
-							{
-								mob[i].direction = false;
-								mob[j].direction = true;
+								if (i < j)
+								{
+									mob[i].direction = true;
+									mob[j].direction = false;
+								}
+								if (i > j)
+								{
+									mob[i].direction = false;
+									mob[j].direction = true;
+								}
 							}
 						}
 					}
