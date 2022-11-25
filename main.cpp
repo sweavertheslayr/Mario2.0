@@ -983,50 +983,48 @@ int main()
 
 
 				//CHARACTER COLLISION
-				if (mob[i].hostile)
+				
+				//player
+				if (!mob[i].hit)
 				{
-					//player
-					if (!mob[i].hit)
+					Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - (4.2 * window.blockHeight) - 8, mob[i].width * window.scale * 1.4, mob[i].height * window.scale };
+					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY, player.width * window.scale, player.height * window.scale };
+
+					if (CheckCollisionRecs(boxCollider, playerCollider))
 					{
-						Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - (4.2 * window.blockHeight) - 8, mob[i].width * window.scale * 1.4, mob[i].height * window.scale };
+						mob[i].hit = true;
+						player.velocity = player.jumpVelocity;
+					}
+					else
+					{
+						Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
 						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY, player.width * window.scale, player.height * window.scale };
 
 						if (CheckCollisionRecs(boxCollider, playerCollider))
 						{
-							mob[i].hit = true;
-							player.velocity = player.jumpVelocity;
-						}
-						else
-						{
-							Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
-							Rectangle playerCollider{ player.posX + window.renderPosX, player.posY, player.width * window.scale, player.height * window.scale };
-
-							if (CheckCollisionRecs(boxCollider, playerCollider))
-							{
-								player.collision = true;
-							}
+							player.collision = true;
 						}
 					}
+				}
 
-					//other mobs
-					Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
-					for (int j = 0; j < window.mobCount; j++)
+				//other mobs
+				Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
+				for (int j = 0; j < window.mobCount; j++)
+				{
+					if (mob[j].hostile)
 					{
-						if (mob[j].hostile)
+						Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale * 2, mob[j].height * window.scale * 2 };
+						if (CheckCollisionRecs(boxCollider, boxCollider2))
 						{
-							Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale * 2, mob[j].height * window.scale * 2 };
-							if (CheckCollisionRecs(boxCollider, boxCollider2))
+							if (i < j)
 							{
-								if (i < j)
-								{
-									mob[i].direction = true;
-									mob[j].direction = false;
-								}
-								if (i > j)
-								{
-									mob[i].direction = false;
-									mob[j].direction = true;
-								}
+								mob[i].direction = true;
+								mob[j].direction = false;
+							}
+							if (i > j)
+							{
+								mob[i].direction = false;
+								mob[j].direction = true;
 							}
 						}
 					}
