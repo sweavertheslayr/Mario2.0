@@ -1629,6 +1629,7 @@ int main()
 			player.jumpVelocity = 0;
 			player.frame = 0;
 			a = 0;
+			//yesq
 
 		}
 		else if (player.collision)
