@@ -1609,10 +1609,16 @@ int main()
 			restartLevel();
 		}
 		
+		//do stuff here
 		if (player.collision && player.tall == 0)
 		{
 			player.lives--;
-			restartLevel();
+			player.sidewaysVelocity = 0;
+			player.velocity = 0;
+			player.jumpVelocity = 0;
+			player.frame = 0;
+			a = 0;
+
 		}
 		else if (player.collision)
 		{
