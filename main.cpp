@@ -193,7 +193,7 @@ struct Levels {
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                             ,.m                                     ",
-	"                    M                                                                                                                                                                                                                                ",
+	"                     l                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                            xcvcx                                    ",
 	" 1          2    5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1     O                                           ",
@@ -899,6 +899,7 @@ int main()
 					mob[window.mobCount].posY = (i) * window.blockHeight;
 					mob[window.mobCount].mob = 0;
 					mob[window.mobCount].type = level.type;
+					mob[window.mobCount].hostile = true;
 					window.mobCount += 1;
 				}
 				//koopas
@@ -909,6 +910,18 @@ int main()
 					mob[window.mobCount].posY = (i) * window.blockHeight;
 					mob[window.mobCount].mob = 3;
 					mob[window.mobCount].type = level.type;
+					mob[window.mobCount].hostile = true;
+					window.mobCount += 1;
+				}
+				//mushroom
+				else if (level.currentScene[i][j] == 'M')
+				{
+					level.currentScene[i][j] = ' ';
+					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+					mob[window.mobCount].posY = (i)*window.blockHeight;
+					mob[window.mobCount].mob = 6;
+					mob[window.mobCount].type = level.type;
+					mob[window.mobCount].hostile = false;
 					window.mobCount += 1;
 				}
 			}
@@ -962,38 +975,53 @@ int main()
 
 
 				//CHARACTER COLLISION
-
-				//player
-				if (!mob[i].hit)
+				if (mob[i].hostile)
 				{
-					Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - (4.2 * window.blockHeight) - 8, mob[i].width * window.scale * 1.4, mob[i].height * window.scale };
-					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY, player.width * window.scale, player.height * window.scale };
-
-					if (CheckCollisionRecs(boxCollider, playerCollider))
+					//player
+					if (!mob[i].hit)
 					{
-						mob[i].hit = true;
-						player.velocity = player.jumpVelocity;
-					}
-					else
-					{
-						Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
+						Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - (4.2 * window.blockHeight) - 8, mob[i].width * window.scale * 1.4, mob[i].height * window.scale };
 						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY, player.width * window.scale, player.height * window.scale };
 
 						if (CheckCollisionRecs(boxCollider, playerCollider))
 						{
-							player.collision = true;
+							mob[i].hit = true;
+							player.velocity = player.jumpVelocity;
+						}
+						else
+						{
+							Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
+							Rectangle playerCollider{ player.posX + window.renderPosX, player.posY, player.width * window.scale, player.height * window.scale };
+
+							if (CheckCollisionRecs(boxCollider, playerCollider))
+							{
+								player.collision = true;
+							}
 						}
 					}
-				}
 
-				//other mobs
-				Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
-				Rectangle boxCollider2{ mob[i - 1].posX - (1 * window.blockHeight), mob[i - 1].posY - (4 * window.blockHeight) - 8, mob[i - 1].width * window.scale * 2, mob[i - 1].height * window.scale * 2 };
-
-				if (CheckCollisionRecs(boxCollider, boxCollider2))
-				{
-					mob[i].direction = false;
-					mob[i - 1].direction = true;
+					//other mobs
+					Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
+					for (int j = 0; j < window.mobCount; j++)
+					{
+						if (mob[j].hostile)
+						{
+							Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale * 2, mob[j].height * window.scale * 2 };
+							if (CheckCollisionRecs(boxCollider, boxCollider2))
+							{
+								if (i < j)
+								{
+									mob[i].direction = true;
+									mob[j].direction = false;
+								}
+								if (i > j)
+								{
+									mob[i].direction = false;
+									mob[j].direction = true;
+								}
+							}
+						}
+					}
 				}
 
 				//MOVEMENT
@@ -1460,16 +1488,12 @@ int main()
 
 		if (player.collideU && level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'o')
 		{
-			if (player.collideU && level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'M')
-			{
-
-			}
-
 			level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'q';
 			block.selectedX = player.iPosXC;
 			block.selectedY = player.iPosY - player.spriteHeight + (level.currentSize - 21);
 			block.runningTime = 0;
 			block.velocity = block.shiftHeight;
+			level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'M';
 		}
 
 
