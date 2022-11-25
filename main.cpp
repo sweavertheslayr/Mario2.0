@@ -195,7 +195,7 @@ struct Levels {
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                             ,.m                                     ",
-	"                     M                                                                                                                                                                                                                               ",
+	"                     l                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                            xcvcx                                    ",
 	" 1          2    5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1     O                                           ",
@@ -976,33 +976,32 @@ int main()
 
 
 				//CHARACTER COLLISION
-
-				//player
-				if (!mob[i].hit)
+				if (mob[i].hostile)
 				{
-					Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - (4.2 * window.blockHeight) - 8, mob[i].width * window.scale * 1.4, mob[i].height * window.scale };
-					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY, player.width * window.scale, player.height * window.scale };
-
-					if (CheckCollisionRecs(boxCollider, playerCollider))
+					//player
+					if (!mob[i].hit)
 					{
-						mob[i].hit = true;
-						player.velocity = player.jumpVelocity;
-					}
-					else
-					{
-						Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
+						Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - (4.2 * window.blockHeight) - 8, mob[i].width * window.scale * 1.4, mob[i].height * window.scale };
 						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY, player.width * window.scale, player.height * window.scale };
 
 						if (CheckCollisionRecs(boxCollider, playerCollider))
 						{
-							player.collision = true;
+							mob[i].hit = true;
+							player.velocity = player.jumpVelocity;
+						}
+						else
+						{
+							Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
+							Rectangle playerCollider{ player.posX + window.renderPosX, player.posY, player.width * window.scale, player.height * window.scale };
+
+							if (CheckCollisionRecs(boxCollider, playerCollider))
+							{
+								player.collision = true;
+							}
 						}
 					}
-				}
 
-				//other mobs
-				if (mob[i].hostile)
-				{
+					//other mobs
 					Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
 					for (int j = 0; j < window.mobCount; j++)
 					{
@@ -1487,16 +1486,12 @@ int main()
 
 		if (player.collideU && level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'o')
 		{
-			if (player.collideU && level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'M')
-			{
-
-			}
-
 			level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'q';
 			block.selectedX = player.iPosXC;
 			block.selectedY = player.iPosY - player.spriteHeight + (level.currentSize - 21);
 			block.runningTime = 0;
 			block.velocity = block.shiftHeight;
+			level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'M';
 		}
 
 
