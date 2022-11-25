@@ -1493,7 +1493,7 @@ int main()
 			block.selectedY = player.iPosY - player.spriteHeight + (level.currentSize - 21);
 			block.runningTime = 0;
 			block.velocity = block.shiftHeight;
-			level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'M';
+			level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'M';
 		}
 
 
