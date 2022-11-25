@@ -52,6 +52,7 @@ struct BadGuy {
 	bool collideD = false;
 	bool collideR = false;
 	bool collideL = false;
+	bool hostile = false;
 
 	bool hit = false;
 
