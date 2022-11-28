@@ -1615,7 +1615,7 @@ int main()
 		}
 
 		//select
-		if (window.pause && IsKeyPressed(KEY_ENTER))
+		if (window.pause && IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER))
 		{
 			switch (pauseMenu)
 			{
