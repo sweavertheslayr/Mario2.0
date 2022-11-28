@@ -44,6 +44,7 @@ struct BadGuy {
 
 	float velocity = 0;
 	float speed = 0;
+	float maxSpeed = 80;
 
 	Texture2D texture;
 
@@ -97,7 +98,7 @@ struct Player {
 	//jump
 	int tempVelocity = 0;
 	int velocity = 0;
-	int jumpVelocity = 1080;
+	int jumpVelocity = 1100;
 	int sidewaysVelocity = 0;
 	int runVelocity = 10;
 	int maxSidewaysVelocity = 500;
@@ -227,14 +228,14 @@ struct Levels {
 	" #                                                      ##  ######  ####      ####                                                                                        |h# ",
 	" #                                                      ##  ######  ####      ####                                                                                        |h# ",
 	" #                                                    ##        ##   #    ##                                                                                              |h# ",
-	" #                                                    ##        ##   #    ##                                                                                 ---          |h# ",
-	" #                                       # #### #     ##        ##   #    ##          ######                                                  ---                         |h# ",
+	" #                                                    ##        ##   #    ##                                                                                 ###          |h# ",
+	" #                                       # #### #     ##        ##   #    ##          ######                                                  ###                         |h# ",
 	" #                             #         # #  # #     ##        ##   # #  ##          ######                                                       ######               yedh# ",
 	" #          ooooo        O O             ###  ###     ####  ######   ###  ##  ####                             tk                         OO                            sbwh# ",
 	" #                     O O O O   O                      ##                                               tk    |h           ##           OOO                      ########### ",
 	" #                   O O O O O   O O                    ##                                               |h    |h    tk     ##          OOOO                      ########### ",
-	" #                 O O O O O O   O O                                                                     |h    |h    |h     ##         OOOOO                 ---  ########### ",
-	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%  ---  %%%%%%%%       %%%%%%%%%%% ",
+	" #                 O O O O O O   O O                                                                     |h    |h    |h     ##         OOOOO                 ###  ########### ",
+	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%  ###  %%%%%%%%       %%%%%%%%%%% ",
 	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%% ",
 	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%% ",
 	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%% ",
@@ -254,7 +255,6 @@ struct Levels {
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
-	"           G K                                                                                                                                                                ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
@@ -263,9 +263,10 @@ struct Levels {
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
+	"            w                                                                                                                                                                 ",
 	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
+	"                  G                                                                                                                                                           ",
+	"                G                                                                                                                                                             ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
@@ -858,7 +859,7 @@ int main()
 
 	emptyArray(level.current);
 	emptyArray(level.currentScene);
-	setArray(1);
+	setArray(2);
 	findSize(level.current);
 
 	for (int i = 0; i < 30; i++)
@@ -928,7 +929,7 @@ int main()
 					mob[window.mobCount].mob = 6;
 					mob[window.mobCount].type = level.type;
 					mob[window.mobCount].hostile = false;
-					mob[window.mobCount].direction = false;
+					mob[window.mobCount].direction = false; 
 					window.mobCount += 1;
 				}
 			}
@@ -942,6 +943,15 @@ int main()
 				mob[i].posX += mob[i].speed * window.dT;
 				mob[i].posY += mob[i].velocity * window.dT;
 				mob[i].runningTime += window.dT;
+
+				if (mob[i].hostile)
+				{
+					mob[i].maxSpeed = 80;
+				}
+				else
+				{
+					mob[i].maxSpeed = 160;
+				}
 
 				mob[i].iPosX = ((mob[i].posX) / window.blockHeight);
 				mob[i].iPosXD = ((mob[i].posX) / window.blockHeight) - 0.5;
@@ -989,7 +999,7 @@ int main()
 					if (!mob[i].hit)
 					{
 						Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - (4.2 * window.blockHeight) - 8, mob[i].width * window.scale * 1.4, mob[i].height * window.scale };
-						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY, player.width * window.scale, player.height * window.scale };
+						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
 
 						if (CheckCollisionRecs(boxCollider, playerCollider))
 						{
@@ -999,7 +1009,7 @@ int main()
 						else
 						{
 							Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
-							Rectangle playerCollider{ player.posX + window.renderPosX, player.posY, player.width * window.scale, player.height * window.scale };
+							Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
 
 							if (CheckCollisionRecs(boxCollider, playerCollider))
 							{
@@ -1014,7 +1024,7 @@ int main()
 					{
 						if (mob[j].hostile)
 						{
-							Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale * 2, mob[j].height * window.scale * 2 };
+							Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale, mob[j].height * window.scale * 2 };
 							if (CheckCollisionRecs(boxCollider, boxCollider2))
 							{
 								if (i < j)
@@ -1029,6 +1039,17 @@ int main()
 								}
 							}
 						}
+					}
+				}
+				else
+				{
+					Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
+					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32) + (1 * window.blockHeight), player.width * window.scale, player.height / 2 * window.scale };
+
+					if (CheckCollisionRecs(boxCollider, playerCollider))
+					{
+						player.tall = 1;
+						mob[i].hit = true;
 					}
 				}
 
@@ -1047,11 +1068,11 @@ int main()
 				//right + left
 				if (mob[i].direction)
 				{
-					mob[i].speed = -80;
+					mob[i].speed = -mob[i].maxSpeed;
 				}
 				else
 				{
-					mob[i].speed = 80;
+					mob[i].speed = mob[i].maxSpeed;
 				}
 
 				//ANIMATE
@@ -1623,14 +1644,13 @@ int main()
 		//do stuff here
 		if (player.collision && player.tall == 0)
 		{
-			player.lives--;
-			player.sidewaysVelocity = 0;
-			player.velocity = 0;
-			player.jumpVelocity = 0;
-			player.frame = 0;
-			a = 0;
-			//yesq
-
+			//player.lives--;
+			//player.sidewaysVelocity = 0;
+			//player.velocity = 0;
+			//player.jumpVelocity = 0;
+			//player.frame = 0;
+			//a = 0;
+			restartLevel();
 		}
 		else if (player.collision)
 		{
