@@ -38,9 +38,6 @@ struct BadGuy {
 	float posX = 0;
 	float posY = 2 * window.blockHeight;
 
-	float tempPosX = 0;
-	float tempPosY = 0;
-	
 	int iPosX = 0;
 	int iPosXD = 0;
 	int iPosY = 0;
@@ -131,6 +128,7 @@ struct Player {
 	bool justJumped = false;
 	bool isTurning = false;
 	bool isDucking = false;
+	bool isHit = false;
 	float tall = 0;
 }player;
 
@@ -463,6 +461,64 @@ void findSize(std::string arr[32])
 }
 
 void outputPause()
+{
+	float a = 0;
+	float b = 0;
+
+	for (int i = 0; i < level.size; i++)
+	{
+		for (int j = 0; j < level.pause[0].length(); j++)
+		{
+			if (level.pause[i][j] == '#')
+			{
+				a = 0;
+			}
+			else if (level.pause[i][j] == 'q')
+			{
+				a = 2;
+			}
+			else if (level.pause[i][j] == 'O')
+			{
+				a = 5;
+			}
+			else if (level.pause[i][j] == 'o')
+			{
+				a = block.frame;
+			}
+			else
+			{
+				a = 17;
+			}
+
+
+			if (level.pause[i][j] == 'o' && block.runningTime >= block.updateTime)
+			{
+				block.frame += 1;
+				if (block.frame > 8)
+				{
+					block.frame = 6;
+				}
+
+				a = block.frame;
+
+				block.runningTime = 0;
+			}
+
+			if (a < 17)
+			{
+				DrawTexturePro(
+					block.texture,
+					Rectangle{ (level.type) * 16, ((16 * a) + 1), 16, 16 },
+					Rectangle{ (j)*window.blockHeight - window.renderPosX, (i)*window.blockHeight - b, (32 * window.scale * 19 / 20), (32 * window.scale * 19 / 20) },
+					Vector2{ 0, 0 },
+					0,
+					WHITE);
+			}
+		}
+	}
+}
+
+void levelSelection()
 {
 	float a = 0;
 	float b = 0;
@@ -862,7 +918,7 @@ int main()
 
 	emptyArray(level.current);
 	emptyArray(level.currentScene);
-	setArray(1);
+	setArray(2);
 	findSize(level.current);
 
 	for (int i = 0; i < 30; i++)
@@ -894,6 +950,223 @@ int main()
 		player.runningTime += window.dT;
 		block.runningTime += window.dT;
 
+		window.renderPosDistance = player.iPosX - (player.posX / window.blockHeight) + 4;
+
+		//MAKE MOBS
+		for (int i = 0; i < 30; i++)
+		{
+			for (int j = (window.renderPosDistance); j < window.blocksWide + window.renderPosX / window.blockHeight; j++)
+			{
+				//goombas
+				if (level.currentScene[i][j] == 'G')
+				{
+					level.currentScene[i][j] = ' ';
+					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+					mob[window.mobCount].posY = (i) * window.blockHeight;
+					mob[window.mobCount].mob = 0;
+					mob[window.mobCount].type = level.type;
+					mob[window.mobCount].hostile = true;
+					window.mobCount += 1;
+				}
+				//koopas
+				else if (level.currentScene[i][j] == 'K')
+				{
+					level.currentScene[i][j] = ' ';
+					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+					mob[window.mobCount].posY = (i) * window.blockHeight;
+					mob[window.mobCount].mob = 3;
+					mob[window.mobCount].type = level.type;
+					mob[window.mobCount].hostile = true;
+					window.mobCount += 1;
+				}
+				//mushroom
+				else if (level.currentScene[i][j] == 'M')
+				{
+					level.currentScene[i][j] = ' ';
+					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+					mob[window.mobCount].posY = (i)*window.blockHeight;
+					mob[window.mobCount].mob = 6;
+					mob[window.mobCount].type = level.type;
+					mob[window.mobCount].hostile = false;
+					mob[window.mobCount].direction = false; 
+					window.mobCount += 1;
+				}
+			}
+		}
+
+		for (int i = 0; i < window.mobCount; i++)
+		{
+			if (mob[i].loaded && !window.pause)
+			{
+				//POSITION
+				mob[i].posX += mob[i].speed * window.dT;
+				mob[i].posY += mob[i].velocity * window.dT;
+				mob[i].runningTime += window.dT;
+
+				if (mob[i].hostile)
+				{
+					mob[i].maxSpeed = 80;
+				}
+				else
+				{
+					mob[i].maxSpeed = 160;
+				}
+
+				mob[i].iPosX = ((mob[i].posX) / window.blockHeight);
+				mob[i].iPosXD = ((mob[i].posX) / window.blockHeight) - 0.5;
+
+				mob[i].iPosY = (mob[i].posY / window.blockHeight);
+
+				//COLLISION
+
+
+				//down
+				if (level.current[mob[i].iPosY + 1][mob[i].iPosXD] == ' ')
+				{
+					mob[i].collideD = false;
+				}
+				else
+				{
+					mob[i].collideD = true;
+					mob[i].posY = mob[i].iPosY * window.blockHeight;
+				}
+
+				//right
+				if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ')
+				{
+					mob[i].direction = true;
+				}
+
+				//left
+				if (mob[i].iPosX == 0)
+				{
+					mob[i].loaded = false;;
+				}
+				else
+				{
+					if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ')
+					{
+						mob[i].direction = false;
+					}
+				}
+
+
+				//CHARACTER COLLISION
+				if (mob[i].hostile)
+				{
+					//player
+					if (!mob[i].hit)
+					{
+						Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - (4.2 * window.blockHeight) - 8, mob[i].width * window.scale * 1.4, mob[i].height * window.scale };
+						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
+
+						if (CheckCollisionRecs(boxCollider, playerCollider))
+						{
+							mob[i].hit = true;
+							player.velocity = player.jumpVelocity;
+						}
+						else
+						{
+							Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
+							Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
+
+							if (CheckCollisionRecs(boxCollider, playerCollider))
+							{
+								player.collision = true;
+							}
+						}
+					}
+
+					//other mobs
+					Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
+					for (int j = 0; j < window.mobCount; j++)
+					{
+						if (mob[j].hostile)
+						{
+							Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale, mob[j].height * window.scale * 2 };
+							if (CheckCollisionRecs(boxCollider, boxCollider2))
+							{
+								if (i < j)
+								{
+									mob[i].direction = true;
+									mob[j].direction = false;
+								}
+								if (i > j)
+								{
+									mob[i].direction = false;
+									mob[j].direction = true;
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
+					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32) + (1 * window.blockHeight), player.width * window.scale, player.height / 2 * window.scale };
+
+					if (CheckCollisionRecs(boxCollider, playerCollider))
+					{
+						player.tall = 1;
+						mob[i].hit = true;
+					}
+				}
+
+				//MOVEMENT
+
+				//down
+				if (!mob[i].collideD)
+				{
+					mob[i].velocity += gravity * window.dT;
+				}
+				else
+				{
+					mob[i].velocity = 0;
+				}
+
+				//right + left
+				if (mob[i].direction)
+				{
+					mob[i].speed = -mob[i].maxSpeed;
+				}
+				else
+				{
+					mob[i].speed = mob[i].maxSpeed;
+				}
+
+				//ANIMATE
+				if (mob[i].runningTime >= mob[i].updateTime)
+				{
+					if (mob[i].direction)
+					{
+						mob[i].frame++;
+
+						if (mob[i].frame > 1)
+						{
+							mob[i].frame = 0;
+						}
+					}
+					else
+					{
+						mob[i].frame++;
+
+						if (mob[i].frame > 3)
+						{
+							mob[i].frame = 2;
+						}
+					}
+					mob[i].runningTime = 0;
+				}
+				if (mob[i].hit)
+				{
+					mob[i].frame = 4;
+					mob[i].speed = 0;
+					mob[i].velocity = 0;
+				}
+			}
+		}
+
+
 		//PLAYER INFO
 		player.posY -= player.velocity * window.dT;
 		player.posX += player.sidewaysVelocity * window.dT;
@@ -913,232 +1186,6 @@ int main()
 			player.spriteHeight = 2;
 		}
 
-
-		window.renderPosDistance = player.iPosX - (player.posX / window.blockHeight) + 4;
-
-		//MAKE MOBS
-		if (!window.pause)
-		{
-			for (int i = 0; i < 30; i++)
-			{
-				for (int j = (window.renderPosDistance); j < window.blocksWide + window.renderPosX / window.blockHeight; j++)
-				{
-		
-					//goombas
-					if (level.currentScene[i][j] == 'G')
-					{
-						level.currentScene[i][j] = ' ';
-						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
-						mob[window.mobCount].posY = (i)*window.blockHeight;
-						mob[window.mobCount].mob = 0;
-						mob[window.mobCount].type = level.type;
-						mob[window.mobCount].hostile = true;
-						window.mobCount += 1;
-					}
-					//koopas
-					else if (level.currentScene[i][j] == 'K')
-					{
-						level.currentScene[i][j] = ' ';
-						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
-						mob[window.mobCount].posY = (i)*window.blockHeight;
-						mob[window.mobCount].mob = 3;
-						mob[window.mobCount].type = level.type;
-						mob[window.mobCount].hostile = true;
-						window.mobCount += 1;
-					}
-					//mushroom
-					else if (level.currentScene[i][j] == 'M')
-					{
-						level.currentScene[i][j] = ' ';
-						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
-						mob[window.mobCount].posY = (i)*window.blockHeight;
-						mob[window.mobCount].mob = 6;
-						mob[window.mobCount].type = level.type;
-						mob[window.mobCount].hostile = false;
-						mob[window.mobCount].direction = false;
-						window.mobCount += 1;
-					}
-				}
-			}
-		}
-
-		if (!window.pause)
-		{
-			for (int i = 0; i < window.mobCount; i++)
-			{
-				if (mob[i].loaded && !window.pause)
-				{
-					//POSITION
-					mob[i].posX += mob[i].speed * window.dT;
-					mob[i].posY += mob[i].velocity * window.dT;
-					mob[i].runningTime += window.dT;
-
-					if (mob[i].hostile)
-					{
-						mob[i].maxSpeed = 80;
-					}
-					else
-					{
-						mob[i].maxSpeed = 160;
-					}
-
-					mob[i].iPosX = ((mob[i].posX) / window.blockHeight);
-					mob[i].iPosXD = ((mob[i].posX) / window.blockHeight) - 0.5;
-
-					mob[i].iPosY = (mob[i].posY / window.blockHeight);
-
-					//COLLISION
-
-
-					//down
-					if (level.current[mob[i].iPosY + 1][mob[i].iPosXD] == ' ')
-					{
-						mob[i].collideD = false;
-					}
-					else
-					{
-						mob[i].collideD = true;
-						mob[i].posY = mob[i].iPosY * window.blockHeight;
-					}
-
-					//right
-					if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ')
-					{
-						mob[i].direction = true;
-					}
-
-					//left
-					if (mob[i].iPosX == 0)
-					{
-						mob[i].loaded = false;;
-					}
-					else
-					{
-						if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ')
-						{
-							mob[i].direction = false;
-						}
-					}
-
-
-					//CHARACTER COLLISION
-					if (mob[i].hostile)
-					{
-						//player
-						if (!mob[i].hit)
-						{
-							Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - (4.2 * window.blockHeight) - 8, mob[i].width * window.scale * 1.4, mob[i].height * window.scale };
-							Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
-
-							if (CheckCollisionRecs(boxCollider, playerCollider))
-							{
-								mob[i].hit = true;
-								player.velocity = player.jumpVelocity;
-							}
-							else
-							{
-								Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
-								Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
-
-								if (CheckCollisionRecs(boxCollider, playerCollider))
-								{
-									player.collision = true;
-								}
-							}
-						}
-
-						//other mobs
-						Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
-						for (int j = 0; j < window.mobCount; j++)
-						{
-							if (mob[j].hostile)
-							{
-								Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale, mob[j].height * window.scale * 2 };
-								if (CheckCollisionRecs(boxCollider, boxCollider2))
-								{
-									if (i < j)
-									{
-										mob[i].direction = true;
-										mob[j].direction = false;
-									}
-									if (i > j)
-									{
-										mob[i].direction = false;
-										mob[j].direction = true;
-									}
-								}
-							}
-						}
-					}
-					else
-					{
-						Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
-						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32) + (1 * window.blockHeight), player.width * window.scale, player.height / 2 * window.scale };
-
-						if (CheckCollisionRecs(boxCollider, playerCollider))
-						{
-							player.tall = 1;
-							mob[i].hit = true;
-						}
-					}
-
-					//MOVEMENT
-
-					//down
-					if (!mob[i].collideD)
-					{
-						mob[i].velocity += gravity * window.dT;
-					}
-					else
-					{
-						mob[i].velocity = 0;
-					}
-
-					//right + left
-					if (mob[i].direction)
-					{
-						mob[i].speed = -mob[i].maxSpeed;
-					}
-					else
-					{
-						mob[i].speed = mob[i].maxSpeed;
-					}
-
-					//ANIMATE
-					if (mob[i].runningTime >= mob[i].updateTime)
-					{
-						if (mob[i].direction)
-						{
-							mob[i].frame++;
-
-							if (mob[i].frame > 1)
-							{
-								mob[i].frame = 0;
-							}
-						}
-						else
-						{
-							mob[i].frame++;
-
-							if (mob[i].frame > 3)
-							{
-								mob[i].frame = 2;
-							}
-						}
-						mob[i].runningTime = 0;
-					}
-					if (mob[i].hit)
-					{
-						mob[i].frame = 4;
-						mob[i].speed = 0;
-						mob[i].velocity = 0;
-					}
-				}
-			}
-		}
-
-
-		
 		//COLLISION
 
 		//up
@@ -1257,7 +1304,7 @@ int main()
 		//MOVEMENT
 
 		//up
-		if (((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsKeyReleased(KEY_SPACE)) && !window.pause))
+		if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsKeyReleased(KEY_SPACE)) && !window.pause)
 		{
 			player.justJumped = false;
 		}
@@ -1273,7 +1320,7 @@ int main()
 		}
 		else
 		{
-			if (player.velocity > 900) 
+			if (player.velocity > 0) 
 			{
 				player.velocity /= -2;
 			}
@@ -1556,12 +1603,6 @@ int main()
 				player.velocity = player.tempVelocity;
 				window.renderPosX = window.tempRenderX;
 				pauseMenu = 0;
-
-				for (int i = 0; i < window.mobCount; i++)
-				{
-					mob[i].posX = mob[i].tempPosX;
-					mob[i].posY = mob[i].tempPosY;
-				}
 			}
 			else
 			{
@@ -1573,13 +1614,6 @@ int main()
 				window.tempRenderX = window.renderPosX;
 				window.renderPosX = (24 - ((window.blocksWide) / 2)) * window.blockHeight;
 				player.sidewaysVelocity = 0;
-
-				for (int i = 0; i < window.mobCount; i++)
-				{
-					mob[i].tempPosX = mob[i].posX;
-					mob[i].tempPosY = mob[i].posY;
-					mob[i].posX = 1 * window.blockHeight;
-				}
 			}
 		}
 
@@ -1647,19 +1681,12 @@ int main()
 			case 0:
 				player.posX = player.tempPosX;
 				player.posY = player.tempPosY;
-				player.velocity = player.tempVelocity;
 				window.renderPosX = window.tempRenderX;
 				window.pause = false;
-
-				std::cout << "start\n";
-				for (int i = 0; i < window.mobCount; i++)
-				{
-					mob[i].posX = mob[i].tempPosX;
-					mob[i].posY = mob[i].tempPosY;
-				}
 				break;
 			case 1:
 				break;
+				window.levelSelect = true;
 			case 2:
 				window.exit = true;
 				break;
@@ -1716,7 +1743,11 @@ int main()
 		}
 		else if (window.levelSelect)
 		{
+			levelSelection();
 
+			DrawTextEx(window.font, "level 1", Vector2{ 14 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight, 0, WHITE);
+			DrawTextEx(window.font, "level 2", Vector2{ 14 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight, 0, WHITE);
+			DrawTextEx(window.font, "level 3", Vector2{ 14 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight, 0, WHITE);
 		}
 		else
 		{
