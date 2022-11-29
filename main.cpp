@@ -61,6 +61,8 @@ struct BadGuy {
 	bool collideL = false;
 	bool hostile = false;
 
+	bool stationary = false;
+
 	bool hit = false;
 
 	bool direction = true;
@@ -170,7 +172,7 @@ struct Levels {
 	"                                                                                                                                                                                            OOOO        l                                            ",
 	"                                                                                                                                                                                           OOOOO        l                                            ",
 	"                 o   _o_o_                     tk         tk                   _o_              _     __    o  o  o     _          __      O  O          OO  O            __o_            OOOOOO        l                                            ",
-	"                             p         tk      |h         |h                                                                              OO  OO        OOO  OO                          OOOOOOO        l                                            ",
+	"                                       tk      |h         |h                                                                              OO  OO        OOO  OO                          OOOOOOO        l                                            ",
 	"                             tk        |h      |h         |h                                                                             OOO  OOO      OOOO  OOO     tk              tk OOOOOOOO        l                                            ",
 	"                             |h        |h      |h         |h                                                                            OOOO  OOOO    OOOOO  OOOO    |h              |hOOOOOOOOO        O                                            ",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
@@ -202,7 +204,7 @@ struct Levels {
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                             ,.m                                     ",
 	"                      w                                                         w                                                                                                                                                                    ",
-	"                                                                                                                                                                                                                                                     ",
+	"                            P                                                                                                                                                                                                                        ",
 	"                                                                                                                                                                                                            xcvcx                                    ",
 	" 1          2    5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1     O                                           ",
 	"                                                                                                                                                                                                                                                     ",
@@ -934,6 +936,7 @@ int main()
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = true;
 						mob[window.mobCount].direction = true;
+						mob[window.mobCount].stationary = false;
 						window.mobCount += 1;
 					}
 					//koopas
@@ -946,6 +949,22 @@ int main()
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = true;
 						mob[window.mobCount].direction = true;
+						mob[window.mobCount].stationary = false;
+						window.mobCount += 1;
+					}
+					//tube thing 
+					else if (level.currentScene[i][j] == 'P')
+					{
+						mob[window.mobCount].texture = LoadTexture("DevAssets/standEnemySheet.png");
+						level.currentScene[i][j] = ' ';
+						mob[window.mobCount].posX = (j + 2.48) * window.blockHeight;
+						mob[window.mobCount].posY = (i)*window.blockHeight;
+						mob[window.mobCount].mob = 1;
+						mob[window.mobCount].velocity = 0;
+						mob[window.mobCount].type = level.type;
+						mob[window.mobCount].hostile = true;
+						mob[window.mobCount].direction = true;
+						mob[window.mobCount].stationary = true;
 						window.mobCount += 1;
 					}
 					//mushroom
@@ -958,6 +977,7 @@ int main()
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = false;
 						mob[window.mobCount].direction = false;
+						mob[window.mobCount].stationary = false;
 						window.mobCount += 1;
 					}
 				}
@@ -975,7 +995,11 @@ int main()
 					mob[i].posY += mob[i].velocity * window.dT;
 					mob[i].runningTime += window.dT;
 
-					if (mob[i].hostile)
+					if (mob[i].stationary)
+					{
+						mob[i].maxSpeed = 0;
+					}
+					else if (mob[i].hostile)
 					{
 						mob[i].maxSpeed = 80;
 					}
@@ -1029,7 +1053,7 @@ int main()
 						//player
 						if (!mob[i].hit)
 						{
-							Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - (4.2 * window.blockHeight) - 8, mob[i].width * window.scale * 1.4, mob[i].height * window.scale };
+							Rectangle boxCollider{ mob[i].posX - (0.6 * window.blockHeight), mob[i].posY - ((4.2 - mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 1.4, mob[i].height * window.scale };
 							Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
 
 							if (CheckCollisionRecs(boxCollider, playerCollider))
@@ -1039,7 +1063,7 @@ int main()
 							}
 							else
 							{
-								Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
+								Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - (3.8 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
 								Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
 
 								if (CheckCollisionRecs(boxCollider, playerCollider))
