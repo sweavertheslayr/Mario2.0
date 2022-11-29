@@ -49,6 +49,8 @@ struct BadGuy {
 	float speed = 0;
 	float maxSpeed = 80;
 
+	float startY = 0;
+
 	Texture2D texture;
 
 	float runningTime = 0;
@@ -62,6 +64,7 @@ struct BadGuy {
 	bool hostile = false;
 
 	bool stationary = false;
+	bool upDown = false;
 
 	bool hit = false;
 
@@ -204,7 +207,7 @@ struct Levels {
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                             ,.m                                     ",
 	"                      w                                                         w                                                                                                                                                                    ",
-	"                            P                                                                                                                                                                                                                        ",
+	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                            xcvcx                                    ",
 	" 1          2    5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1     O                                           ",
 	"                                                                                                                                                                                                                                                     ",
@@ -267,11 +270,11 @@ struct Levels {
 	"                                                                                                                                                                                                 ",
 	"                                                                                                                                                                                                 ",
 	"                                                                                                                                                                                                 ",
-	"                                                                                                                                                                                                 ",
-	"            w                                                                                                                                                                                    ",
-	"                                                                                                                                                                                                 ",
-	"                  G                                                                                                                                                                              ",
-	"                G                                                                                                                                                                                ",
+	"                                                                                                              P                                                                                  ",
+	"           w                                                                                            P                                                                                        ",
+	"                                                                                                                    P                                                                            ",
+	"                 G                                                                                                                                                                               ",
+	"               G                                                                                                                                                                                 ",
 	"                                                                                                                                                                                                 ",
 	"                                                                                                                                                                                                 ",
 	"                                                                                                                                                                                                 ",
@@ -824,6 +827,50 @@ void outputLevel()
 	}
 }
 
+void outputPipes()
+{
+	float a = 0;
+
+
+	for (int i = 0; i < level.currentSize; i++)
+	{
+		for (int j = 1; j < level.current[0].length(); j++)
+		{
+			if (level.current[i][j] == 't')
+			{
+				a = 9;
+			}
+			else if (level.current[i][j] == 'k')
+			{
+				a = 10;
+			}
+			else if (level.current[i][j] == '|')
+			{
+				a = 11;
+			}
+			else if (level.current[i][j] == 'h')
+			{
+				a = 12;
+			}
+			else
+			{
+				a = 26;
+			}
+
+			if (a < 26)
+			{
+				DrawTexturePro(
+					block.texture,
+					Rectangle{ (level.type) * 16, ((16 * a) + 1), 16, 16 },
+					Rectangle{ (j)*window.blockHeight - (window.blockHeight * 1) - window.renderPosX, ((i)*window.blockHeight - ((level.currentSize - (level.currentSize - 7)) * window.blockHeight)), (32 * window.scale * 19 / 20), (32 * window.scale * 19 / 20) },
+					Vector2{ 0, 0 },
+					0,
+					WHITE);
+			}
+		}
+	}
+}
+
 void restartLevel()
 {
 	emptyArray(level.current);
@@ -864,7 +911,7 @@ int main()
 
 	emptyArray(level.current);
 	emptyArray(level.currentScene);
-	setArray(1);
+	setArray(2);
 	findSize(level.current);
 
 	for (int i = 0; i < 30; i++)
@@ -937,6 +984,7 @@ int main()
 						mob[window.mobCount].hostile = true;
 						mob[window.mobCount].direction = true;
 						mob[window.mobCount].stationary = false;
+						mob[window.mobCount].upDown = false;
 						window.mobCount += 1;
 					}
 					//koopas
@@ -950,6 +998,7 @@ int main()
 						mob[window.mobCount].hostile = true;
 						mob[window.mobCount].direction = true;
 						mob[window.mobCount].stationary = false;
+						mob[window.mobCount].upDown = false;
 						window.mobCount += 1;
 					}
 					//tube thing 
@@ -958,13 +1007,15 @@ int main()
 						mob[window.mobCount].texture = LoadTexture("DevAssets/standEnemySheet.png");
 						level.currentScene[i][j] = ' ';
 						mob[window.mobCount].posX = (j + 2.48) * window.blockHeight;
-						mob[window.mobCount].posY = (i)*window.blockHeight;
-						mob[window.mobCount].mob = 1;
+						mob[window.mobCount].posY = (i) * window.blockHeight;
+						mob[window.mobCount].mob = 0;
 						mob[window.mobCount].velocity = 0;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = true;
+						mob[window.mobCount].startY = i * window.blockHeight;
 						mob[window.mobCount].direction = true;
 						mob[window.mobCount].stationary = true;
+						mob[window.mobCount].upDown = true;
 						window.mobCount += 1;
 					}
 					//mushroom
@@ -978,6 +1029,7 @@ int main()
 						mob[window.mobCount].hostile = false;
 						mob[window.mobCount].direction = false;
 						mob[window.mobCount].stationary = false;
+						mob[window.mobCount].upDown = false;
 						window.mobCount += 1;
 					}
 				}
@@ -1015,34 +1067,36 @@ int main()
 
 					//COLLISION
 
-
-					//down
-					if (level.current[mob[i].iPosY + 1][mob[i].iPosXD] == ' ')
+					if (!mob[i].upDown)
 					{
-						mob[i].collideD = false;
-					}
-					else
-					{
-						mob[i].collideD = true;
-						mob[i].posY = mob[i].iPosY * window.blockHeight;
-					}
-
-					//right
-					if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ')
-					{
-						mob[i].direction = true;
-					}
-
-					//left
-					if (mob[i].iPosX == 0)
-					{
-						mob[i].loaded = false;;
-					}
-					else
-					{
-						if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ')
+						//down
+						if (level.current[mob[i].iPosY + 1][mob[i].iPosXD] == ' ')
 						{
-							mob[i].direction = false;
+							mob[i].collideD = false;
+						}
+						else
+						{
+							mob[i].collideD = true;
+							mob[i].posY = mob[i].iPosY * window.blockHeight;
+						}
+
+						//right
+						if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ')
+						{
+							mob[i].direction = true;
+						}
+
+						//left
+						if (mob[i].iPosX == 0)
+						{
+							mob[i].loaded = false;;
+						}
+						else
+						{
+							if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ')
+							{
+								mob[i].direction = false;
+							}
 						}
 					}
 
@@ -1053,7 +1107,7 @@ int main()
 						//player
 						if (!mob[i].hit)
 						{
-							Rectangle boxCollider{ mob[i].posX - (0.6 * window.blockHeight), mob[i].posY - ((4.2 - mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 1.4, mob[i].height * window.scale };
+							Rectangle boxCollider{ mob[i].posX - (0.6 * window.blockHeight), mob[i].posY - ((4.2 - mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 0.8, mob[i].height * window.scale };
 							Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
 
 							if (CheckCollisionRecs(boxCollider, playerCollider))
@@ -1063,7 +1117,7 @@ int main()
 							}
 							else
 							{
-								Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - (3.8 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
+								Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - ((3.4 + mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 1.2, mob[i].height * window.scale * 0.2 };
 								Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
 
 								if (CheckCollisionRecs(boxCollider, playerCollider))
@@ -1110,24 +1164,40 @@ int main()
 
 					//MOVEMENT
 
-					//down
-					if (!mob[i].collideD)
+					if (!mob[i].upDown)
 					{
-						mob[i].velocity += gravity * window.dT;
-					}
-					else
-					{
-						mob[i].velocity = 0;
-					}
+						//down
+						if (!mob[i].collideD)
+						{
+							mob[i].velocity += gravity * window.dT;
+						}
+						else
+						{
+							mob[i].velocity = 0;
+						}
 
-					//right + left
-					if (mob[i].direction)
-					{
-						mob[i].speed = -mob[i].maxSpeed;
+						//right + left
+						if (mob[i].direction)
+						{
+							mob[i].speed = -mob[i].maxSpeed;
+						}
+						else
+						{
+							mob[i].speed = mob[i].maxSpeed;
+						}
+
 					}
+					//updown
 					else
 					{
-						mob[i].speed = mob[i].maxSpeed;
+						if (mob[i].startY >= mob[i].posY)
+						{
+							mob[i].velocity = 40;
+						}
+						else if (mob[i].startY + (2 * window.blockHeight) <= mob[i].posY)
+						{
+							mob[i].velocity = -40;
+						}
 					}
 
 					//ANIMATE
@@ -1728,6 +1798,8 @@ int main()
 					0,
 					WHITE);
 			}
+
+			outputPipes();
 
 			DrawTexturePro(
 				player.texture,
