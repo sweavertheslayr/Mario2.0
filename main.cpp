@@ -1273,10 +1273,7 @@ int main()
 		}
 		else
 		{
-			if (player.velocity > 900) 
-			{
-				player.velocity /= -2;
-			}
+			player.velocity -= 2200 * window.dT;
 		}
 
 		//down
