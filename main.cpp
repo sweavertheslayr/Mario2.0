@@ -168,7 +168,7 @@ struct Levels {
 	"                                                                                                                                                                                            OOOO        l                                            ",
 	"                                                                                                                                                                                           OOOOO        l                                            ",
 	"                 o   _o_o_                     tk         tk                   _o_              _     __    o  o  o     _          __      O  O          OO  O            __o_            OOOOOO        l                                            ",
-	"                                       tk      |h         |h                                                                              OO  OO        OOO  OO                          OOOOOOO        l                                            ",
+	"                             p         tk      |h         |h                                                                              OO  OO        OOO  OO                          OOOOOOO        l                                            ",
 	"                             tk        |h      |h         |h                                                                             OOO  OOO      OOOO  OOO     tk              tk OOOOOOOO        l                                            ",
 	"                             |h        |h      |h         |h                                                                            OOOO  OOOO    OOOOO  OOOO    |h              |hOOOOOOOOO        O                                            ",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
@@ -214,68 +214,68 @@ struct Levels {
 	};
 
 	std::string twoA[30] = {
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	" #     #####################################################################################################################################                       ########## ",
-	" #                                                                                                                                                                            ",
-	" #                                                                                                                                                                            ",
-	" #                                                                                                                                                                            ",
-	" #     #####################################################################################################################################                       #######|h# ",
-	" #                                                      ##  ######  ####      ####                                                                                        |h# ",
-	" #                                                      ##  ######  ####      ####                                                                                        |h# ",
-	" #                                                    ##        ##   #    ##                                                                                              |h# ",
-	" #                                                    ##        ##   #    ##                                                                                 ###          |h# ",
-	" #                                       # #### #     ##        ##   #    ##          ######                                                  ###                         |h# ",
-	" #                             #         # #  # #     ##        ##   # #  ##          ######                                                       ######               yedh# ",
-	" #          ooooo        O O             ###  ###     ####  ######   ###  ##  ####                             tk                         OO                            sbwh# ",
-	" #                     O O O O   O                      ##                                               tk    |h           ##           OOO                      ########### ",
-	" #                   O O O O O   O O                    ##                                               |h    |h    tk     ##          OOOO                      ########### ",
-	" #                 O O O O O O   O O                                                                     |h    |h    |h     ##         OOOOO                 ###  ########### ",
-	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%  ###  %%%%%%%%       %%%%%%%%%%% ",
-	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%% ",
-	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%% ",
-	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%% ",
-	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%% ",
-	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%% ",
-	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%% ",
-	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%---%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--%%--%%%%%%%%%%%%-------%%%%%%%%-------%%%%%%%%%%% "
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	" #     #####################################################################################################################################                       ##########                    ",
+	" #                                                                                                                                                                                               ",
+	" #                                                                                                                                                                                               ",
+	" #                                                                                                                                                                                               ",
+	" #     #####################################################################################################################################                       #######|h#                    ",
+	" #                                                      ##  ######  ####      ####                                                                                        |h#                    ",
+	" #                                                      ##  ######  ####      ####                                                                                        |h#                    ",
+	" #                                                    ##        ##   #    ##                                                                                              |h#                    ",
+	" #                                                    ##        ##   #    ##                                                                                 ###          |h#                    ",
+	" #                                       # #### #     ##        ##   #    ##          ######                                                  ###                         |h#                    ",
+	" #                             #         # #  # #     ##        ##   # #  ##          ######                                                       ######               yedh#                    ",
+	" #          ooooo        O O             ###  ###     ####  ######   ###  ##  ####                             tk                         OO                            sbwh#                    ",
+	" #                     O O O O   O                      ##                                               tk    |h           ##           OOO                      ###########                    ",
+	" #                   O O O O O   O O                    ##                                               |h    |h    tk     ##          OOOO                      ###########                    ",
+	" #                 O O O O O O   O O                                                                     |h    |h    |h     ##         OOOOO                 ###  ###########                    ",
+	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%  ###  %%%%%%%%       %%%%%%%%%%%                    ",
+	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%%                    ",
+	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%%                    ",
+	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%%                    ",
+	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%%                    ",
+	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%%                    ",
+	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%%                    ",
+	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%---%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--%%--%%%%%%%%%%%%-------%%%%%%%%-------%%%%%%%%%%%                    "
 	};
 	std::string twoSceneA[30] = {
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"            w                                                                                                                                                                 ",
-	"                                                                                                                                                                              ",
-	"                  G                                                                                                                                                           ",
-	"                G                                                                                                                                                             ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              ",
-	"                                                                                                                                                                              "
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"            w                                                                                                                                                                                    ",
+	"                                                                                                                                                                                                 ",
+	"                  G                                                                                                                                                                              ",
+	"                G                                                                                                                                                                                ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                 "
 	};
 
 	std::string threeA[30] = {
@@ -953,43 +953,49 @@ int main()
 		window.renderPosDistance = player.iPosX - (player.posX / window.blockHeight) + 4;
 
 		//MAKE MOBS
-		for (int i = 0; i < 30; i++)
+		if (!window.pause)
 		{
-			for (int j = (window.renderPosDistance); j < window.blocksWide + window.renderPosX / window.blockHeight; j++)
+			for (int i = 0; i < 30; i++)
 			{
-				//goombas
-				if (level.currentScene[i][j] == 'G')
+				for (int j = (window.renderPosDistance); j < window.blocksWide + window.renderPosX / window.blockHeight; j++)
 				{
-					level.currentScene[i][j] = ' ';
-					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
-					mob[window.mobCount].posY = (i) * window.blockHeight;
-					mob[window.mobCount].mob = 0;
-					mob[window.mobCount].type = level.type;
-					mob[window.mobCount].hostile = true;
-					window.mobCount += 1;
-				}
-				//koopas
-				else if (level.currentScene[i][j] == 'K')
-				{
-					level.currentScene[i][j] = ' ';
-					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
-					mob[window.mobCount].posY = (i) * window.blockHeight;
-					mob[window.mobCount].mob = 3;
-					mob[window.mobCount].type = level.type;
-					mob[window.mobCount].hostile = true;
-					window.mobCount += 1;
-				}
-				//mushroom
-				else if (level.currentScene[i][j] == 'M')
-				{
-					level.currentScene[i][j] = ' ';
-					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
-					mob[window.mobCount].posY = (i)*window.blockHeight;
-					mob[window.mobCount].mob = 6;
-					mob[window.mobCount].type = level.type;
-					mob[window.mobCount].hostile = false;
-					mob[window.mobCount].direction = false; 
-					window.mobCount += 1;
+		
+					//goombas
+					if (level.currentScene[i][j] == 'G')
+					{
+						level.currentScene[i][j] = ' ';
+						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+						mob[window.mobCount].posY = (i)*window.blockHeight;
+						mob[window.mobCount].mob = 0;
+						mob[window.mobCount].type = level.type;
+						mob[window.mobCount].hostile = true;
+						mob[window.mobCount].direction = true;
+						window.mobCount += 1;
+					}
+					//koopas
+					else if (level.currentScene[i][j] == 'K')
+					{
+						level.currentScene[i][j] = ' ';
+						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+						mob[window.mobCount].posY = (i)*window.blockHeight;
+						mob[window.mobCount].mob = 3;
+						mob[window.mobCount].type = level.type;
+						mob[window.mobCount].hostile = true;
+						mob[window.mobCount].direction = true;
+						window.mobCount += 1;
+					}
+					//mushroom
+					else if (level.currentScene[i][j] == 'M')
+					{
+						level.currentScene[i][j] = ' ';
+						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+						mob[window.mobCount].posY = (i)*window.blockHeight;
+						mob[window.mobCount].mob = 6;
+						mob[window.mobCount].type = level.type;
+						mob[window.mobCount].hostile = false;
+						mob[window.mobCount].direction = false;
+						window.mobCount += 1;
+					}
 				}
 			}
 		}
@@ -1199,7 +1205,7 @@ int main()
 
 			if (player.velocity > 0)
 			{
-				player.velocity /= -1;
+				player.velocity /= -2;
 			}
 		}
 
@@ -1320,7 +1326,7 @@ int main()
 		}
 		else
 		{
-			player.velocity -= 2200 * window.dT;
+			player.velocity -= 4000 * window.dT;
 		}
 
 		//down
