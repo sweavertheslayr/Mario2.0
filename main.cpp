@@ -1257,7 +1257,7 @@ int main()
 		//MOVEMENT
 
 		//up
-		if ((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsKeyReleased(KEY_SPACE)) && !window.pause)
+		if (((IsKeyReleased(KEY_UP) || IsKeyReleased(KEY_W) || IsKeyReleased(KEY_SPACE)) && !window.pause))
 		{
 			player.justJumped = false;
 		}
@@ -1273,7 +1273,7 @@ int main()
 		}
 		else
 		{
-			if (player.velocity > 0) 
+			if (player.velocity > 900) 
 			{
 				player.velocity /= -2;
 			}
