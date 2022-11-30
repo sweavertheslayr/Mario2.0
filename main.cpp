@@ -14,6 +14,8 @@ struct Window {
 	int renderPosX = 0;
 	int renderPosY = 0;
 
+	int currentLevel = 2;
+
 	Font font;
 
 	float dT = GetFrameTime();
@@ -46,6 +48,8 @@ struct BadGuy {
 	float speed = 0;
 	float maxSpeed = 80;
 
+	float startY = 0;
+
 	Texture2D texture;
 
 	float runningTime = 0;
@@ -57,6 +61,9 @@ struct BadGuy {
 	bool collideR = false;
 	bool collideL = false;
 	bool hostile = false;
+
+	bool stationary = false;
+	bool upDown = false;
 
 	bool hit = false;
 
@@ -168,7 +175,7 @@ struct Levels {
 	"                                                                                                                                                                                            OOOO        l                                            ",
 	"                                                                                                                                                                                           OOOOO        l                                            ",
 	"                 o   _o_o_                     tk         tk                   _o_              _     __    o  o  o     _          __      O  O          OO  O            __o_            OOOOOO        l                                            ",
-	"                             p         tk      |h         |h                                                                              OO  OO        OOO  OO                          OOOOOOO        l                                            ",
+	"                                       tk      |h         |h                                                                              OO  OO        OOO  OO                          OOOOOOO        l                                            ",
 	"                             tk        |h      |h         |h                                                                             OOO  OOO      OOOO  OOO     tk              tk OOOOOOOO        l                                            ",
 	"                             |h        |h      |h         |h                                                                            OOOO  OOOO    OOOOO  OOOO    |h              |hOOOOOOOOO        O                                            ",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
@@ -259,15 +266,15 @@ struct Levels {
 	"                                                                                                                                                                                                 ",
 	"                                                                                                                                                                                                 ",
 	"                                                                                                                                                                                                 ",
+	"                                                                          G                                                                                                                      ",
 	"                                                                                                                                                                                                 ",
 	"                                                                                                                                                                                                 ",
-	"                                                                                                                                                                                                 ",
-	"                                                                                                                                                                                                 ",
-	"                                                                                                                                                                                                 ",
-	"            w                                                                                                                                                                                    ",
-	"                                                                                                                                                                                                 ",
+	"                                                                                                                                        G G             w                                        ",
+	"                                                                       w      G G                             P                                                                                  ",
+	"            w                                                                                           P                                                                                        ",
+	"                                                                                                                    P                                                                            ",
 	"                  G                                                                                                                                                                              ",
-	"                G                                                                                                                                                                                ",
+	"                G              G              K K            K  G G                                G G G           G                                K                                            ",
 	"                                                                                                                                                                                                 ",
 	"                                                                                                                                                                                                 ",
 	"                                                                                                                                                                                                 ",
@@ -878,11 +885,55 @@ void outputLevel()
 	}
 }
 
+void outputPipes()
+{
+	float a = 0;
+
+
+	for (int i = 0; i < level.currentSize; i++)
+	{
+		for (int j = 1; j < level.current[0].length(); j++)
+		{
+			if (level.current[i][j] == 't')
+			{
+				a = 9;
+			}
+			else if (level.current[i][j] == 'k')
+			{
+				a = 10;
+			}
+			else if (level.current[i][j] == '|')
+			{
+				a = 11;
+			}
+			else if (level.current[i][j] == 'h')
+			{
+				a = 12;
+			}
+			else
+			{
+				a = 26;
+			}
+
+			if (a < 26)
+			{
+				DrawTexturePro(
+					block.texture,
+					Rectangle{ (level.type) * 16, ((16 * a) + 1), 16, 16 },
+					Rectangle{ (j)*window.blockHeight - (window.blockHeight * 1) - window.renderPosX, ((i)*window.blockHeight - ((level.currentSize - (level.currentSize - 7)) * window.blockHeight)), (32 * window.scale * 19 / 20), (32 * window.scale * 19 / 20) },
+					Vector2{ 0, 0 },
+					0,
+					WHITE);
+			}
+		}
+	}
+}
+
 void restartLevel()
 {
 	emptyArray(level.current);
 	emptyArray(level.currentScene);
-	setArray(1);
+	setArray(window.currentLevel);
 	findSize(level.current);
 	window.renderPosX = 0;
 
@@ -918,13 +969,8 @@ int main()
 
 	emptyArray(level.current);
 	emptyArray(level.currentScene);
-	setArray(2);
+	setArray(window.currentLevel);
 	findSize(level.current);
-
-	for (int i = 0; i < 30; i++)
-	{
-		mob[i].texture = LoadTexture("DevAssets/mobSheet.png");
-	}
 
 	window.scale = (window.height / (508 + ((level.size - 16) * 16)));
 	window.blockHeight = window.height/level.size;
@@ -963,37 +1009,66 @@ int main()
 					//goombas
 					if (level.currentScene[i][j] == 'G')
 					{
+						mob[window.mobCount].texture = LoadTexture("DevAssets/mobSheet.png");
 						level.currentScene[i][j] = ' ';
 						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
 						mob[window.mobCount].mob = 0;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = true;
+						mob[window.mobCount].startY = i * window.blockHeight;
 						mob[window.mobCount].direction = true;
+						mob[window.mobCount].stationary = false;
+						mob[window.mobCount].upDown = false;
 						window.mobCount += 1;
 					}
 					//koopas
 					else if (level.currentScene[i][j] == 'K')
 					{
+						mob[window.mobCount].texture = LoadTexture("DevAssets/mobSheet.png");
 						level.currentScene[i][j] = ' ';
 						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
 						mob[window.mobCount].mob = 3;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = true;
+						mob[window.mobCount].startY = i * window.blockHeight;
 						mob[window.mobCount].direction = true;
+						mob[window.mobCount].stationary = false;
+						mob[window.mobCount].upDown = false;
+						window.mobCount += 1;
+					}
+					//tube thing 
+					else if (level.currentScene[i][j] == 'P')
+					{
+						mob[window.mobCount].texture = LoadTexture("DevAssets/standEnemySheet.png");
+						level.currentScene[i][j] = ' ';
+						mob[window.mobCount].posX = (j + 2.48) * window.blockHeight;
+						mob[window.mobCount].posY = (i) * window.blockHeight;
+						mob[window.mobCount].mob = 0;
+						mob[window.mobCount].velocity = 0;
+						mob[window.mobCount].type = level.type;
+						mob[window.mobCount].hostile = true;
+						mob[window.mobCount].startY = i * window.blockHeight;
+						mob[window.mobCount].direction = true;
+						mob[window.mobCount].stationary = true;
+						mob[window.mobCount].upDown = true;
 						window.mobCount += 1;
 					}
 					//mushroom
 					else if (level.currentScene[i][j] == 'M')
 					{
+						mob[window.mobCount].texture = LoadTexture("DevAssets/mobSheet.png");
 						level.currentScene[i][j] = ' ';
 						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
 						mob[window.mobCount].mob = 6;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = false;
+						mob[window.mobCount].startY = i * window.blockHeight;
 						mob[window.mobCount].direction = false;
+						mob[window.mobCount].stationary = false;
+						mob[window.mobCount].upDown = false;
 						window.mobCount += 1;
 					}
 				}
@@ -1009,14 +1084,18 @@ int main()
 				mob[i].posY += mob[i].velocity * window.dT;
 				mob[i].runningTime += window.dT;
 
-				if (mob[i].hostile)
-				{
-					mob[i].maxSpeed = 80;
-				}
-				else
-				{
-					mob[i].maxSpeed = 160;
-				}
+					if (mob[i].stationary)
+					{
+						mob[i].maxSpeed = 0;
+					}
+					else if (mob[i].hostile)
+					{
+						mob[i].maxSpeed = 80;
+					}
+					else
+					{
+						mob[i].maxSpeed = 160;
+					}
 
 				mob[i].iPosX = ((mob[i].posX) / window.blockHeight);
 				mob[i].iPosXD = ((mob[i].posX) / window.blockHeight) - 0.5;
@@ -1025,56 +1104,58 @@ int main()
 
 				//COLLISION
 
-
-				//down
-				if (level.current[mob[i].iPosY + 1][mob[i].iPosXD] == ' ')
-				{
-					mob[i].collideD = false;
-				}
-				else
-				{
-					mob[i].collideD = true;
-					mob[i].posY = mob[i].iPosY * window.blockHeight;
-				}
-
-				//right
-				if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ')
-				{
-					mob[i].direction = true;
-				}
-
-				//left
-				if (mob[i].iPosX == 0)
-				{
-					mob[i].loaded = false;;
-				}
-				else
-				{
-					if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ')
+					if (!mob[i].upDown)
 					{
-						mob[i].direction = false;
-					}
-				}
-
-
-				//CHARACTER COLLISION
-				if (mob[i].hostile)
-				{
-					//player
-					if (!mob[i].hit)
-					{
-						Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - (4.2 * window.blockHeight) - 8, mob[i].width * window.scale * 1.4, mob[i].height * window.scale };
-						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
-
-						if (CheckCollisionRecs(boxCollider, playerCollider))
+						//down
+						if (level.current[mob[i].iPosY + 1][mob[i].iPosXD] == ' ')
 						{
-							mob[i].hit = true;
-							player.velocity = player.jumpVelocity;
+							mob[i].collideD = false;
 						}
 						else
 						{
-							Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
+							mob[i].collideD = true;
+							mob[i].posY = mob[i].iPosY * window.blockHeight;
+						}
+
+						//right
+						if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX] != ' ' && mob[i].mob == 3))
+						{
+							mob[i].direction = true;
+						}
+
+						//left
+						if (mob[i].iPosX == 0)
+						{
+							mob[i].loaded = false;;
+						}
+						else
+						{
+							if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX - 1] != ' ' && mob[i].mob == 3))
+							{
+								mob[i].direction = false;
+							}
+						}
+					}
+
+
+					//CHARACTER COLLISION
+					if (mob[i].hostile)
+					{
+						//player
+						if (!mob[i].hit)
+						{
+							Rectangle boxCollider{ mob[i].posX - (0.6 * window.blockHeight), mob[i].posY - ((4.0 - mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 0.4, mob[i].height * window.scale };
 							Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
+
+							if (CheckCollisionRecs(boxCollider, playerCollider))
+							{
+								mob[i].hit = true;
+								player.velocity = player.jumpVelocity;
+							}
+							else
+							{
+								Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - ((3.4 + mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 1.2, mob[i].height * window.scale * 0.1 };
+								Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
 
 							if (CheckCollisionRecs(boxCollider, playerCollider))
 							{
@@ -1083,33 +1164,33 @@ int main()
 						}
 					}
 
-					//other mobs
-					Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
-					for (int j = 0; j < window.mobCount; j++)
-					{
-						if (mob[j].hostile)
+						//other mobs
+						Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
+						for (int j = 0; j < window.mobCount; j++)
 						{
-							Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale, mob[j].height * window.scale * 2 };
-							if (CheckCollisionRecs(boxCollider, boxCollider2))
+							if (mob[j].hostile)
 							{
-								if (i < j)
+								Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale, mob[j].height * window.scale * 2 };
+								if (CheckCollisionRecs(boxCollider, boxCollider2))
 								{
-									mob[i].direction = true;
-									mob[j].direction = false;
-								}
-								if (i > j)
-								{
-									mob[i].direction = false;
-									mob[j].direction = true;
+									if (mob[i].posX < mob[j].posX)
+									{
+										mob[i].direction = true;
+										mob[j].direction = false;
+									}
+									if (mob[i].posX > mob[j].posX)
+									{
+										mob[i].direction = false;
+										mob[j].direction = true;
+									}
 								}
 							}
 						}
 					}
-				}
-				else
-				{
-					Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
-					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32) + (1 * window.blockHeight), player.width * window.scale, player.height / 2 * window.scale };
+					else
+					{
+						Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
+						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32) + (1 * window.blockHeight), player.width * window.scale, player.height / 2 * window.scale };
 
 					if (CheckCollisionRecs(boxCollider, playerCollider))
 					{
@@ -1120,32 +1201,48 @@ int main()
 
 				//MOVEMENT
 
-				//down
-				if (!mob[i].collideD)
-				{
-					mob[i].velocity += gravity * window.dT;
-				}
-				else
-				{
-					mob[i].velocity = 0;
-				}
-
-				//right + left
-				if (mob[i].direction)
-				{
-					mob[i].speed = -mob[i].maxSpeed;
-				}
-				else
-				{
-					mob[i].speed = mob[i].maxSpeed;
-				}
-
-				//ANIMATE
-				if (mob[i].runningTime >= mob[i].updateTime)
-				{
-					if (mob[i].direction)
+					if (!mob[i].upDown)
 					{
-						mob[i].frame++;
+						//down
+						if (!mob[i].collideD)
+						{
+							mob[i].velocity += gravity * window.dT;
+						}
+						else
+						{
+							mob[i].velocity = 0;
+						}
+
+						//right + left
+						if (mob[i].direction)
+						{
+							mob[i].speed = -mob[i].maxSpeed;
+						}
+						else
+						{
+							mob[i].speed = mob[i].maxSpeed;
+						}
+
+					}
+					//updown
+					else
+					{
+						if (mob[i].startY >= mob[i].posY)
+						{
+							mob[i].velocity = 40;
+						}
+						else if (mob[i].startY + (2 * window.blockHeight) <= mob[i].posY)
+						{
+							mob[i].velocity = -40;
+						}
+					}
+
+					//ANIMATE
+					if (mob[i].runningTime >= mob[i].updateTime)
+					{
+						if (mob[i].direction)
+						{
+							mob[i].frame++;
 
 						if (mob[i].frame > 1)
 						{
@@ -1575,6 +1672,12 @@ int main()
 			{
 				level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = ' ';
 			}
+
+			if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'w')
+			{
+				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'M';
+				level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'c';
+			}
 		}
 
 		if (player.collideU && level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'o')
@@ -1735,6 +1838,8 @@ int main()
 					0,
 					WHITE);
 			}
+
+			outputPipes();
 
 			DrawTexturePro(
 				player.texture,
