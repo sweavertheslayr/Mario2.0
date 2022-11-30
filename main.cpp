@@ -1084,7 +1084,7 @@ int main()
 						}
 
 						//right
-						if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX] != ' '))
+						if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX] != ' ' && mob[i].mob == 3))
 						{
 							mob[i].direction = true;
 						}
@@ -1096,7 +1096,7 @@ int main()
 						}
 						else
 						{
-							if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ' || level.current[mob[i].iPosY - 1][mob[i].iPosX - 1] != ' ')
+							if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX - 1] != ' ' && mob[i].mob == 3))
 							{
 								mob[i].direction = false;
 							}
