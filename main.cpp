@@ -916,11 +916,6 @@ int main()
 	setArray(window.currentLevel);
 	findSize(level.current);
 
-	for (int i = 0; i < 30; i++)
-	{
-		mob[i].texture = LoadTexture("DevAssets/mobSheet.png");
-	}
-
 	window.scale = (window.height / (508 + ((level.size - 16) * 16)));
 	window.blockHeight = window.height/level.size;
 	window.blocksWide = window.width / window.blockHeight;
@@ -978,6 +973,7 @@ int main()
 					//goombas
 					if (level.currentScene[i][j] == 'G')
 					{
+						mob[window.mobCount].texture = LoadTexture("DevAssets/mobSheet.png");
 						level.currentScene[i][j] = ' ';
 						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
@@ -993,6 +989,7 @@ int main()
 					//koopas
 					else if (level.currentScene[i][j] == 'K')
 					{
+						mob[window.mobCount].texture = LoadTexture("DevAssets/mobSheet.png");
 						level.currentScene[i][j] = ' ';
 						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
@@ -1025,6 +1022,7 @@ int main()
 					//mushroom
 					else if (level.currentScene[i][j] == 'M')
 					{
+						mob[window.mobCount].texture = LoadTexture("DevAssets/mobSheet.png");
 						level.currentScene[i][j] = ' ';
 						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
