@@ -1112,7 +1112,7 @@ int main()
 						//player
 						if (!mob[i].hit)
 						{
-							Rectangle boxCollider{ mob[i].posX - (0.6 * window.blockHeight), mob[i].posY - ((4.2 - mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 0.8, mob[i].height * window.scale };
+							Rectangle boxCollider{ mob[i].posX - (0.6 * window.blockHeight), mob[i].posY - ((4.0 - mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 0.4, mob[i].height * window.scale };
 							Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
 
 							if (CheckCollisionRecs(boxCollider, playerCollider))
@@ -1122,7 +1122,7 @@ int main()
 							}
 							else
 							{
-								Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - ((4.0 + mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 1.2, mob[i].height * window.scale * 0.2 };
+								Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - ((3.4 + mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 1.2, mob[i].height * window.scale * 0.1 };
 								Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
 
 								if (CheckCollisionRecs(boxCollider, playerCollider))
