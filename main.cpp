@@ -14,6 +14,8 @@ struct Window {
 	int renderPosX = 0;
 	int renderPosY = 0;
 
+	int currentLevel = 2;
+
 	Font font;
 
 	float dT = GetFrameTime();
@@ -266,15 +268,15 @@ struct Levels {
 	"                                                                                                                                                                                                 ",
 	"                                                                                                                                                                                                 ",
 	"                                                                                                                                                                                                 ",
+	"                                                                          G                                                                                                                      ",
 	"                                                                                                                                                                                                 ",
 	"                                                                                                                                                                                                 ",
-	"                                                                                                                                                                                                 ",
-	"                                                                                                                                                                                                 ",
-	"                                                                                                              P                                                                                  ",
-	"           w                                                                                            P                                                                                        ",
+	"                                                                                                                                        G G             w                                        ",
+	"                                                                       w      G G                             P                                                                                  ",
+	"            w                                                                                           P                                                                                        ",
 	"                                                                                                                    P                                                                            ",
-	"                 G                                                                                                                                                                               ",
-	"               G                                                                                                                                                                                 ",
+	"                  G                                                                                                                                                                              ",
+	"                G              G              K K            K  G G                                G G G           G                                K                                            ",
 	"                                                                                                                                                                                                 ",
 	"                                                                                                                                                                                                 ",
 	"                                                                                                                                                                                                 ",
@@ -875,7 +877,7 @@ void restartLevel()
 {
 	emptyArray(level.current);
 	emptyArray(level.currentScene);
-	setArray(1);
+	setArray(window.currentLevel);
 	findSize(level.current);
 	window.renderPosX = 0;
 
@@ -911,7 +913,7 @@ int main()
 
 	emptyArray(level.current);
 	emptyArray(level.currentScene);
-	setArray(2);
+	setArray(window.currentLevel);
 	findSize(level.current);
 
 	for (int i = 0; i < 30; i++)
@@ -982,6 +984,7 @@ int main()
 						mob[window.mobCount].mob = 0;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = true;
+						mob[window.mobCount].startY = i * window.blockHeight;
 						mob[window.mobCount].direction = true;
 						mob[window.mobCount].stationary = false;
 						mob[window.mobCount].upDown = false;
@@ -996,6 +999,7 @@ int main()
 						mob[window.mobCount].mob = 3;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = true;
+						mob[window.mobCount].startY = i * window.blockHeight;
 						mob[window.mobCount].direction = true;
 						mob[window.mobCount].stationary = false;
 						mob[window.mobCount].upDown = false;
@@ -1027,6 +1031,7 @@ int main()
 						mob[window.mobCount].mob = 6;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = false;
+						mob[window.mobCount].startY = i * window.blockHeight;
 						mob[window.mobCount].direction = false;
 						mob[window.mobCount].stationary = false;
 						mob[window.mobCount].upDown = false;
@@ -1117,7 +1122,7 @@ int main()
 							}
 							else
 							{
-								Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - ((3.4 + mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 1.2, mob[i].height * window.scale * 0.2 };
+								Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - ((4.0 + mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 1.2, mob[i].height * window.scale * 0.2 };
 								Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
 
 								if (CheckCollisionRecs(boxCollider, playerCollider))
@@ -1136,15 +1141,25 @@ int main()
 								Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale, mob[j].height * window.scale * 2 };
 								if (CheckCollisionRecs(boxCollider, boxCollider2))
 								{
-									if (i < j)
+									if (i < j && mob[i].startY >= mob[j].startY)
 									{
 										mob[i].direction = true;
 										mob[j].direction = false;
 									}
-									if (i > j)
+									else if (i < j)
 									{
 										mob[i].direction = false;
 										mob[j].direction = true;
+									}
+									if (i > j && mob[i].startY >= mob[j].startY)
+									{
+										mob[i].direction = false;
+										mob[j].direction = true;
+									}
+									else if (i > j)
+									{
+										mob[i].direction = true;
+										mob[j].direction = false;
 									}
 								}
 							}
@@ -1617,6 +1632,12 @@ int main()
 			else
 			{
 				level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = ' ';
+			}
+
+			if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'w')
+			{
+				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'M';
+				level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'c';
 			}
 		}
 
