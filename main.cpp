@@ -1804,6 +1804,7 @@ int main()
 		if (player.collideD && (level.current[player.iPosY + (level.currentSize - 21)][player.iPosXD] == '-' || level.current[player.iPosY + (level.currentSize - 21)][player.iPosXLD] == '-'))
 		{
 			player.lives--;
+			player.tall = 0;
 			restartLevel();
 		}
 		
