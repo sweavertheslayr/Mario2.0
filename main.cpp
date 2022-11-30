@@ -1086,7 +1086,7 @@ int main()
 						}
 
 						//right
-						if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ')
+						if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX] != ' '))
 						{
 							mob[i].direction = true;
 						}
@@ -1098,7 +1098,7 @@ int main()
 						}
 						else
 						{
-							if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ')
+							if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ' || level.current[mob[i].iPosY - 1][mob[i].iPosX - 1] != ' ')
 							{
 								mob[i].direction = false;
 							}
@@ -1141,25 +1141,15 @@ int main()
 								Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale, mob[j].height * window.scale * 2 };
 								if (CheckCollisionRecs(boxCollider, boxCollider2))
 								{
-									if (i < j && mob[i].startY >= mob[j].startY)
+									if (mob[i].posX < mob[j].posX)
 									{
 										mob[i].direction = true;
 										mob[j].direction = false;
 									}
-									else if (i < j)
+									if (mob[i].posX > mob[j].posX)
 									{
 										mob[i].direction = false;
 										mob[j].direction = true;
-									}
-									if (i > j && mob[i].startY >= mob[j].startY)
-									{
-										mob[i].direction = false;
-										mob[j].direction = true;
-									}
-									else if (i > j)
-									{
-										mob[i].direction = true;
-										mob[j].direction = false;
 									}
 								}
 							}
