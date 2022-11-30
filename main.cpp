@@ -996,7 +996,6 @@ int main()
 		player.runningTime += window.dT;
 		block.runningTime += window.dT;
 
-		window.renderPosDistance = player.iPosX - (player.posX / window.blockHeight) + 4;
 
 		//MAKE MOBS
 		if (!window.pause)
@@ -1278,6 +1277,10 @@ int main()
 		player.iPosXL = (player.posX - (28 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
 		player.iPosXLD = (player.posX - (24 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
 		player.iPosXC = (player.posX - (16 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
+
+
+		window.renderPosDistance = player.iPosX - (player.posX / window.blockHeight) + 4;
+
 		player.iPosY = (player.posY) / window.blockHeight;
 
 		if (player.tall == 0 || player.isDucking)
