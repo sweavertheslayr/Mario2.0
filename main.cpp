@@ -14,7 +14,7 @@ struct Window {
 	int renderPosX = 0;
 	int renderPosY = 0;
 
-	int currentLevel = 2;
+	int currentLevel = 1;
 
 	Font font;
 
@@ -269,8 +269,8 @@ struct Levels {
 	"                                                                          G                                                                                                                      ",
 	"                                                                                                                                                                                                 ",
 	"                                                                                                                                                                                                 ",
-	"                                                                                                                                        G G             w                                        ",
-	"                                                                       w      G G                             P                                                                                  ",
+	"                                                                                                                                        G G                                                      ",
+	"                                                                       w      G G                             P                                         w                                        ",
 	"            w                                                                                           P                                                                                        ",
 	"                                                                                                                    P                                                                            ",
 	"                  G                                                                                                                                                                              ",
