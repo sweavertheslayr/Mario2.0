@@ -1794,8 +1794,8 @@ int main()
 				window.pause = false;
 				break;
 			case 1:
-				break;
 				window.levelSelect = true;
+				break;
 			case 2:
 				window.exit = true;
 				break;
@@ -1853,13 +1853,17 @@ int main()
 				0,
 				WHITE);
 		}
-		else if (window.levelSelect)
+		else if (window.levelSelect || IsKeyPressed(KEY_L) && window.pause)
 		{
 			levelSelection();
 
-			DrawTextEx(window.font, "level 1", Vector2{ 14 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight, 0, WHITE);
-			DrawTextEx(window.font, "level 2", Vector2{ 14 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight, 0, WHITE);
-			DrawTextEx(window.font, "level 3", Vector2{ 14 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight, 0, WHITE);
+			DrawTextEx(window.font, "level 1", Vector2{ 14 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight/1.25, 0, WHITE);
+			DrawTextEx(window.font, "level 2", Vector2{ 14 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight/1.25, 0, WHITE);
+			DrawTextEx(window.font, "level 3", Vector2{ 14 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight/1.25, 0, WHITE);
+			if (IsKeyPressed(KEY_ESCAPE))
+			{
+				window.levelSelect = false;
+			}
 		}
 		else
 		{
