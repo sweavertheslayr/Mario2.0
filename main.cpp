@@ -1215,6 +1215,16 @@ int main()
 					}
 				}
 
+				if (mob[i].isPlatform)
+				{
+					Rectangle boxCollider{ mob[i].posX, mob[i].posY - (4.0 * window.blockHeight) - 8, 32 * window.scale, 16 * window.scale };
+					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
+
+					if (CheckCollisionRecs(boxCollider, playerCollider))
+					{
+						player.velocity = mob[i].velocity;
+					}
+				}
 
 				//other mobs
 				Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
