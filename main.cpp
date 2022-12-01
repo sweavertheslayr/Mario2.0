@@ -69,6 +69,11 @@ struct BadGuy {
 
 	bool direction = true;
 
+	bool isPlatform = false;
+
+	bool gravity = false;
+	bool blockCollide = false;
+
 	bool loaded = true;
 }reset, mob[30];
 
@@ -202,7 +207,7 @@ struct Levels {
 	"                    7               0                               7                 0                              7                0                              7            0                                                                  ",
 	"                             3                           7                   3                            7                  3                            7                  3                            7                                          ",
 	"                                                                                 G                                                                                                                                                                   ",
-	"                                                                                                               w                                                                                                                                     ",
+	"            LLLL                                                                                               w                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                             ,.m                                     ",
@@ -268,7 +273,7 @@ struct Levels {
 	"                                                                                                                                                                                                 ",
 	"                                                                          G                                                                                                                      ",
 	"                                                                                                                                                                                                 ",
-	"                                                                                                                                                                                                 ",
+	"                                                                                                                                             p                                                   ",
 	"                                                                                                                                        G G                                                      ",
 	"                                                                       w      G G                             P                                         w                                        ",
 	"            w                                                                                           P                                                                                        ",
@@ -952,6 +957,21 @@ void restartLevel()
 	player.collision = false;
 }
 
+void outputPlatform(float type, int i)
+{
+	Texture2D texture = LoadTexture("DevAssets/platformSheet.png");
+
+	//8*8px
+	DrawTexturePro(
+		texture,
+		Rectangle{ 0, type * 8, 16, 8 },
+		Rectangle{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (7 * window.blockHeight), 32 * window.scale, 16 * window.scale },
+		Vector2{ 0, 0 },
+		0,
+		WHITE);
+	
+}
+
 int main()
 {
 	InitWindow(window.width, window.height, window.title);
@@ -973,7 +993,7 @@ int main()
 	findSize(level.current);
 
 	window.scale = (window.height / (508 + ((level.size - 16) * 16)));
-	window.blockHeight = window.height/level.size;
+	window.blockHeight = window.height / level.size;
 	window.blocksWide = window.width / window.blockHeight;
 	block.shiftHeight = window.blockHeight * 0.9;
 
@@ -1004,7 +1024,7 @@ int main()
 			{
 				for (int j = (window.renderPosDistance); j < window.blocksWide + window.renderPosX / window.blockHeight; j++)
 				{
-		
+
 					//goombas
 					if (level.currentScene[i][j] == 'G')
 					{
@@ -1019,6 +1039,9 @@ int main()
 						mob[window.mobCount].direction = true;
 						mob[window.mobCount].stationary = false;
 						mob[window.mobCount].upDown = false;
+						mob[window.mobCount].isPlatform = false;
+						mob[window.mobCount].gravity = true;
+						mob[window.mobCount].blockCollide = true;
 						window.mobCount += 1;
 					}
 					//koopas
@@ -1035,6 +1058,9 @@ int main()
 						mob[window.mobCount].direction = true;
 						mob[window.mobCount].stationary = false;
 						mob[window.mobCount].upDown = false;
+						mob[window.mobCount].isPlatform = false;
+						mob[window.mobCount].gravity = true;
+						mob[window.mobCount].blockCollide = true;
 						window.mobCount += 1;
 					}
 					//tube thing 
@@ -1043,7 +1069,7 @@ int main()
 						mob[window.mobCount].texture = LoadTexture("DevAssets/standEnemySheet.png");
 						level.currentScene[i][j] = ' ';
 						mob[window.mobCount].posX = (j + 2.48) * window.blockHeight;
-						mob[window.mobCount].posY = (i) * window.blockHeight;
+						mob[window.mobCount].posY = (i)*window.blockHeight;
 						mob[window.mobCount].mob = 0;
 						mob[window.mobCount].velocity = 0;
 						mob[window.mobCount].type = level.type;
@@ -1052,6 +1078,9 @@ int main()
 						mob[window.mobCount].direction = true;
 						mob[window.mobCount].stationary = true;
 						mob[window.mobCount].upDown = true;
+						mob[window.mobCount].isPlatform = false;
+						mob[window.mobCount].gravity = false;
+						mob[window.mobCount].blockCollide = false;
 						window.mobCount += 1;
 					}
 					//mushroom
@@ -1068,6 +1097,28 @@ int main()
 						mob[window.mobCount].direction = false;
 						mob[window.mobCount].stationary = false;
 						mob[window.mobCount].upDown = false;
+						mob[window.mobCount].isPlatform = false;
+						mob[window.mobCount].gravity = true;
+						mob[window.mobCount].blockCollide = true;
+						window.mobCount += 1;
+					}
+					//platform
+					else if (level.currentScene[i][j] == 'L')
+					{
+						mob[window.mobCount].texture = LoadTexture("nothing");
+						level.currentScene[i][j] = ' ';
+						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+						mob[window.mobCount].posY = (i)*window.blockHeight;
+						mob[window.mobCount].mob = 6;
+						mob[window.mobCount].type = level.type;
+						mob[window.mobCount].hostile = false;
+						mob[window.mobCount].startY = i * window.blockHeight;
+						mob[window.mobCount].direction = false;
+						mob[window.mobCount].stationary = true;
+						mob[window.mobCount].upDown = false;
+						mob[window.mobCount].isPlatform = true;
+						mob[window.mobCount].gravity = false;
+						mob[window.mobCount].blockCollide = false;
 						window.mobCount += 1;
 					}
 				}
@@ -1083,18 +1134,18 @@ int main()
 				mob[i].posY += mob[i].velocity * window.dT;
 				mob[i].runningTime += window.dT;
 
-					if (mob[i].stationary)
-					{
-						mob[i].maxSpeed = 0;
-					}
-					else if (mob[i].hostile)
-					{
-						mob[i].maxSpeed = 80;
-					}
-					else
-					{
-						mob[i].maxSpeed = 160;
-					}
+				if (mob[i].stationary)
+				{
+					mob[i].maxSpeed = 0;
+				}
+				else if (mob[i].hostile)
+				{
+					mob[i].maxSpeed = 80;
+				}
+				else
+				{
+					mob[i].maxSpeed = 160;
+				}
 
 				mob[i].iPosX = ((mob[i].posX) / window.blockHeight);
 				mob[i].iPosXD = ((mob[i].posX) / window.blockHeight) - 0.5;
@@ -1103,58 +1154,58 @@ int main()
 
 				//COLLISION
 
-					if (!mob[i].upDown)
+				if (mob[i].blockCollide)
+				{
+					//down
+					if (level.current[mob[i].iPosY + 1][mob[i].iPosXD] == ' ')
 					{
-						//down
-						if (level.current[mob[i].iPosY + 1][mob[i].iPosXD] == ' ')
-						{
-							mob[i].collideD = false;
-						}
-						else
-						{
-							mob[i].collideD = true;
-							mob[i].posY = mob[i].iPosY * window.blockHeight;
-						}
-
-						//right
-						if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX] != ' ' && mob[i].mob == 3))
-						{
-							mob[i].direction = true;
-						}
-
-						//left
-						if (mob[i].iPosX == 0)
-						{
-							mob[i].loaded = false;;
-						}
-						else
-						{
-							if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX - 1] != ' ' && mob[i].mob == 3))
-							{
-								mob[i].direction = false;
-							}
-						}
+						mob[i].collideD = false;
+					}
+					else
+					{
+						mob[i].collideD = true;
+						mob[i].posY = mob[i].iPosY * window.blockHeight;
 					}
 
-
-					//CHARACTER COLLISION
-					if (mob[i].hostile)
+					//right
+					if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX] != ' ' && mob[i].mob == 3))
 					{
-						//player
-						if (!mob[i].hit)
-						{
-							Rectangle boxCollider{ mob[i].posX - (0.6 * window.blockHeight), mob[i].posY - ((4.0 - mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 0.4, mob[i].height * window.scale };
-							Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
+						mob[i].direction = true;
+					}
 
-							if (CheckCollisionRecs(boxCollider, playerCollider))
-							{
-								mob[i].hit = true;
-								player.velocity = player.jumpVelocity;
-							}
-							else
-							{
-								Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - ((3.4 + mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 1.2, mob[i].height * window.scale * 0.1 };
-								Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
+					//left
+					if (mob[i].iPosX == 0)
+					{
+						mob[i].loaded = false;;
+					}
+					else
+					{
+						if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX - 1] != ' ' && mob[i].mob == 3))
+						{
+							mob[i].direction = false;
+						}
+					}
+				}
+
+
+				//CHARACTER COLLISION
+				if (mob[i].hostile)
+				{
+					//player
+					if (!mob[i].hit)
+					{
+						Rectangle boxCollider{ mob[i].posX - (0.6 * window.blockHeight), mob[i].posY - ((4.0 - mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 0.4, mob[i].height * window.scale };
+						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
+
+						if (CheckCollisionRecs(boxCollider, playerCollider))
+						{
+							mob[i].hit = true;
+							player.velocity = player.jumpVelocity;
+						}
+						else
+						{
+							Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - ((3.4 + mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 1.2, mob[i].height * window.scale * 0.1 };
+							Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
 
 							if (CheckCollisionRecs(boxCollider, playerCollider))
 							{
@@ -1162,109 +1213,120 @@ int main()
 							}
 						}
 					}
+				}
 
-						//other mobs
-						Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
-						for (int j = 0; j < window.mobCount; j++)
+				if ()
+
+				//other mobs
+				Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
+				for (int j = 0; j < window.mobCount; j++)
+				{
+					if (mob[j].hostile)
+					{
+						Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale, mob[j].height * window.scale * 2 };
+						if (CheckCollisionRecs(boxCollider, boxCollider2))
 						{
-							if (mob[j].hostile)
+							if (mob[i].posX < mob[j].posX)
 							{
-								Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale, mob[j].height * window.scale * 2 };
-								if (CheckCollisionRecs(boxCollider, boxCollider2))
-								{
-									if (mob[i].posX < mob[j].posX)
-									{
-										mob[i].direction = true;
-										mob[j].direction = false;
-									}
-									if (mob[i].posX > mob[j].posX)
-									{
-										mob[i].direction = false;
-										mob[j].direction = true;
-									}
-								}
+								mob[i].direction = true;
+								mob[j].direction = false;
+							}
+							if (mob[i].posX > mob[j].posX)
+							{
+								mob[i].direction = false;
+								mob[j].direction = true;
 							}
 						}
 					}
-					else
-					{
-						Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
-						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32) + (1 * window.blockHeight), player.width * window.scale, player.height / 2 * window.scale };
-
-					if (CheckCollisionRecs(boxCollider, playerCollider))
-					{
-						player.tall = 1;
-						mob[i].hit = true;
-					}
 				}
+			}
+			else if (!mob[i].isPlatform)
+			{
+				Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
+				Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32) + (1 * window.blockHeight), player.width * window.scale, player.height / 2 * window.scale };
 
-				//MOVEMENT
-
-					if (!mob[i].upDown)
-					{
-						//down
-						if (!mob[i].collideD)
-						{
-							mob[i].velocity += gravity * window.dT;
-						}
-						else
-						{
-							mob[i].velocity = 0;
-						}
-
-						//right + left
-						if (mob[i].direction)
-						{
-							mob[i].speed = -mob[i].maxSpeed;
-						}
-						else
-						{
-							mob[i].speed = mob[i].maxSpeed;
-						}
-
-					}
-					//updown
-					else
-					{
-						if (mob[i].startY >= mob[i].posY)
-						{
-							mob[i].velocity = 40;
-						}
-						else if (mob[i].startY + (2 * window.blockHeight) <= mob[i].posY)
-						{
-							mob[i].velocity = -40;
-						}
-					}
-
-					//ANIMATE
-					if (mob[i].runningTime >= mob[i].updateTime)
-					{
-						if (mob[i].direction)
-						{
-							mob[i].frame++;
-
-						if (mob[i].frame > 1)
-						{
-							mob[i].frame = 0;
-						}
-					}
-					else
-					{
-						mob[i].frame++;
-
-						if (mob[i].frame > 3)
-						{
-							mob[i].frame = 2;
-						}
-					}
-					mob[i].runningTime = 0;
-				}
-				if (mob[i].hit)
+				if (CheckCollisionRecs(boxCollider, playerCollider))
 				{
-					mob[i].frame = 4;
-					mob[i].speed = 0;
+					player.tall = 1;
+					mob[i].hit = true;
+				}
+			}
+
+			//MOVEMENT
+
+			if (mob[i].gravity)
+			{
+				//down
+				if (!mob[i].collideD)
+				{
+					mob[i].velocity += gravity * window.dT;
+				}
+				else
+				{
 					mob[i].velocity = 0;
 				}
+
+				//right + left
+				if (mob[i].direction)
+				{
+					mob[i].speed = -mob[i].maxSpeed;
+				}
+				else
+				{
+					mob[i].speed = mob[i].maxSpeed;
+				}
+
+			}
+			//updown
+			else if (mob[i].upDown)
+			{
+				if (mob[i].startY >= mob[i].posY)
+				{
+					mob[i].velocity = 40;
+				}
+				else if (mob[i].startY + (2 * window.blockHeight) <= mob[i].posY)
+				{
+					mob[i].velocity = -40;
+				}
+			}
+			else if (mob[i].isPlatform)
+			{
+				mob[i].velocity = -80;
+
+				if (mob[i].iPosY < 6)
+				{
+					mob[i].posY = 26 * window.blockHeight;
+				}
+			}
+
+			//ANIMATE
+			if (mob[i].runningTime >= mob[i].updateTime)
+			{
+				if (mob[i].direction)
+				{
+					mob[i].frame++;
+
+					if (mob[i].frame > 1)
+					{
+						mob[i].frame = 0;
+					}
+				}
+				else
+				{
+					mob[i].frame++;
+
+					if (mob[i].frame > 3)
+					{
+						mob[i].frame = 2;
+					}
+				}
+				mob[i].runningTime = 0;
+			}
+			if (mob[i].hit)
+			{
+				mob[i].frame = 4;
+				mob[i].speed = 0;
+				mob[i].velocity = 0;
 			}
 		}
 
@@ -1834,6 +1896,12 @@ int main()
 
 			for (int i = 0; i < window.mobCount; i++)
 			{
+				if (mob[i].isPlatform)
+				{
+					outputPlatform(mob[i].mob, i);
+				}
+
+
 				DrawTexturePro(
 					mob[i].texture,
 					Rectangle{ (mob[i].frame) * 16, ((mob[i].mob + mob[i].type) * 32), 16, 32 },
