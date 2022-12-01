@@ -1215,7 +1215,6 @@ int main()
 					}
 				}
 
-				if ()
 
 				//other mobs
 				Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
