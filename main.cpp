@@ -1800,7 +1800,23 @@ int main()
 				window.exit = true;
 				break;
 			}
+			
 		}
+		//if (window.pause && window.levelSelect && IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER))
+		//{
+		//	switch (pauseMenu)
+		//	{
+		//	case 0:
+		//		setArray(1);
+		//		break;
+		//	case 1:
+		//		setArray(2);
+		//		break;
+		//	case 2:
+		//		setArray(3);
+		//		break;
+		//	}
+		//}
 
 
 		//DEATH
