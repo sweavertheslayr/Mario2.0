@@ -124,6 +124,7 @@ struct Player {
 	bool collideU = false;
 	bool collideD = true;
 	bool collision = false;
+	bool collidePlatform = false;
 
 	//animation
 	float width = 32;
@@ -1214,15 +1215,30 @@ int main()
 						}
 					}
 				}
-
-				if (mob[i].isPlatform)
+				else if (mob[i].isPlatform)
 				{
 					Rectangle boxCollider{ mob[i].posX, mob[i].posY - (4.0 * window.blockHeight) - 8, 32 * window.scale, 16 * window.scale };
 					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
 
 					if (CheckCollisionRecs(boxCollider, playerCollider))
 					{
-						player.velocity = mob[i].velocity;
+						player.velocity = -mob[i].velocity;
+						player.collidePlatform = true;
+					}
+					else
+					{
+						player.collidePlatform = false;
+					}
+				}
+				else if (!mob[i].isPlatform)
+				{
+					Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (3 * window.blockHeight), mob[i].width * window.scale * 2, mob[i].height * window.scale };
+					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32) + (1 * window.blockHeight), player.width * window.scale, player.height / 2 * window.scale };
+
+					if (CheckCollisionRecs(boxCollider, playerCollider))
+					{
+						player.tall = 1;
+						mob[i].hit = true;
 					}
 				}
 
@@ -1247,17 +1263,6 @@ int main()
 							}
 						}
 					}
-				}
-			}
-			else if (!mob[i].isPlatform)
-			{
-				Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale };
-				Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32) + (1 * window.blockHeight), player.width * window.scale, player.height / 2 * window.scale };
-
-				if (CheckCollisionRecs(boxCollider, playerCollider))
-				{
-					player.tall = 1;
-					mob[i].hit = true;
 				}
 			}
 
@@ -1382,7 +1387,7 @@ int main()
 
 
 		//down
-		if (level.current[player.iPosY + (level.currentSize - 21)][player.iPosXD] == ' ' && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXLD] == ' ')
+		if ((level.current[player.iPosY + (level.currentSize - 21)][player.iPosXD] == ' ' && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXLD] == ' ') && !player.collidePlatform)
 		{
 			player.collideD = false;
 			player.isGrounded = false;
@@ -1579,7 +1584,7 @@ int main()
 		//DECELERATE
 
 		//up
-		if (!player.isGrounded)
+		if (!player.isGrounded && !player.collidePlatform)
 		{
 			player.velocity -= gravity * window.dT;
 		}
@@ -1717,7 +1722,7 @@ int main()
 		}
 
 		//fall
-		if (!player.isGrounded && !player.isDucking)
+		if (!player.isGrounded && !player.isDucking && !player.collidePlatform)
 		{
 			if (player.direction)
 			{
@@ -1728,7 +1733,6 @@ int main()
 				player.currentSprite = 1;
 			}
 		}
-
 
 		//BLOCK STUFF
 
