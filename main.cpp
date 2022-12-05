@@ -208,7 +208,7 @@ struct Levels {
 	"                    7               0                               7                 0                              7                0                              7            0                                                                  ",
 	"                             3                           7                   3                            7                  3                            7                  3                            7                                          ",
 	"                                                                                 G                                                                                                                                                                   ",
-	"            LLLL                                                                                               w                                                                                                                                     ",
+	"            L                                                                                                   w                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                             ,.m                                     ",
@@ -1937,7 +1937,7 @@ int main()
 			{
 				if (mob[i].isPlatform)
 				{
-					outputPlatform(mob[i].mob, i, 6);
+					outputPlatform(mob[i].mob, i, 4);
 				}
 
 
