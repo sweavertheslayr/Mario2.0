@@ -1225,10 +1225,6 @@ int main()
 						player.velocity = -mob[i].velocity;
 						player.collidePlatform = true;
 					}
-					else
-					{
-						player.collidePlatform = false;
-					}
 				}
 				else if (!mob[i].isPlatform)
 				{
@@ -1387,7 +1383,7 @@ int main()
 
 
 		//down
-		if ((level.current[player.iPosY + (level.currentSize - 21)][player.iPosXD] == ' ' && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXLD] == ' ') && !player.collidePlatform)
+		if ((level.current[player.iPosY + (level.currentSize - 21)][player.iPosXD] == ' ' && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXLD] == ' '))
 		{
 			player.collideD = false;
 			player.isGrounded = false;
@@ -1584,7 +1580,7 @@ int main()
 		//DECELERATE
 
 		//up
-		if (!player.isGrounded && !player.collidePlatform)
+		if (!player.isGrounded)
 		{
 			player.velocity -= gravity * window.dT;
 		}
@@ -1722,7 +1718,7 @@ int main()
 		}
 
 		//fall
-		if (!player.isGrounded && !player.isDucking && !player.collidePlatform)
+		if (!player.isGrounded && !player.isDucking)
 		{
 			if (player.direction)
 			{
@@ -1733,6 +1729,7 @@ int main()
 				player.currentSprite = 1;
 			}
 		}
+
 
 		//BLOCK STUFF
 
