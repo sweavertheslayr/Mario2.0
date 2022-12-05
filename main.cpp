@@ -1880,7 +1880,7 @@ int main()
 				break;
 			}
 		}
-		if (window.pause && window.levelSelect && (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER)))
+		else if (window.levelSelect && (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER)))
 		{
 			switch (pauseMenu)
 			{
