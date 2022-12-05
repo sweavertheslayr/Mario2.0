@@ -1873,6 +1873,10 @@ int main()
 				break;
 			}
 			
+			if (window.exit)
+			{
+				break;
+			}
 		}
 		//if (window.pause && window.levelSelect && IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER))
 		//{
