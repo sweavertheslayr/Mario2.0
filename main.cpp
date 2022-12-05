@@ -1870,6 +1870,7 @@ int main()
 				break;
 			case 1:
 				window.levelSelect = true;
+				window.renderPosX = (24 - ((window.blocksWide) / 2)) * window.blockHeight;
 				break;
 			case 2:
 				window.exit = true;
@@ -1877,21 +1878,28 @@ int main()
 			}
 			
 		}
-		//if (window.pause && window.levelSelect && IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER))
-		//{
-		//	switch (pauseMenu)
-		//	{
-		//	case 0:
-		//		setArray(1);
-		//		break;
-		//	case 1:
-		//		setArray(2);
-		//		break;
-		//	case 2:
-		//		setArray(3);
-		//		break;
-		//	}
-		//}
+		if (window.pause && window.levelSelect && IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER))
+		{
+			
+			switch (pauseMenu)
+			{
+			case 0:
+				setArray(1);
+				restartLevel();
+				window.pause = false;
+				break;
+			case 1:
+				setArray(2);
+				restartLevel();
+				window.pause = false;
+				break;
+			case 2:
+				setArray(3);
+				restartLevel();
+				window.pause = false;
+				break;
+			}
+		}
 
 
 		//DEATH
@@ -1957,10 +1965,6 @@ int main()
 			DrawTextEx(window.font, "level 1", Vector2{ 14 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight/1.25, 0, WHITE);
 			DrawTextEx(window.font, "level 2", Vector2{ 14 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight/1.25, 0, WHITE);
 			DrawTextEx(window.font, "level 3", Vector2{ 14 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight/1.25, 0, WHITE);
-			if (IsKeyPressed(KEY_ESCAPE))
-			{
-				window.levelSelect = false;
-			}
 		}
 		else
 		{
