@@ -1943,7 +1943,7 @@ int main()
 			{
 				if (mob[i].isPlatform)
 				{
-					if (level.currentScene[mob[i].iStartY][mob[i].iPosX + 1] == 'q')
+					if (level.currentScene[mob[i].iStartY][mob[i].iPosX-1] == 'q')
 					{
 						b = 3;
 					}
