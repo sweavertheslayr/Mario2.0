@@ -1972,7 +1972,7 @@ int main()
 				0,
 				WHITE);
 		}
-		else if (window.levelSelect || IsKeyPressed(KEY_L) && window.pause)
+		else if (window.levelSelect)
 		{
 			levelSelection();
 
