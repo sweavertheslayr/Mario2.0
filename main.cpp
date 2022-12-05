@@ -958,19 +958,22 @@ void restartLevel()
 	player.collision = false;
 }
 
-void outputPlatform(float type, int i)
+void outputPlatform(float type, int i, int length)
 {
 	Texture2D texture = LoadTexture("DevAssets/platformSheet.png");
 
 	//8*8px
-	DrawTexturePro(
-		texture,
-		Rectangle{ 0, type * 8, 16, 8 },
-		Rectangle{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (7 * window.blockHeight), 32 * window.scale, 16 * window.scale },
-		Vector2{ 0, 0 },
-		0,
-		WHITE);
-	
+
+	for (int j = 0; j < length; j++)
+	{
+		DrawTexturePro(
+			texture,
+			Rectangle{ 0, type * 8, 16, 8 },
+			Rectangle{ mob[i].posX - window.renderPosX - ((2 + j) * window.blockHeight), mob[i].posY - (7 * window.blockHeight), 32 * window.scale, 16 * window.scale },
+			Vector2{ 0, 0 },
+			0,
+			WHITE);
+	}
 }
 
 int main()
@@ -1222,7 +1225,6 @@ int main()
 
 					if (CheckCollisionRecs(boxCollider, playerCollider))
 					{
-						player.velocity = -mob[i].velocity;
 						player.collidePlatform = true;
 					}
 				}
@@ -1380,7 +1382,6 @@ int main()
 				player.velocity /= -2;
 			}
 		}
-
 
 		//down
 		if ((level.current[player.iPosY + (level.currentSize - 21)][player.iPosXD] == ' ' && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXLD] == ' '))
@@ -1580,7 +1581,7 @@ int main()
 		//DECELERATE
 
 		//up
-		if (!player.isGrounded)
+		if (!player.isGrounded && !player.collidePlatform)
 		{
 			player.velocity -= gravity * window.dT;
 		}
@@ -1718,7 +1719,7 @@ int main()
 		}
 
 		//fall
-		if (!player.isGrounded && !player.isDucking)
+		if (!player.isGrounded && !player.isDucking && !player.collidePlatform)
 		{
 			if (player.direction)
 			{
@@ -1874,6 +1875,10 @@ int main()
 				break;
 			}
 			
+			if (window.exit)
+			{
+				break;
+			}
 		}
 		if (window.pause && window.levelSelect && (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER)))
 		{
@@ -1935,7 +1940,7 @@ int main()
 			{
 				if (mob[i].isPlatform)
 				{
-					outputPlatform(mob[i].mob, i);
+					outputPlatform(mob[i].mob, i, 6);
 				}
 
 
