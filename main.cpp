@@ -1875,27 +1875,30 @@ int main()
 			}
 			
 		}
-		if (window.pause && window.levelSelect && IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER))
+		if (window.pause && window.levelSelect && (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_KP_ENTER)))
 		{
-			
 			switch (pauseMenu)
 			{
 			case 0:
-				setArray(1);
+				window.currentLevel = 1;
 				restartLevel();
 				window.pause = false;
+				window.levelSelect = false;
 				break;
 			case 1:
-				setArray(2);
+				window.currentLevel = 2;
 				restartLevel();
 				window.pause = false;
+				window.levelSelect = false;
 				break;
 			case 2:
-				setArray(3);
+				window.currentLevel = 3;
 				restartLevel();
 				window.pause = false;
+				window.levelSelect = false;
 				break;
 			}
+
 		}
 
 
@@ -1963,7 +1966,7 @@ int main()
 			DrawTextEx(window.font, "level 2", Vector2{ 14 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight/1.25, 0, WHITE);
 			DrawTextEx(window.font, "level 3", Vector2{ 14 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight/1.25, 0, WHITE);
 		}
-		else
+		else if (window.pause)
 		{
 			outputPause();
 
