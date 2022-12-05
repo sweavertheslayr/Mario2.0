@@ -49,6 +49,7 @@ struct BadGuy {
 	float maxSpeed = 80;
 
 	float startY = 0;
+	int iStartY = 0;
 
 	Texture2D texture;
 
@@ -193,6 +194,7 @@ struct Levels {
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%---%%%%%%%%%%%%%%%---%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%---%%%%%%%%%%%%%%%---%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
 	};
+
 	std::string oneSceneA[30] = {
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
@@ -208,7 +210,7 @@ struct Levels {
 	"                    7               0                               7                 0                              7                0                              7            0                                                                  ",
 	"                             3                           7                   3                            7                  3                            7                  3                            7                                          ",
 	"                                                                                 G                                                                                                                                                                   ",
-	"            L                                                                                                   w                                                                                                                                     ",
+	"            Lq                                                                                                 w                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                             ,.m                                     ",
@@ -980,7 +982,7 @@ int main()
 {
 	InitWindow(window.width, window.height, window.title);
 	ToggleFullscreen();
-	int a = 1;
+	int a = 1, b = 1;
 	int pauseMenu = 0;
 
 	window.font = LoadFont("DevAssets/super-mario-bros-nes.ttf");
@@ -1117,6 +1119,7 @@ int main()
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = false;
 						mob[window.mobCount].startY = i * window.blockHeight;
+						mob[window.mobCount].iStartY = i;
 						mob[window.mobCount].direction = false;
 						mob[window.mobCount].stationary = true;
 						mob[window.mobCount].upDown = false;
@@ -1940,17 +1943,23 @@ int main()
 			{
 				if (mob[i].isPlatform)
 				{
-					outputPlatform(mob[i].mob, i, 4);
+					if (level.currentScene[mob[i].iStartY][mob[i].iPosX + 1] == 'q')
+					{
+						b = 3;
+					}
+
+					outputPlatform(mob[i].mob, i, b);
 				}
-
-
-				DrawTexturePro(
-					mob[i].texture,
-					Rectangle{ (mob[i].frame) * 16, ((mob[i].mob + mob[i].type) * 32), 16, 32 },
-					Rectangle{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8, (32 * window.scale), (64 * window.scale) },
-					Vector2{ 0, 0 },
-					0,
-					WHITE);
+				else
+				{
+					DrawTexturePro(
+						mob[i].texture,
+						Rectangle{ (mob[i].frame) * 16, ((mob[i].mob + mob[i].type) * 32), 16, 32 },
+						Rectangle{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8, (32 * window.scale), (64 * window.scale) },
+						Vector2{ 0, 0 },
+						0,
+						WHITE);
+				}
 			}
 
 			outputPipes();
