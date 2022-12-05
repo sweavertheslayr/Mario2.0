@@ -947,8 +947,7 @@ void restartLevel()
 
 	for (int i = 0; i < window.mobCount; i++)
 	{
-		mob[i].hit = false;
-		mob[i].loaded = true;
+		mob[i] = reset;
 	}
 
 	window.mobCount = 0;
