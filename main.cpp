@@ -1229,13 +1229,11 @@ int main()
 				}
 				else if (mob[i].isPlatform)
 				{
-					Rectangle boxCollider{ mob[i].posX - (2 * window.blockHeight), mob[i].posY - (4.25 * window.blockHeight), (32 * window.scale) + ((mob[i].length - 1) * window.blockHeight), 4 * window.scale };
-					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32 * window.scale), player.width * window.scale, player.height * window.scale };
+					Rectangle boxCollider{ mob[i].posX - (2 * window.blockHeight), mob[i].posY - (4 * window.blockHeight), (32 * window.scale) + ((mob[i].length - 1) * window.blockHeight), 32 * window.scale };
+					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY, player.width * window.scale, player.height / 2 * window.scale };
 
 					if (CheckCollisionRecs(boxCollider, playerCollider))
 					{
-						player.collideU = true;
-
 						if (player.velocity > 0)
 						{
 							player.velocity /= -2;
@@ -1243,13 +1241,13 @@ int main()
 					}
 					else
 					{
-						Rectangle boxCollider{ mob[i].posX - (2 * window.blockHeight), mob[i].posY - (4.25 * window.blockHeight) - 8, (32 * window.scale) + ((mob[i].length - 1) * window.blockHeight), 4 * window.scale };
+						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32 * window.scale), player.width * window.scale, player.height / 2 * window.scale };
+
 						if (CheckCollisionRecs(boxCollider, playerCollider))
 						{
 							player.platform = i;
 							player.collidePlatform = true;
-							player.velocity = 40;
-							player.posY = mob[i].posY - 7 * window.blockHeight;
+							player.velocity = 80;
 						}
 						else if (i == player.platform)
 						{
@@ -1519,7 +1517,7 @@ int main()
 
 		if ((IsKeyDown(KEY_UP) || IsKeyDown(KEY_W) || IsKeyDown(KEY_SPACE)) && !player.collideU)
 		{
-			if (player.isGrounded && !player.justJumped)
+			if ((player.isGrounded || player.collidePlatform) && !player.justJumped)
 			{
 				player.velocity = player.jumpVelocity;
 				player.isGrounded = false;
@@ -1721,13 +1719,13 @@ int main()
 		}
 
 		//stand
-		if (player.direction && player.runningTime >= player.updateTime && player.isGrounded && player.sidewaysVelocity == 0 && !player.isDucking)
+		if (player.direction && player.runningTime >= player.updateTime && player.sidewaysVelocity == 0 && !player.isDucking)
 		{
 			player.currentSprite = 7;
 			player.isRunning = false;
 			player.isTurning = false;
 		}
-		else if (player.runningTime >= player.updateTime && player.isGrounded && player.sidewaysVelocity == 0 && !player.isDucking)
+		else if (player.runningTime >= player.updateTime && player.sidewaysVelocity == 0 && !player.isDucking)
 		{
 			player.currentSprite = 6;
 			player.isRunning = false;
@@ -1745,13 +1743,6 @@ int main()
 		{
 			player.currentSprite = 6;
 			player.direction = false;
-		}
-
-		//on platform
-		if (player.collidePlatform)
-		{
-			player.velocity = 80;
-			player.currentSprite = player.frame;
 		}
 
 		//fall
