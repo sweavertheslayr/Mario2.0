@@ -18,7 +18,7 @@ struct Window {
 
 	Font font;
 
-	float dT = GetFrameTime();
+	float dT = 0;
 	float scale = 0;
 
 	int renderPosDistance = 32;
@@ -37,6 +37,8 @@ struct BadGuy {
 	float width = 16;
 	float height = 16;
 
+	int length = 0;
+
 	float posX = 0;
 	float posY = 2 * window.blockHeight;
 
@@ -49,7 +51,6 @@ struct BadGuy {
 	float maxSpeed = 80;
 
 	float startY = 0;
-	int iStartY = 0;
 
 	Texture2D texture;
 
@@ -98,6 +99,8 @@ struct Player {
 
 	int tempPosX = 0;
 	int tempPosY = 0;
+
+	int platform = 0;
 
 	int iPosX = 0;
 	int iPosXL = 0;
@@ -213,7 +216,7 @@ struct Levels {
 	"            Lq                                                                                                 w                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
-	"                                                                                                                                                                                                             ,.m                                     ",
+	"                     Lq                                                                                                                                                                                      ,.m                                     ",
 	"                      w                                                         w                                                                                                                                                                    ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                            xcvcx                                    ",
@@ -970,7 +973,7 @@ void outputPlatform(float type, int i, int length)
 		DrawTexturePro(
 			texture,
 			Rectangle{ 0, type * 8, 16, 8 },
-			Rectangle{ mob[i].posX - window.renderPosX - ((2 + j) * window.blockHeight), mob[i].posY - (7 * window.blockHeight), 32 * window.scale, 16 * window.scale },
+			Rectangle{ mob[i].posX - window.renderPosX - ((1 + j) * window.blockHeight), mob[i].posY - (7 * window.blockHeight), 32 * window.scale, 16 * window.scale },
 			Vector2{ 0, 0 },
 			0,
 			WHITE);
@@ -981,7 +984,7 @@ int main()
 {
 	InitWindow(window.width, window.height, window.title);
 	ToggleFullscreen();
-	int a = 1, b = 1;
+	int a = 1;
 	int pauseMenu = 0;
 
 	window.font = LoadFont("DevAssets/super-mario-bros-nes.ttf");
@@ -1118,13 +1121,17 @@ int main()
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = false;
 						mob[window.mobCount].startY = i * window.blockHeight;
-						mob[window.mobCount].iStartY = i;
 						mob[window.mobCount].direction = false;
 						mob[window.mobCount].stationary = true;
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].isPlatform = true;
 						mob[window.mobCount].gravity = false;
 						mob[window.mobCount].blockCollide = false;
+
+						if (level.currentScene[i][j + 1] == 'q')
+						{
+							mob[window.mobCount].length = 3;
+						}
 						window.mobCount += 1;
 					}
 				}
@@ -1222,18 +1229,38 @@ int main()
 				}
 				else if (mob[i].isPlatform)
 				{
-					Rectangle boxCollider{ mob[i].posX, mob[i].posY - (4.0 * window.blockHeight) - 8, 32 * window.scale, 16 * window.scale };
+					Rectangle boxCollider{ mob[i].posX - (2 * window.blockHeight), mob[i].posY - (4.25 * window.blockHeight) - 2, (32 * window.scale) + ((mob[i].length - 1) * window.blockHeight), 4 * window.scale };
 					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
 
 					if (CheckCollisionRecs(boxCollider, playerCollider))
 					{
-						player.collidePlatform = true;
+						player.collideU = true;
+
+						if (player.velocity > 0)
+						{
+							player.velocity /= -2;
+						}
+					}
+					else
+					{
+						Rectangle boxCollider{ mob[i].posX - (2 * window.blockHeight), mob[i].posY - (4.25 * window.blockHeight) - 6, (32 * window.scale) + ((mob[i].length - 1) * window.blockHeight), 4 * window.scale };
+						if (CheckCollisionRecs(boxCollider, playerCollider))
+						{
+							player.platform = i;
+							player.collidePlatform = true;
+							player.velocity = 40;
+							player.posY = mob[i].posY - 7 * window.blockHeight;
+						}
+						else if (i == player.platform)
+						{
+							player.collidePlatform = false;
+						}
 					}
 				}
-				else if (!mob[i].isPlatform)
+				else
 				{
 					Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (3 * window.blockHeight), mob[i].width * window.scale * 2, mob[i].height * window.scale };
-					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32) + (1 * window.blockHeight), player.width * window.scale, player.height / 2 * window.scale };
+					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32) + (2 * window.blockHeight), player.width * window.scale, player.height * player.spriteHeight * window.scale };
 
 					if (CheckCollisionRecs(boxCollider, playerCollider))
 					{
@@ -1583,11 +1610,11 @@ int main()
 		//DECELERATE
 
 		//up
-		if (!player.isGrounded && !player.collidePlatform)
+		if ((!player.isGrounded) && (!player.collidePlatform))
 		{
 			player.velocity -= gravity * window.dT;
 		}
-		else
+		else if (!player.collidePlatform)
 		{
 			player.velocity = 0;
 			player.posY = ((player.iPosY) * window.blockHeight);
@@ -1718,6 +1745,13 @@ int main()
 		{
 			player.currentSprite = 6;
 			player.direction = false;
+		}
+
+		//on platform
+		if (player.collidePlatform)
+		{
+			player.velocity = 80;
+			player.currentSprite = player.frame;
 		}
 
 		//fall
@@ -1942,12 +1976,7 @@ int main()
 			{
 				if (mob[i].isPlatform)
 				{
-					if (level.currentScene[mob[i].iStartY][mob[i].iPosX-1] == 'q')
-					{
-						b = 3;
-					}
-
-					outputPlatform(mob[i].mob, i, b);
+					outputPlatform(mob[i].mob, i, mob[i].length);
 				}
 				else
 				{
