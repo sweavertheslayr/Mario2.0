@@ -216,7 +216,7 @@ struct Levels {
 	"            Lq                                                                                                 w                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                                                                     ",
-	"                     Lq                                                                                                                                                                                      ,.m                                     ",
+	"                                                                                                                                                                                                             ,.m                                     ",
 	"                      w                                                         w                                                                                                                                                                    ",
 	"                                                                                                                                                                                                                                                     ",
 	"                                                                                                                                                                                                            xcvcx                                    ",
@@ -1026,7 +1026,7 @@ int main()
 
 
 		//MAKE MOBS
-		if (!window.pause)
+		if (!window.pause && !window.exit)
 		{
 			for (int i = 0; i < 30; i++)
 			{
@@ -1140,7 +1140,7 @@ int main()
 
 		for (int i = 0; i < window.mobCount; i++)
 		{
-			if (mob[i].loaded && !window.pause)
+			if (mob[i].loaded && !window.pause && !window.exit)
 			{
 				//POSITION
 				mob[i].posX += mob[i].speed * window.dT;
@@ -1229,21 +1229,14 @@ int main()
 				}
 				else if (mob[i].isPlatform)
 				{
-					Rectangle boxCollider{ mob[i].posX - (2 * window.blockHeight), mob[i].posY - (4.25 * window.blockHeight) - 2, (32 * window.scale) + ((mob[i].length - 1) * window.blockHeight), 4 * window.scale };
+					
 					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32 * window.scale), player.width * window.scale, player.height * window.scale };
+
+					Rectangle boxCollider{ mob[i].posX - (2 * window.blockHeight), mob[i].posY - (4.25 * window.blockHeight) - 8, (32 * window.scale) + ((mob[i].length - 1) * window.blockHeight), 4 * window.scale };
 
 					if (CheckCollisionRecs(boxCollider, playerCollider))
 					{
-						player.collideU = true;
-
-						if (player.velocity > 0)
-						{
-							player.velocity /= -2;
-						}
-					}
-					else
-					{
-						Rectangle boxCollider{ mob[i].posX - (2 * window.blockHeight), mob[i].posY - (4.25 * window.blockHeight) - 6, (32 * window.scale) + ((mob[i].length - 1) * window.blockHeight), 4 * window.scale };
+						Rectangle boxCollider{ mob[i].posX - (2 * window.blockHeight), mob[i].posY - (4.25 * window.blockHeight) - 8, (32 * window.scale) + ((mob[i].length - 1) * window.blockHeight), 4 * window.scale };
 						if (CheckCollisionRecs(boxCollider, playerCollider))
 						{
 							player.platform = i;
@@ -1254,6 +1247,16 @@ int main()
 						else if (i == player.platform)
 						{
 							player.collidePlatform = false;
+						}
+					}
+					else
+					{
+						Rectangle boxCollider{ mob[i].posX - (2 * window.blockHeight), mob[i].posY - (4.25 * window.blockHeight), (32 * window.scale) + ((mob[i].length - 1) * window.blockHeight), 4 * window.scale };
+						player.collideU = true;
+
+						if (player.velocity > 0)
+						{
+							player.velocity /= -2;
 						}
 					}
 				}
