@@ -1939,6 +1939,7 @@ int main()
 				window.levelSelect = false;
 				break;
 			}
+			
 
 		}
 
@@ -2002,11 +2003,18 @@ int main()
 		}
 		else if (window.levelSelect)
 		{
-			levelSelection();
+			if (IsKeyPressed(KEY_ESCAPE))
+			{
+				window.levelSelect = false;
+			}
+			else
+			{
+				levelSelection();
 
-			DrawTextEx(window.font, "level 1", Vector2{ 14 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight/1.25, 0, WHITE);
-			DrawTextEx(window.font, "level 2", Vector2{ 14 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight/1.25, 0, WHITE);
-			DrawTextEx(window.font, "level 3", Vector2{ 14 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight/1.25, 0, WHITE);
+				DrawTextEx(window.font, "level 1", Vector2{ 13 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
+				DrawTextEx(window.font, "level 2", Vector2{ 13 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
+				DrawTextEx(window.font, "level 3", Vector2{ 13 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
+			}
 		}
 		else if (window.pause)
 		{
