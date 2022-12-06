@@ -1993,6 +1993,8 @@ int main()
 
 			outputPipes();
 
+			
+
 			DrawTexturePro(
 				player.texture,
 				Rectangle{ player.currentSprite * 16, (32 * player.tall), -player.width / 2, -player.width },
@@ -2006,6 +2008,7 @@ int main()
 			if (IsKeyPressed(KEY_ESCAPE))
 			{
 				window.levelSelect = false;
+				window.pause = true;
 			}
 			else
 			{
