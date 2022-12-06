@@ -1230,7 +1230,7 @@ int main()
 				else if (mob[i].isPlatform)
 				{
 					Rectangle boxCollider{ mob[i].posX - (2 * window.blockHeight), mob[i].posY - (4.25 * window.blockHeight) - 2, (32 * window.scale) + ((mob[i].length - 1) * window.blockHeight), 4 * window.scale };
-					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
+					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32 * window.scale), player.width * window.scale, player.height * window.scale };
 
 					if (CheckCollisionRecs(boxCollider, playerCollider))
 					{
