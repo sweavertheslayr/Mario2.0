@@ -1814,7 +1814,7 @@ int main()
 		{
 			window.pause = !window.pause;
 
-			if (!window.pause)
+			if ((!window.pause) && (!window.levelSelect))
 			{
 				player.posX = player.tempPosX;
 				player.posY = player.tempPosY;
@@ -1822,7 +1822,7 @@ int main()
 				window.renderPosX = window.tempRenderX;
 				pauseMenu = 0;
 			}
-			else
+			else if (!window.levelSelect)
 			{
 				player.tempPosX = player.posX;
 				player.tempPosY = player.posY;
@@ -1830,9 +1830,13 @@ int main()
 
 				player.posX = 1 * window.blockHeight;
 				window.tempRenderX = window.renderPosX;
-				window.renderPosX = (24 - ((window.blocksWide) / 2)) * window.blockHeight;
 				player.sidewaysVelocity = 0;
 			}
+		}
+
+		if (window.pause || window.levelSelect)
+		{
+			window.renderPosX = (24 - ((window.blocksWide) / 2)) * window.blockHeight;
 		}
 
 		//pan up 
@@ -1904,7 +1908,6 @@ int main()
 				break;
 			case 1:
 				window.levelSelect = true;
-				window.renderPosX = (24 - ((window.blocksWide) / 2)) * window.blockHeight;
 				break;
 			case 2:
 				window.exit = true;
@@ -2023,9 +2026,9 @@ int main()
 		{
 			outputPause();
 
-			DrawTextEx(window.font, "resume", Vector2{ 14 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight, 0, WHITE);
-			DrawTextEx(window.font, "levels", Vector2{ 14 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight, 0, WHITE);
-			DrawTextEx(window.font, "quit", Vector2{ 14 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight, 0, WHITE);
+			DrawTextEx(window.font, "resume", Vector2{ 13 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight, 0, WHITE);
+			DrawTextEx(window.font, "levels", Vector2{ 13 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight, 0, WHITE);
+			DrawTextEx(window.font, "quit", Vector2{ 13 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight, 0, WHITE);
 		}
 
 		EndDrawing();
