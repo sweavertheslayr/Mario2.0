@@ -47,6 +47,7 @@ struct BadGuy {
 	int iPosX = 0;
 	int iPosXD = 0;
 	int iPosY = 0;
+	int scoreHit = 0;
 
 	float velocity = 0;
 	float speed = 0;
@@ -1200,7 +1201,7 @@ int main()
 					}
 					else
 					{
-						if (mob[i].iPosY + 1 == block.selectedY && mob[i].iPosXD == block.selectedX)
+						if (mob[i].iPosY + 1 == block.selectedY && mob[i].iPosXD == block.selectedX && mob[i].hostile)
 						{
 							mob[i].flip = true;
 							mob[i].hit = true;
@@ -1246,6 +1247,7 @@ int main()
 							mob[i].hit = true;
 							player.velocity = player.jumpVelocity;
 							player.score += 100 * player.streak;
+							mob[i].scoreHit = 100 * player.streak;
 						}
 						else
 						{
@@ -1307,7 +1309,10 @@ int main()
 					if (CheckCollisionRecs(boxCollider, playerCollider))
 					{
 						player.tall = 1;
+						player.score += 1000;
+						mob[i].scoreHit = 1000;
 						mob[i].hit = true;
+						mob[i].loaded = false;
 					}
 				}
 
@@ -2081,10 +2086,6 @@ int main()
 
 			outputPipes();
 
-
-			const char a = player.world;
-
-
 			DrawTextEx(window.font, TextFormat("world %i-%i", player.world, player.level), Vector2{0 * window.blockHeight + 10, 10}, window.blockHeight / 2., 0, WHITE);
 			DrawTextEx(window.font, TextFormat("score: %i", player.score), Vector2{ (window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
 			DrawTextEx(window.font, TextFormat("coins: %i", player.coins), Vector2{ (2 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
@@ -2098,6 +2099,14 @@ int main()
 				Vector2{ 0, 0 },
 				0,
 				WHITE);
+
+			for (int i = 0; i < window.mobCount; i++)
+			{
+				if (mob[i].loaded && mob[i].hit)
+				{
+					DrawTextEx(window.font, TextFormat("%i", mob[i].scoreHit), Vector2{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (7 * window.blockHeight) - 8 - mob[i].runningTime * window.blockHeight }, window.blockHeight / 2.5, 0, WHITE);
+				}
+			}
 		}
 		else if (window.levelSelect)
 		{
