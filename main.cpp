@@ -39,6 +39,8 @@ struct BadGuy {
 
 	int length = 0;
 
+	bool flip = false;
+
 	float posX = 0;
 	float posY = 2 * window.blockHeight;
 
@@ -186,8 +188,8 @@ struct Levels {
 	"                       o                                                          ________   ___o              o           ___    _oo_                                                        OO        l                                                                                      ",
 	"                                                                                                                                                                                             OOO        l                                                                                      ",
 	"                                                                                                                                                                                            OOOO        l                                                                                      ",
-	"                                                                                                                                                                                           OOOOO        l                                                                                      ",
-	"                 o   _o_o_                     tk         tk                   _o_              _     __    o  o  o     _          __      O  O          OO  O            __o_            OOOOOO        l                                                                                      ",
+	"   o           o                                                                                                                                                                           OOOOO        l                                                                                      ",
+	"   ooooooooooooo o   _o_o_                     tk         tk                   _o_              _     __    o  o  o     _          __      O  O          OO  O            __o_            OOOOOO        l                                                                                      ",
 	"                                       tk      |h         |h                                                                              OO  OO        OOO  OO                          OOOOOOO        l                                                                                      ",
 	"                             tk        |h      |h         |h                                                                             OOO  OOO      OOOO  OOO     tk              tk OOOOOOOO        l              tk                                                                      ",
 	"                             |h        |h      |h         |h                                                                            OOOO  OOOO    OOOOO  OOOO    |h              |hOOOOOOOOO        O              |h                                                                      ",
@@ -219,7 +221,7 @@ struct Levels {
 	"                                                                                                               w                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                             ,.m                                                                               ",
+	"       GGGGGGGG                                                                                                                                                                                              ,.m                                                                               ",
 	"                      w                                                         w                                                                                                                                                                                                              ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                            xcvcx                                                                              ",
@@ -1051,6 +1053,7 @@ int main()
 						mob[window.mobCount].stationary = false;
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].isPlatform = false;
+						mob[window.mobCount].flip = false;
 						mob[window.mobCount].gravity = true;
 						mob[window.mobCount].blockCollide = true;
 						window.mobCount += 1;
@@ -1070,6 +1073,7 @@ int main()
 						mob[window.mobCount].stationary = false;
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].isPlatform = false;
+						mob[window.mobCount].flip = false;
 						mob[window.mobCount].gravity = true;
 						mob[window.mobCount].blockCollide = true;
 						window.mobCount += 1;
@@ -1090,6 +1094,7 @@ int main()
 						mob[window.mobCount].stationary = true;
 						mob[window.mobCount].upDown = true;
 						mob[window.mobCount].isPlatform = false;
+						mob[window.mobCount].flip = false;
 						mob[window.mobCount].gravity = false;
 						mob[window.mobCount].blockCollide = false;
 						window.mobCount += 1;
@@ -1109,6 +1114,7 @@ int main()
 						mob[window.mobCount].stationary = false;
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].isPlatform = false;
+						mob[window.mobCount].flip = false;
 						mob[window.mobCount].gravity = true;
 						mob[window.mobCount].blockCollide = true;
 						window.mobCount += 1;
@@ -1129,6 +1135,7 @@ int main()
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].isPlatform = true;
 						mob[window.mobCount].gravity = false;
+						mob[window.mobCount].flip = false;
 						mob[window.mobCount].blockCollide = false;
 
 
@@ -1189,6 +1196,12 @@ int main()
 					}
 					else
 					{
+						if (mob[i].iPosY + 1 == block.selectedY && mob[i].iPosXD == block.selectedX)
+						{
+							mob[i].flip = true;
+							mob[i].hit = true;
+						}
+
 						mob[i].collideD = true;
 						mob[i].posY = mob[i].iPosY * window.blockHeight;
 					}
@@ -2052,7 +2065,12 @@ int main()
 			}
 
 			outputPipes();
-			
+
+			DrawTextEx(window.font, "score", Vector2{ 0 * window.blockHeight + 10, 10 }, window.blockHeight / 1.5, 0, WHITE);
+			DrawTextEx(window.font, "coins", Vector2{ (window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 1.5, 0, WHITE);
+			DrawTextEx(window.font, "world", Vector2{ (2 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 1.5, 0, WHITE);
+			DrawTextEx(window.font, "time", Vector2{ (3 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 1.5, 0, WHITE);
+			DrawTextEx(window.font, "lives", Vector2{ (4 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 1.5, 0, WHITE);
 
 			DrawTexturePro(
 				player.texture,
