@@ -1602,7 +1602,7 @@ int main()
 		}
 
 		//sprint
-		if (IsKeyDown(KEY_LEFT_SHIFT))
+		if (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))
 		{
 			player.maxSidewaysVelocity = 800;
 			player.runVelocity = 20;
