@@ -1601,7 +1601,8 @@ int main()
 			player.isDucking = false;
 		}
 
-		if (IsKeyDown(KEY_LEFT_CONTROL))
+		//sprint
+		if (IsKeyDown(KEY_LEFT_SHIFT))
 		{
 			player.maxSidewaysVelocity = 800;
 			player.runVelocity = 20;
