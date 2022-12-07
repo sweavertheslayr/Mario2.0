@@ -70,6 +70,7 @@ struct BadGuy {
 	bool hit = false;
 
 	bool direction = true;
+	bool directionUp = true;
 
 	bool isPlatform = false;
 
@@ -81,6 +82,7 @@ struct BadGuy {
 
 struct Block {
 	Texture2D texture;
+	Texture2D texture2;
 	float selectedX = -1;
 	float selectedY = -1;
 	float shift = 0;
@@ -129,6 +131,7 @@ struct Player {
 	bool collideD = true;
 	bool collision = false;
 	bool collidePlatform = false;
+	bool bufferCollide = false;
 
 	//animation
 	float width = 32;
@@ -213,12 +216,12 @@ struct Levels {
 	"                    7               0                               7                 0                              7                0                              7            0                                                                                                            ",
 	"                             3                           7                   3                            7                  3                            7                  3                            7                                                                                    ",
 	"                                                                                 G                                                                                                                                                                                                             ",
-	"            Lq                                                                                                 w                                                                                                                                                                               ",
+	"                                                                                                               w                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                             ,.m                                                                               ",
 	"                      w                                                         w                                                                                                                                                                                                              ",
-	"            Lq                                                                                                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                            xcvcx                                                                              ",
 	" 1          2    5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1     O                                                                                     ",
 	"                                                                                                                                                                                                                                                                                               ",
@@ -226,14 +229,14 @@ struct Levels {
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
-	"            Lq                                                                                                                                                                                                                                                                                 ",
+	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               "
 	};
 
 	std::string twoA[30] = {
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                               ",
+	"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------",
+	"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
@@ -247,14 +250,14 @@ struct Levels {
 	" #                                                      ##  ######  ####      ####                                                                                        |h#                                                                                                                  ",
 	" #                                                      ##  ######  ####      ####                                                                                        |h#                                                                                                                  ",
 	" #                                                    ##        ##   #    ##                                                                                              |h#                                                                                                                  ",
-	" #                                                    ##        ##   #    ##                                                                                 ###          |h#                                                                                                                  ",
-	" #                                       # #### #     ##        ##   #    ##          ######                                                  ###                         |h#                                                                                                                  ",
+	" #                                                    ##        ##   #    ##                                                                                              |h#                                                                                                                  ",
+	" #                                       # #### #     ##        ##   #    ##          ######                                                                              |h#                                                                                                                  ",
 	" #                             #         # #  # #     ##        ##   # #  ##          ######                                                       ######               yedh#                                                                                                                  ",
 	" #          ooooo        O O             ###  ###     ####  ######   ###  ##  ####                             tk                         OO                            sbwh#                                                                                                                  ",
 	" #                     O O O O   O                      ##                                               tk    |h           ##           OOO                      ###########                                                                                                                  ",
 	" #                   O O O O O   O O                    ##                                               |h    |h    tk     ##          OOOO                      ###########                                                                                                                  ",
-	" #                 O O O O O O   O O                                                                     |h    |h    |h     ##         OOOOO                 ###  ###########                                                                                                                  ",
-	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%  ###  %%%%%%%%       %%%%%%%%%%%                                                                                                                  ",
+	" #                 O O O O O O   O O                                                                     |h    |h    |h     ##         OOOOO                      ###########                                                                                                                  ",
+	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%%                                                                                                                  ",
 	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%%                                                                                                                  ",
 	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%%                                                                                                                  ",
 	" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%  %%%%%%%%%%%%       %%%%%%%%       %%%%%%%%%%%                                                                                                                  ",
@@ -269,6 +272,7 @@ struct Levels {
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
+	"                                                                                                                                              Lqd            Lqu                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
@@ -276,16 +280,15 @@ struct Levels {
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
+	"                                                                          G                                                                   Lqd            Lqu                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                          G                                                                                                                                                                                                                    ",
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                             Lq                                                                                                                                                 ",
+	"                                                                                                                                                                                                                                                                                                ",
 	"                                                                                                                                        G G                                                                                                                                                    ",
 	"                                                                       w      G G                             P                                         w                                                                                                                                      ",
 	"            w                                                                                           P                                                                                                                                                                                      ",
 	"                                                                                                                    P                                                                                                                                                                          ",
 	"                  G                                                                                                                                                                                                                                                                            ",
-	"                G              G              K K            K  G G                                G G G           G                                K                                                                                                                                          ",
+	"                G              G              K K            K  G G                                G G G           G                          Lqd   K        Lqu                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
@@ -964,14 +967,14 @@ void restartLevel()
 
 void outputPlatform(float type, int i, int length)
 {
-	Texture2D texture = LoadTexture("DevAssets/platformSheet.png");
+	block.texture2 = LoadTexture("DevAssets/platformSheet.png");
 
 	//8*8px
 
 	for (int j = 0; j < length; j++)
 	{
 		DrawTexturePro(
-			texture,
+			block.texture2,
 			Rectangle{ 0, type * 8, 16, 8 },
 			Rectangle{ mob[i].posX - window.renderPosX - ((1 + j) * window.blockHeight), mob[i].posY - (7 * window.blockHeight), 32 * window.scale, 16 * window.scale },
 			Vector2{ 0, 0 },
@@ -1128,6 +1131,16 @@ int main()
 						mob[window.mobCount].gravity = false;
 						mob[window.mobCount].blockCollide = false;
 
+
+						if (level.currentScene[i][j + 2] == 'u')
+						{
+							mob[window.mobCount].directionUp = true;
+						}
+						else if (level.currentScene[i][j + 2] == 'd')
+						{
+							mob[window.mobCount].directionUp = false;
+						}
+
 						if (level.currentScene[i][j + 1] == 'q')
 						{
 							mob[window.mobCount].length = 3;
@@ -1229,7 +1242,7 @@ int main()
 				}
 				else if (mob[i].isPlatform)
 				{
-					Rectangle boxCollider{ mob[i].posX - (2 * window.blockHeight), mob[i].posY - (5 * window.blockHeight), (32 * window.scale) + ((mob[i].length - 1) * window.blockHeight), 4 * window.scale };
+					Rectangle boxCollider{ mob[i].posX - (2 * window.blockHeight), mob[i].posY - (5 * window.blockHeight) + 9, (32 * window.scale) + ((mob[i].length - 1) * window.blockHeight), 4 * window.scale };
 					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY, player.width * window.scale, player.height / 2 * window.scale };
 
 					if (CheckCollisionRecs(boxCollider, playerCollider))
@@ -1243,15 +1256,27 @@ int main()
 					{
 						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32 * window.scale), player.width * window.scale, player.height / 2 * window.scale };
 
-						if (CheckCollisionRecs(boxCollider, playerCollider))
+						if (CheckCollisionRecs(boxCollider, playerCollider) && (!player.bufferCollide))
 						{
 							player.platform = i;
 							player.collidePlatform = true;
-							player.velocity = 80;
+
+
+							if (mob[i].directionUp)
+							{
+								player.velocity = 80;
+							}
+							else
+							{
+								player.velocity = -80;
+							}
+
+							player.posY = mob[i].posY - (7 * window.blockHeight) + 2;
 						}
 						else if (i == player.platform)
 						{
 							player.collidePlatform = false;
+							player.bufferCollide = false;
 						}
 					}
 				}
@@ -1289,83 +1314,95 @@ int main()
 						}
 					}
 				}
-			}
 
-			//MOVEMENT
+				//MOVEMENT
 
-			if (mob[i].gravity)
-			{
-				//down
-				if (!mob[i].collideD)
+				if (mob[i].gravity)
 				{
-					mob[i].velocity += gravity * window.dT;
+					//down
+					if (!mob[i].collideD)
+					{
+						mob[i].velocity += gravity * window.dT;
+					}
+					else
+					{
+						mob[i].velocity = 0;
+					}
+
+					//right + left
+					if (mob[i].direction)
+					{
+						mob[i].speed = -mob[i].maxSpeed;
+					}
+					else
+					{
+						mob[i].speed = mob[i].maxSpeed;
+					}
+
 				}
-				else
+				//updown
+				else if (mob[i].upDown)
 				{
+					if (mob[i].startY >= mob[i].posY)
+					{
+						mob[i].velocity = 40;
+					}
+					else if (mob[i].startY + (2 * window.blockHeight) <= mob[i].posY)
+					{
+						mob[i].velocity = -40;
+					}
+				}
+				else if (mob[i].isPlatform)
+				{
+					if (mob[i].directionUp)
+					{
+						mob[i].velocity = -120;
+
+						if (mob[i].iPosY < 4)
+						{
+							mob[i].posY = 28 * window.blockHeight;
+						}
+					}
+					else
+					{
+						mob[i].velocity = 120;
+
+						if (mob[i].iPosY > 28)
+						{
+							mob[i].posY = 4 * window.blockHeight;
+						}
+					}
+				}
+
+				//ANIMATE
+				if (mob[i].runningTime >= mob[i].updateTime)
+				{
+					if (mob[i].direction)
+					{
+						mob[i].frame++;
+
+						if (mob[i].frame > 1)
+						{
+							mob[i].frame = 0;
+						}
+					}
+					else
+					{
+						mob[i].frame++;
+
+						if (mob[i].frame > 3)
+						{
+							mob[i].frame = 2;
+						}
+					}
+					mob[i].runningTime = 0;
+				}
+				if (mob[i].hit)
+				{
+					mob[i].frame = 4;
+					mob[i].speed = 0;
 					mob[i].velocity = 0;
 				}
-
-				//right + left
-				if (mob[i].direction)
-				{
-					mob[i].speed = -mob[i].maxSpeed;
-				}
-				else
-				{
-					mob[i].speed = mob[i].maxSpeed;
-				}
-
-			}
-			//updown
-			else if (mob[i].upDown)
-			{
-				if (mob[i].startY >= mob[i].posY)
-				{
-					mob[i].velocity = 40;
-				}
-				else if (mob[i].startY + (2 * window.blockHeight) <= mob[i].posY)
-				{
-					mob[i].velocity = -40;
-				}
-			}
-			else if (mob[i].isPlatform)
-			{
-				mob[i].velocity = -80;
-
-				if (mob[i].iPosY < 6)
-				{
-					mob[i].posY = 26 * window.blockHeight;
-				}
-			}
-
-			//ANIMATE
-			if (mob[i].runningTime >= mob[i].updateTime)
-			{
-				if (mob[i].direction)
-				{
-					mob[i].frame++;
-
-					if (mob[i].frame > 1)
-					{
-						mob[i].frame = 0;
-					}
-				}
-				else
-				{
-					mob[i].frame++;
-
-					if (mob[i].frame > 3)
-					{
-						mob[i].frame = 2;
-					}
-				}
-				mob[i].runningTime = 0;
-			}
-			if (mob[i].hit)
-			{
-				mob[i].frame = 4;
-				mob[i].speed = 0;
-				mob[i].velocity = 0;
 			}
 		}
 
@@ -1521,7 +1558,12 @@ int main()
 			{
 				player.velocity += player.jumpVelocity;
 				player.isGrounded = false;
-				player.collidePlatform = false;
+
+				if (player.collidePlatform)
+				{
+					player.bufferCollide = true;
+					player.collidePlatform = false;
+				}
 			}
 			player.justJumped = true;
 		}
@@ -1557,6 +1599,15 @@ int main()
 		else
 		{
 			player.isDucking = false;
+		}
+
+		if (IsKeyDown(KEY_LEFT_CONTROL))
+		{
+			player.maxSidewaysVelocity = 800;
+		}
+		else
+		{
+			player.maxSidewaysVelocity = 500;
 		}
 
 		//right
@@ -1950,7 +2001,14 @@ int main()
 			player.tall = 0;
 			restartLevel();
 		}
-		
+		else if (player.collideU && (level.current[player.iPosY + (level.currentSize - 22)][player.iPosXD] == '-' || level.current[player.iPosY + (level.currentSize - 22)][player.iPosXLD] == '-'))
+		{
+			player.lives--;
+			player.tall = 0;
+			restartLevel();
+		}
+
+
 		//do stuff here
 		if (player.collision && player.tall == 0)
 		{
@@ -1991,7 +2049,6 @@ int main()
 			}
 
 			outputPipes();
-
 			
 
 			DrawTexturePro(
@@ -2035,6 +2092,7 @@ int main()
 		}
 	}
 	UnloadTexture(block.texture);
+	UnloadTexture(block.texture2);
 	UnloadTexture(player.texture);
 	UnloadTexture(scenery.texture);
 	CloseWindow();
