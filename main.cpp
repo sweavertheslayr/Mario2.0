@@ -2131,6 +2131,11 @@ int main()
 			window.exit = true;
 		}
 	}
+
+	for(int i = 0; i < window.mobCount; i++)
+	{
+		UnloadTexture(mob[i].texture);
+	}
 	UnloadTexture(block.texture);
 	UnloadTexture(block.texture2);
 	UnloadTexture(player.texture);
