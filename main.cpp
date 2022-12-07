@@ -1254,7 +1254,7 @@ int main()
 					}
 					else
 					{
-						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32 * window.scale), player.width * window.scale, player.height / 2 * window.scale };
+						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (32 * window.scale), player.width * window.scale, player.height / 2 * window.scale };
 
 						if (CheckCollisionRecs(boxCollider, playerCollider) && (!player.bufferCollide))
 						{
@@ -1604,10 +1604,12 @@ int main()
 		if (IsKeyDown(KEY_LEFT_CONTROL))
 		{
 			player.maxSidewaysVelocity = 800;
+			player.runVelocity = 20;
 		}
 		else
 		{
 			player.maxSidewaysVelocity = 500;
+			player.runVelocity = 10;
 		}
 
 		//right
