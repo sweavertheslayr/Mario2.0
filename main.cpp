@@ -113,7 +113,15 @@ struct Player {
 	int iPosXC = 0;
 	int iPosY = 0;
 
+
+	//stuff
+	int score = 0;
 	int lives = 3;
+	int world = 1;
+	int level = 1;
+	int time = 400;
+	int coins = 0;
+	int streak = 0;
 
 	//jump
 	int tempVelocity = 0;
@@ -466,10 +474,10 @@ void emptyArray(std::string arr[32])
 
 void setArray(int currentLevel)
 {
-	if (currentLevel == 1) { for (int i = 0; i < 30; i++) { level.current[i] = level.oneA[i]; level.currentScene[i] = level.oneSceneA[i]; } level.type = 0;}
-	if (currentLevel == 2) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoA[i];  level.currentScene[i] = level.twoSceneA[i];  level.type = 1; } }
-	if (currentLevel == 3) { for (int i = 0; i < 30; i++) { level.current[i] = level.threeA[i];  level.currentScene[i] = level.threeSceneA[i];  level.type = 0; } }
-	if (currentLevel == 4) { for (int i = 0; i < 30; i++) { level.current[i] = level.fourA[i];  level.currentScene[i] = level.fourSceneA[i];  level.type = 2; } }
+	if (currentLevel == 1) { for (int i = 0; i < 30; i++) { level.current[i] = level.oneA[i]; level.currentScene[i] = level.oneSceneA[i]; } level.type = 0; player.world = 1; player.level = 1; }
+	if (currentLevel == 2) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoA[i];  level.currentScene[i] = level.twoSceneA[i]; } level.type = 1; player.world = 1; player.level = 2; }
+	if (currentLevel == 3) { for (int i = 0; i < 30; i++) { level.current[i] = level.threeA[i];  level.currentScene[i] = level.threeSceneA[i]; } level.type = 0; player.world = 1; player.level = 3; }
+	if (currentLevel == 4) { for (int i = 0; i < 30; i++) { level.current[i] = level.fourA[i];  level.currentScene[i] = level.fourSceneA[i]; } level.type = 2; player.world = 1; player.level = 4; }
 }
 
 void findSize(std::string arr[32])
@@ -969,14 +977,10 @@ void restartLevel()
 
 void outputPlatform(float type, int i, int length)
 {
-	block.texture2 = LoadTexture("DevAssets/platformSheet.png");
-
-	//8*8px
-
 	for (int j = 0; j < length; j++)
 	{
 		DrawTexturePro(
-			block.texture2,
+			mob[i].texture,
 			Rectangle{ 0, type * 8, 16, 8 },
 			Rectangle{ mob[i].posX - window.renderPosX - ((1 + j) * window.blockHeight), mob[i].posY - (7 * window.blockHeight), 32 * window.scale, 16 * window.scale },
 			Vector2{ 0, 0 },
@@ -1122,7 +1126,7 @@ int main()
 					//platform
 					else if (level.currentScene[i][j] == 'L')
 					{
-						mob[window.mobCount].texture = LoadTexture("nothing");
+						mob[window.mobCount].texture = LoadTexture("DevAssets/platformSheet.png");
 						level.currentScene[i][j] = ' ';
 						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
@@ -1238,8 +1242,10 @@ int main()
 
 						if (CheckCollisionRecs(boxCollider, playerCollider))
 						{
+							player.streak += 1;
 							mob[i].hit = true;
 							player.velocity = player.jumpVelocity;
+							player.score += 100 * player.streak;
 						}
 						else
 						{
@@ -1312,7 +1318,7 @@ int main()
 					if (mob[j].hostile)
 					{
 						Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale, mob[j].height * window.scale * 2 };
-						if (CheckCollisionRecs(boxCollider, boxCollider2))
+						if (CheckCollisionRecs(boxCollider, boxCollider2) && mob[j].loaded)
 						{
 							if (mob[i].posX < mob[j].posX)
 							{
@@ -1388,7 +1394,7 @@ int main()
 				}
 
 				//ANIMATE
-				if (mob[i].runningTime >= mob[i].updateTime)
+				if (mob[i].runningTime >= mob[i].updateTime && !mob[i].hit)
 				{
 					if (mob[i].direction)
 					{
@@ -1410,7 +1416,11 @@ int main()
 					}
 					mob[i].runningTime = 0;
 				}
-				if (mob[i].hit)
+				else if (mob[i].hit && mob[i].runningTime >= 4 * mob[i].updateTime)
+				{
+					mob[i].loaded = false;
+				}
+				if (mob[i].hit && mob[i].loaded)
 				{
 					mob[i].frame = 4;
 					mob[i].speed = 0;
@@ -1468,6 +1478,7 @@ int main()
 		}
 		else
 		{
+			player.streak = 0;
 			player.collideD = true;
 			player.isGrounded = true;
 		}
@@ -2013,14 +2024,20 @@ int main()
 		//DEATH
 		if (player.collideD && (level.current[player.iPosY + (level.currentSize - 21)][player.iPosXD] == '-' || level.current[player.iPosY + (level.currentSize - 21)][player.iPosXLD] == '-'))
 		{
+			player.sidewaysVelocity = 0;
+			player.velocity = 0;
 			player.lives--;
+			player.score = 0;
 			player.tall = 0;
 			restartLevel();
 		}
 		else if (player.collideU && (level.current[player.iPosY + (level.currentSize - 22)][player.iPosXD] == '-' || level.current[player.iPosY + (level.currentSize - 22)][player.iPosXLD] == '-'))
 		{
+			player.sidewaysVelocity = 0;
+			player.velocity = 0;
 			player.lives--;
 			player.tall = 0;
+			player.score = 0;
 			restartLevel();
 		}
 
@@ -2028,12 +2045,10 @@ int main()
 		//do stuff here
 		if (player.collision && player.tall == 0)
 		{
-			//player.lives--;
-			//player.sidewaysVelocity = 0;
-			//player.velocity = 0;
-			//player.jumpVelocity = 0;
-			//player.frame = 0;
-			//a = 0;
+			player.sidewaysVelocity = 0;
+			player.velocity = 0;
+			player.lives--;
+			player.score = 0;
 			restartLevel();
 		}
 		else if (player.collision)
@@ -2052,7 +2067,7 @@ int main()
 				{
 					outputPlatform(mob[i].mob, i, mob[i].length);
 				}
-				else
+				else if (mob[i].loaded)
 				{
 					DrawTexturePro(
 						mob[i].texture,
@@ -2066,11 +2081,15 @@ int main()
 
 			outputPipes();
 
-			DrawTextEx(window.font, "score", Vector2{ 0 * window.blockHeight + 10, 10 }, window.blockHeight / 1.5, 0, WHITE);
-			DrawTextEx(window.font, "coins", Vector2{ (window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 1.5, 0, WHITE);
-			DrawTextEx(window.font, "world", Vector2{ (2 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 1.5, 0, WHITE);
-			DrawTextEx(window.font, "time", Vector2{ (3 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 1.5, 0, WHITE);
-			DrawTextEx(window.font, "lives", Vector2{ (4 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 1.5, 0, WHITE);
+
+			const char a = player.world;
+
+
+			DrawTextEx(window.font, TextFormat("world %i-%i", player.world, player.level), Vector2{0 * window.blockHeight + 10, 10}, window.blockHeight / 2., 0, WHITE);
+			DrawTextEx(window.font, TextFormat("score: %i", player.score), Vector2{ (window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
+			DrawTextEx(window.font, TextFormat("coins: %i", player.coins), Vector2{ (2 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
+			DrawTextEx(window.font, TextFormat("time: %i", player.time), Vector2{ (3 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
+			DrawTextEx(window.font, TextFormat("lives: %i", player.lives), Vector2{ (4 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
 
 			DrawTexturePro(
 				player.texture,
