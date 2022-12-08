@@ -122,7 +122,7 @@ struct Player {
 	int level = 1;
 	int time = 400;
 	int coins = 0;
-	int streak = 0;
+	int streak = 1;
 
 	//jump
 	int tempVelocity = 0;
@@ -1201,10 +1201,12 @@ int main()
 					}
 					else
 					{
-						if (mob[i].iPosY + 1 == block.selectedY && mob[i].iPosXD == block.selectedX && mob[i].hostile)
+						if (mob[i].iPosY + 1 == block.selectedY && mob[i].iPosXD == block.selectedX && mob[i].hostile && !mob[i].hit)
 						{
 							mob[i].flip = true;
 							mob[i].hit = true;
+							player.score += 100 * player.streak;
+							mob[i].scoreHit = 100 * player.streak;
 						}
 
 						mob[i].collideD = true;
@@ -1243,11 +1245,11 @@ int main()
 
 						if (CheckCollisionRecs(boxCollider, playerCollider))
 						{
-							player.streak += 1;
 							mob[i].hit = true;
 							player.velocity = player.jumpVelocity;
 							player.score += 100 * player.streak;
 							mob[i].scoreHit = 100 * player.streak;
+							player.streak += 1;
 						}
 						else
 						{
@@ -1301,7 +1303,7 @@ int main()
 						}
 					}
 				}
-				else
+				else if (!mob[i].hit)
 				{
 					Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (2.5 * window.blockHeight), mob[i].width * window.scale * 2, mob[i].height * window.scale };
 					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32) + (2 * window.blockHeight), player.width * window.scale, player.height * player.spriteHeight * window.scale };
@@ -1312,7 +1314,6 @@ int main()
 						player.score += 1000;
 						mob[i].scoreHit = 1000;
 						mob[i].hit = true;
-						mob[i].loaded = false;
 					}
 				}
 
@@ -1483,7 +1484,7 @@ int main()
 		}
 		else
 		{
-			player.streak = 0;
+			player.streak = 1;
 			player.collideD = true;
 			player.isGrounded = true;
 		}
