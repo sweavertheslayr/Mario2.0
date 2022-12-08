@@ -40,6 +40,8 @@ struct BadGuy {
 	int length = 0;
 
 	bool flip = false;
+	bool outShell = false;
+	bool moving = false;
 
 	float posX = 0;
 	float posY = 2 * window.blockHeight;
@@ -123,6 +125,7 @@ struct Player {
 	int time = 400;
 	int coins = 0;
 	int streak = 1;
+	int shellStreak = 1;
 
 	//jump
 	int tempVelocity = 0;
@@ -197,8 +200,8 @@ struct Levels {
 	"                       o                                                          ________   ___o              o           ___    _oo_                                                        OO        l                                                                                      ",
 	"                                                                                                                                                                                             OOO        l                                                                                      ",
 	"                                                                                                                                                                                            OOOO        l                                                                                      ",
-	"   o           o                                                                                                                                                                           OOOOO        l                                                                                      ",
-	"   ooooooooooooo o   _o_o_                     tk         tk                   _o_              _     __    o  o  o     _          __      O  O          OO  O            __o_            OOOOOO        l                                                                                      ",
+	"                                                                                                                                                                                           OOOOO        l                                                                                      ",
+	"                 o   _o_o_                     tk         tk                   _o_              _     __    o  o  o     _          __      O  O          OO  O            __o_            OOOOOO        l                                                                                      ",
 	"                                       tk      |h         |h                                                                              OO  OO        OOO  OO                          OOOOOOO        l                                                                                      ",
 	"                             tk        |h      |h         |h                                                                             OOO  OOO      OOOO  OOO     tk              tk OOOOOOOO        l              tk                                                                      ",
 	"                             |h        |h      |h         |h                                                                            OOOO  OOOO    OOOOO  OOOO    |h              |hOOOOOOOOO        O              |h                                                                      ",
@@ -230,7 +233,7 @@ struct Levels {
 	"                                                                                                               w                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
-	"       GGGGGGGG                                                                                                                                                                                              ,.m                                                                               ",
+	"                                                                                                                                                                                                             ,.m                                                                               ",
 	"                      w                                                         w                                                                                                                                                                                                              ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                            xcvcx                                                                              ",
@@ -1061,6 +1064,7 @@ int main()
 						mob[window.mobCount].flip = false;
 						mob[window.mobCount].gravity = true;
 						mob[window.mobCount].blockCollide = true;
+						mob[window.mobCount].outShell = true;
 						window.mobCount += 1;
 					}
 					//koopas
@@ -1081,6 +1085,7 @@ int main()
 						mob[window.mobCount].flip = false;
 						mob[window.mobCount].gravity = true;
 						mob[window.mobCount].blockCollide = true;
+						mob[window.mobCount].outShell = true;
 						window.mobCount += 1;
 					}
 					//tube thing 
@@ -1102,6 +1107,7 @@ int main()
 						mob[window.mobCount].flip = false;
 						mob[window.mobCount].gravity = false;
 						mob[window.mobCount].blockCollide = false;
+						mob[window.mobCount].outShell = true;
 						window.mobCount += 1;
 					}
 					//mushroom
@@ -1122,6 +1128,7 @@ int main()
 						mob[window.mobCount].flip = false;
 						mob[window.mobCount].gravity = true;
 						mob[window.mobCount].blockCollide = true;
+						mob[window.mobCount].outShell = true;
 						window.mobCount += 1;
 					}
 					//platform
@@ -1142,6 +1149,7 @@ int main()
 						mob[window.mobCount].gravity = false;
 						mob[window.mobCount].flip = false;
 						mob[window.mobCount].blockCollide = false;
+						mob[window.mobCount].outShell = true;
 
 
 						if (level.currentScene[i][j + 2] == 'u')
@@ -1165,7 +1173,7 @@ int main()
 
 		for (int i = 0; i < window.mobCount; i++)
 		{
-			if (mob[i].loaded && !window.pause && !window.exit)
+			if (mob[i].loaded && !window.pause)
 			{
 				//POSITION
 				mob[i].posX += mob[i].speed * window.dT;
@@ -1176,9 +1184,13 @@ int main()
 				{
 					mob[i].maxSpeed = 0;
 				}
-				else if (mob[i].hostile)
+				else if (mob[i].hostile && !mob[i].moving)
 				{
 					mob[i].maxSpeed = 80;
+				}
+				else if (mob[i].moving)
+				{
+					mob[i].maxSpeed = 600;
 				}
 				else
 				{
@@ -1222,7 +1234,11 @@ int main()
 					//left
 					if (mob[i].iPosX == 0)
 					{
-						mob[i].loaded = false;;
+						mob[i].loaded = false;
+						if (mob[i].moving)
+						{
+							player.shellStreak = 1;
+						}
 					}
 					else
 					{
@@ -1238,20 +1254,43 @@ int main()
 				if (mob[i].hostile)
 				{
 					//player
-					if (!mob[i].hit)
+					if (!mob[i].hit || !mob[i].outShell)
 					{
 						Rectangle boxCollider{ mob[i].posX - (0.6 * window.blockHeight), mob[i].posY - ((4.0 - mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 0.4, mob[i].height * window.scale };
 						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
 
 						if (CheckCollisionRecs(boxCollider, playerCollider))
 						{
-							mob[i].hit = true;
-							player.velocity = player.jumpVelocity;
-							player.score += 100 * player.streak;
-							mob[i].scoreHit = 100 * player.streak;
-							player.streak += 1;
+							if (!mob[i].outShell && !mob[i].moving && mob[i].mob == 3)
+							{
+								mob[i].maxSpeed = 600;
+								mob[i].moving = true;
+								if (player.posX + 1.4 * window.blockHeight > mob[i].posX)
+								{
+									mob[i].direction = true;
+								}
+								else
+								{
+									mob[i].direction = false;
+								}
+							}
+							else if (!mob[i].outShell)
+							{
+								mob[i].moving = false;
+								mob[i].maxSpeed = 0;
+								player.shellStreak = 1;
+							}
+							else if (!mob[i].hit)
+							{
+								mob[i].hit = true;
+								player.score += 100 * player.streak;
+								mob[i].scoreHit = 100 * player.streak;
+								player.streak += 1;
+								player.velocity = player.jumpVelocity;
+								player.velocity = player.jumpVelocity;
+							}
 						}
-						else
+						else if (mob[i].outShell || mob[i].moving)
 						{
 							Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - ((3.4 + mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 1.2, mob[i].height * window.scale * 0.1 };
 							Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
@@ -1326,15 +1365,40 @@ int main()
 						Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale, mob[j].height * window.scale * 2 };
 						if (CheckCollisionRecs(boxCollider, boxCollider2) && mob[j].loaded)
 						{
-							if (mob[i].posX < mob[j].posX)
+							if (!mob[i].outShell && mob[i].speed != 0)
 							{
-								mob[i].direction = true;
-								mob[j].direction = false;
+								if (!mob[j].hit)
+								{
+									player.score += 100 * player.shellStreak;
+									mob[j].scoreHit = 100 * player.shellStreak;
+									player.shellStreak += 1;
+								}
+
+								mob[j].hit = true;
 							}
-							if (mob[i].posX > mob[j].posX)
+							else if (!mob[j].outShell && mob[j].speed != 0)
 							{
-								mob[i].direction = false;
-								mob[j].direction = true;
+								if (!mob[i].hit)
+								{
+									player.score += 100 * player.shellStreak;
+									mob[i].scoreHit = 100 * player.shellStreak;
+									player.shellStreak += 1;
+								}
+
+								mob[i].hit = true;
+							}
+							else
+							{
+								if (mob[i].posX < mob[j].posX)
+								{
+									mob[i].direction = true;
+									mob[j].direction = false;
+								}
+								if (mob[i].posX > mob[j].posX)
+								{
+									mob[i].direction = false;
+									mob[j].direction = true;
+								}
 							}
 						}
 					}
@@ -1363,7 +1427,6 @@ int main()
 					{
 						mob[i].speed = mob[i].maxSpeed;
 					}
-
 				}
 				//updown
 				else if (mob[i].upDown)
@@ -1422,11 +1485,20 @@ int main()
 					}
 					mob[i].runningTime = 0;
 				}
-				else if (mob[i].hit && mob[i].runningTime >= 4 * mob[i].updateTime)
+				else if (mob[i].hit && mob[i].runningTime >= 4 * mob[i].updateTime && mob[i].mob != 3)
 				{
 					mob[i].loaded = false;
 				}
-				if (mob[i].hit && mob[i].loaded)
+				else if (mob[i].hit && mob[i].runningTime >= 2 * mob[i].updateTime)
+				{
+					mob[i].outShell = false;
+				}
+				else if (mob[i].hit && mob[i].runningTime >= 60 * mob[i].updateTime)
+				{
+					mob[i].hit = false;
+					player.shellStreak = 1;
+				}
+				if (mob[i].hit && mob[i].loaded && !mob[i].moving)
 				{
 					mob[i].frame = 4;
 					mob[i].speed = 0;
@@ -1634,8 +1706,8 @@ int main()
 		//sprint
 		if (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT))
 		{
-			player.maxSidewaysVelocity = 800;
-			player.runVelocity = 20;
+			player.maxSidewaysVelocity = 600;
+			player.runVelocity = 15;
 		}
 		else
 		{
@@ -2103,7 +2175,7 @@ int main()
 
 			for (int i = 0; i < window.mobCount; i++)
 			{
-				if (mob[i].loaded && mob[i].hit)
+				if (mob[i].loaded && mob[i].hit && mob[i].runningTime <= 4 * mob[i].updateTime)
 				{
 					DrawTextEx(window.font, TextFormat("%i", mob[i].scoreHit), Vector2{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (7 * window.blockHeight) - 8 - mob[i].runningTime * window.blockHeight }, window.blockHeight / 2.5, 0, WHITE);
 				}
