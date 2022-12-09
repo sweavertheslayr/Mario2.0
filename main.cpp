@@ -1024,7 +1024,7 @@ int main()
 	SetTargetFPS(60);
 	const float gravity = 2200;
 
-
+	float winTime = 400;
 	while (!window.exit)
 	{
 		SetExitKey(KEY_Y);
@@ -1036,7 +1036,8 @@ int main()
 
 		player.runningTime += window.dT;
 		block.runningTime += window.dT;
-
+		winTime -= 1 * window.dT;
+		player.time = winTime;
 
 		//MAKE MOBS
 		if (!window.pause && !window.exit)
@@ -1190,7 +1191,7 @@ int main()
 				}
 				else if (mob[i].moving)
 				{
-					mob[i].maxSpeed = 600;
+					mob[i].maxSpeed = 800;
 				}
 				else
 				{
@@ -1263,8 +1264,9 @@ int main()
 						{
 							if (!mob[i].outShell && !mob[i].moving && mob[i].mob == 3)
 							{
-								mob[i].maxSpeed = 600;
 								mob[i].moving = true;
+								mob[i].maxSpeed = 800;
+								mob[i].runningTime = 0;
 								if (player.posX + 1.4 * window.blockHeight > mob[i].posX)
 								{
 									mob[i].direction = true;
@@ -1290,7 +1292,7 @@ int main()
 								player.velocity = player.jumpVelocity;
 							}
 						}
-						else if (mob[i].outShell || mob[i].moving)
+						else if ((mob[i].outShell || (mob[i].moving && mob[i].runningTime > 2 * mob[i].updateTime)))
 						{
 							Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - ((3.4 + mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 1.2, mob[i].height * window.scale * 0.1 };
 							Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
@@ -1493,7 +1495,7 @@ int main()
 				{
 					mob[i].outShell = false;
 				}
-				else if (mob[i].hit && mob[i].runningTime >= 60 * mob[i].updateTime)
+				else if (!mob[i].outShell && mob[i].runningTime >= 60 * mob[i].updateTime)
 				{
 					mob[i].hit = false;
 					player.shellStreak = 1;
