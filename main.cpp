@@ -196,15 +196,15 @@ struct Levels {
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                        r                                                                                      ",
-	"                                                                                                                                                                                                       nf                                                                                      ",
-	"                       o                                                          ________   ___o              o           ___    _oo_                                                        OO        l                                                                                      ",
-	"                                                                                                                                                                                             OOO        l                                                                                      ",
-	"                                                                                                                                                                                            OOOO        l                                                                                      ",
-	"                                                                                                                                                                                           OOOOO        l                                                                                      ",
-	"                 o   _o_o_                     tk         tk                   _o_              _     __    o  o  o     _          __      O  O          OO  O            __o_            OOOOOO        l                                                                                      ",
-	"                                       tk      |h         |h                                                                              OO  OO        OOO  OO                          OOOOOOO        l                                                                                      ",
-	"                             tk        |h      |h         |h                                                                             OOO  OOO      OOOO  OOO     tk              tk OOOOOOOO        l              tk                                                                      ",
+	"                                                                                                                                                                                                                                                                                               ",
+	"                                                                                                                                                                                                                                                                                               ",
+	"                       o                                                          ________   ___o              o           ___    _oo_                                                        OO                                                                                               ",
+	"                                                                                                                                                                                             OOO                                                                                               ",
+	"                                                                                                                                                                                            OOOO                                                                                               ",
+	"                                                                                                                                                                                           OOOOO                                                                                               ",
+	"                 o   _o_o_                     tk         tk                   _o_              _     __    o  o  o     _          __      O  O          OO  O            __o_            OOOOOO                                                                                               ",
+	"                                       tk      |h         |h                                                                              OO  OO        OOO  OO                          OOOOOOO                                                                                               ",
+	"                             tk        |h      |h         |h                                                                             OOO  OOO      OOOO  OOO     tk              tk OOOOOOOO                       tk                                                                      ",
 	"                             |h        |h      |h         |h                                                                            OOOO  OOOO    OOOOO  OOOO    |h              |hOOOOOOOOO        O              |h                                                                      ",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
@@ -229,15 +229,15 @@ struct Levels {
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                    7               0                               7                 0                              7                0                              7            0                                                                                                            ",
-	"                             3                           7                   3                            7                  3                            7                  3                            7                                                                                    ",
-	"                                                                                 G                                                                                                                                                                                                             ",
-	"                                                                                                               w                                                                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                             ,.m                                                                               ",
-	"                      w                                                         w                                                                                                                                                                                                              ",
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                            xcvcx                                                                              ",
+	"                             3                           7                   3                            7                  3                            7                  3                          j 7                                                                                    ",
+	"                                                                                 G                                                                                                                     ki                                                                                      ",
+	"                                                                                                               w                                                                                        o                                                                                      ",
+	"                                                                                                                                                                                                        o                                                                                      ",
+	"                                                                                                                                                                                                        o                                                                                      ",
+	"                                                                                                                                                                                                        o    ,.m                                                                               ",
+	"                      w                                                         w                                                                                                                       o                                                                                      ",
+	"                                                                                                                                                                                                        o                                                                                      ",
+	"                                                                                                                                                                                                        o   xcvcx                                                                              ",
 	" 1          2    5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1     O                                                                                     ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
@@ -686,6 +686,30 @@ void outputLevel()
 			{
 				a = 0;
 				b = 2;
+				c = 0;
+			}
+			else if (level.currentScene[i][j] == 'i')
+			{
+				a = 0;
+				b = 3;
+				c = 0;
+			}
+			else if (level.currentScene[i][j] == 'o')
+			{
+				a = 1;
+				b = 3;
+				c = 0;
+			}
+			else if (level.currentScene[i][j] == 'j')
+			{
+				a = 2;
+				b = 3;
+				c = 0;
+			}
+			else if (level.currentScene[i][j] == 'k')
+			{
+				a = 3;
+				b = 3;
 				c = 0;
 			}
 			else if (level.currentScene[i][j] == 'x')
@@ -1228,7 +1252,7 @@ int main()
 					}
 
 					//right
-					if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX] != ' ' && mob[i].mob == 3))
+					if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX] != ' ' && mob[i].mob == 3 && !mob[i].moving))
 					{
 						mob[i].direction = true;
 					}
@@ -1244,7 +1268,7 @@ int main()
 					}
 					else
 					{
-						if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX - 1] != ' ' && mob[i].mob == 3))
+						if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX - 1] != ' ' && mob[i].mob == 3 && !mob[i].moving))
 						{
 							mob[i].direction = false;
 						}
