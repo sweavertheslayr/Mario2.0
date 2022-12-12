@@ -1060,7 +1060,7 @@ int main()
 
 		player.runningTime += window.dT;
 		block.runningTime += window.dT;
-		winTime -= 1 * window.dT;
+		winTime -= 2 * window.dT;
 		player.time = winTime;
 
 		//MAKE MOBS
