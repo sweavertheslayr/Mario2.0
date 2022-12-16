@@ -26,6 +26,7 @@ struct Window {
 	bool pause = false;
 	bool levelSelect = false;
 	bool exit = false;
+	bool debug = false;
 
 	const char* title = "Super Mario Bros";
 }window;
@@ -172,6 +173,7 @@ struct Player {
 	bool isTurning = false;
 	bool isDucking = false;
 	bool isHit = false;
+	bool isDead = false;
 	float tall = 0;
 }player;
 
@@ -192,8 +194,8 @@ struct Levels {
 	float type = 0;
 
 	std::string oneA[30] = {
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                               ",
+	"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------",
+	"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
@@ -503,6 +505,8 @@ void setArray(int currentLevel)
 	
 	if (level.type == 0)
 	{ sound.currentBackground = sound.runningAbout; }
+	if (level.type == 1)
+	{ sound.currentBackground = sound.underground; }
 }
 
 void findSize(std::string arr[32])
@@ -1004,12 +1008,13 @@ void outputPipes()
 
 void restartLevel()
 {
+	player.isDead = false;
 	emptyArray(level.current);
 	emptyArray(level.currentScene);
 	setArray(window.currentLevel);
 	findSize(level.current);
 	window.renderPosX = 0;
-
+	PlayMusicStream(sound.currentBackground);
 	for (int i = 0; i < window.mobCount; i++)
 	{
 		mob[i] = reset;
@@ -1020,6 +1025,8 @@ void restartLevel()
 	player.posX = window.blockHeight * 4;
 
 	player.posY = window.blockHeight * 7;
+
+	player.velocity = 0;
 
 	player.collision = false;
 }
@@ -1077,12 +1084,37 @@ int main()
 	SetTargetFPS(60);
 	const float gravity = 2200;
 	SetExitKey(KEY_Y);
-
+	restartLevel();
 	float winTime = 400;
+
 	while (!window.exit)
 	{
-		PlayMusicStream(sound.currentBackground);
+		if (player.isDead)
+		{
+			while (1)
+			{
+				if (IsMusicStreamPlaying(sound.currentBackground))
+				{
+					StopMusicStream(sound.currentBackground);
+					PlaySoundMulti(sound.die);
+				}
+
+				if (GetSoundsPlaying() == 0)
+				{
+					restartLevel(); 
+					break;
+				}
+			}
+		}
+
+		//enter debug mode
+		if (IsKeyPressed(KEY_BACKSPACE))
+		{
+			window.debug = !window.debug;
+		}
+
 		UpdateMusicStream(sound.currentBackground);
+		
 		window.dT = GetFrameTime();
 
 		BeginDrawing();
@@ -1305,16 +1337,15 @@ int main()
 					}
 				}
 
-
+				Rectangle playerCollider{ player.posX - player.width * window.scale + 4 * window.scale, player.posY - player.width * player.spriteHeight * window.scale, ((player.width - 8) * window.scale), (player.width * player.spriteHeight * window.scale) };
 				//CHARACTER COLLISION
 				if (mob[i].hostile)
 				{
 					//player
 					if (!mob[i].hit || !mob[i].outShell)
 					{
-						Rectangle boxCollider{ mob[i].posX - (0.6 * window.blockHeight), mob[i].posY - ((4.0 - mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 0.4, mob[i].height * window.scale };
-						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
-
+						Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 4 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (24 * window.scale), (4 * window.scale) };
+					
 						if (CheckCollisionRecs(boxCollider, playerCollider))
 						{
 							if (!mob[i].outShell && !mob[i].moving && mob[i].mob == 3)
@@ -1349,9 +1380,8 @@ int main()
 						}
 						else if ((mob[i].outShell || (mob[i].moving && mob[i].runningTime > 2 * mob[i].updateTime)))
 						{
-							Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - ((3.4 + mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 1.2, mob[i].height * window.scale * 0.1 };
-							Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
-						
+							Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 40 * window.scale, (32 * window.scale), (24 * window.scale) };
+							
 							if (CheckCollisionRecs(boxCollider, playerCollider))
 							{
 								player.collision = true;
@@ -1574,7 +1604,6 @@ int main()
 		player.iPosXLD = (player.posX - (24 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
 		player.iPosXC = (player.posX - (16 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
 
-
 		window.renderPosDistance = player.iPosX - (player.posX / window.blockHeight) + 4;
 
 		player.iPosY = (player.posY) / window.blockHeight;
@@ -1734,7 +1763,7 @@ int main()
 			}
 			player.justJumped = true;
 		}
-		else
+		else if (window.dT < 0.02)
 		{
 			player.velocity -= 4000 * window.dT;
 		}
@@ -1830,7 +1859,7 @@ int main()
 		//DECELERATE
 
 		//up
-		if ((!player.isGrounded) && (!player.collidePlatform))
+		if ((!player.isGrounded) && (!player.collidePlatform) && window.dT < 0.02)
 		{
 			player.velocity -= gravity * window.dT;
 		}
@@ -2165,7 +2194,6 @@ int main()
 			}
 		}
 
-
 		//DEATH
 		if (player.collideD && (level.current[player.iPosY + (level.currentSize - 21)][player.iPosXD] == '-' || level.current[player.iPosY + (level.currentSize - 21)][player.iPosXLD] == '-'))
 		{
@@ -2174,9 +2202,7 @@ int main()
 			player.lives--;
 			player.score = 0;
 			player.tall = 0;
-			StopMusicStream(sound.currentBackground);
-			PlaySoundMulti(sound.die);
-			restartLevel();
+			player.isDead = true;
 		}
 		else if (player.collideU && (level.current[player.iPosY + (level.currentSize - 22)][player.iPosXD] == '-' || level.current[player.iPosY + (level.currentSize - 22)][player.iPosXLD] == '-'))
 		{
@@ -2185,22 +2211,18 @@ int main()
 			player.lives--;
 			player.tall = 0;
 			player.score = 0;
-			StopMusicStream(sound.currentBackground);
-			PlaySoundMulti(sound.die);
-			restartLevel();
+			player.isDead = true;
 		}
 
 
 		//do stuff here
-		if (player.collision && player.tall == 0)
+		if (player.collision && player.tall == 0 && !player.isDead)
 		{
 			player.sidewaysVelocity = 0;
 			player.velocity = 0;
 			player.lives--;
 			player.score = 0;
-			StopMusicStream(sound.currentBackground);
-			PlaySoundMulti(sound.die);
-			restartLevel();
+			player.isDead = true;
 		}
 		else if (player.collision)
 		{
@@ -2227,7 +2249,6 @@ int main()
 						Vector2{ 0, 0 },
 						0,
 						WHITE);
-					DrawRectangleLines(mob[i].posX - (0.6 * window.blockHeight), mob[i].posY - ((4.0 - mob[i].stationary) * window.blockHeight) - 8, mob[i].width* window.scale * 0.4, mob[i].height* window.scale, RED);
 				}
 			}
 
@@ -2247,13 +2268,48 @@ int main()
 				0,
 				WHITE);
 
-			//DrawRectangle( player.posX, player.posY, ((-player.width) * window.scale), (-player.width * player.spriteHeight * window.scale), GREEN);
-
 			for (int i = 0; i < window.mobCount; i++)
 			{
 				if (mob[i].loaded && mob[i].hit && mob[i].runningTime <= 4 * mob[i].updateTime)
 				{
 					DrawTextEx(window.font, TextFormat("%i", mob[i].scoreHit), Vector2{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (7 * window.blockHeight) - 8 - mob[i].runningTime * window.blockHeight }, window.blockHeight / 2.5, 0, WHITE);
+				}
+			}
+
+			if (window.debug)
+			{
+				DrawRectangleLines(player.posX - player.width * window.scale + 4 * window.scale, player.posY - player.width * player.spriteHeight * window.scale, ((player.width - 8) * window.scale), (player.width * player.spriteHeight * window.scale), GREEN);
+				for (int i = 0; i < window.mobCount; i++)
+				{
+					if (mob[i].hostile)
+					{
+						//player
+						if (!mob[i].hit || !mob[i].outShell)
+						{
+							DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 4 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (24 * window.scale), (4 * window.scale), GREEN);
+							DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 40 * window.scale, (32 * window.scale), (24 * window.scale), RED);
+						}
+					}
+					else if (mob[i].isPlatform)
+					{
+						DrawRectangleLines(mob[i].posX - (2 * window.blockHeight), mob[i].posY - (5 * window.blockHeight) + 9, (32 * window.scale) + ((mob[i].length - 1) * window.blockHeight), 4 * window.scale, BLUE );
+					}
+					else if (!mob[i].hit)
+					{
+						Rectangle mobFour{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (2.5 * window.blockHeight), mob[i].width * window.scale * 2, mob[i].height * window.scale };
+						
+					}
+
+					//other mobs
+					Rectangle mobFive{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
+					for (int j = 0; j < window.mobCount; j++)
+					{
+						if (mob[j].hostile)
+						{
+							Rectangle mobSix{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale, mob[j].height * window.scale * 2 };
+
+						}
+					}
 				}
 			}
 		}
