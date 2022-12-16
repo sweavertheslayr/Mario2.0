@@ -2181,6 +2181,7 @@ int main()
 						Vector2{ 0, 0 },
 						0,
 						WHITE);
+					DrawRectangleLines(mob[i].posX - (0.6 * window.blockHeight), mob[i].posY - ((4.0 - mob[i].stationary) * window.blockHeight) - 8, mob[i].width* window.scale * 0.4, mob[i].height* window.scale, RED);
 				}
 			}
 
@@ -2199,6 +2200,8 @@ int main()
 				Vector2{ 0, 0 },
 				0,
 				WHITE);
+
+			DrawRectangleLines( player.posX, player.posY, ((-player.width) * window.scale), (-player.width * 2 * window.scale), GREEN);
 
 			for (int i = 0; i < window.mobCount; i++)
 			{
