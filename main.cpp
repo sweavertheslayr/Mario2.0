@@ -40,6 +40,7 @@ struct Sounds {
 	Sound die;
 	Sound kick;
 	Sound bump;
+	Sound breakBlock;
 }sound;
 
 struct BadGuy {
@@ -128,6 +129,8 @@ struct Player {
 	int iPosXC = 0;
 	int iPosY = 0;
 
+	float hitTime = 0;
+	float rehitTime = 1 / 2.0;
 
 	//stuff
 	int score = 0;
@@ -490,6 +493,7 @@ void loadSounds()
 	sound.die = LoadSound("DevAssets/sounds/die.mp3");
 	sound.kick = LoadSound("DevAssets/sounds/kick.wav");
 	sound.bump = LoadSound("DevAssets/sounds/bump.wav");
+	sound.breakBlock = LoadSound("DevAssets/sounds/breakBlock.wav");
 }
 
 void emptyArray(std::string arr[32])
@@ -1348,44 +1352,21 @@ int main()
 				if (mob[i].hostile)
 				{
 					//player
-					if (!mob[i].hit || !mob[i].outShell)
+					if (!mob[i].hit)
 					{
 						Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 4 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (24 * window.scale), (4 * window.scale) };
 					
 						if (CheckCollisionRecs(boxCollider, playerCollider))
 						{
-							if (!mob[i].outShell && !mob[i].moving && mob[i].mob == 3)
-							{
-								mob[i].moving = true;
-								mob[i].maxSpeed = 800;
-								mob[i].runningTime = 0;
-								if (player.posX + 1.4 * window.blockHeight > mob[i].posX)
-								{
-									mob[i].direction = true;
-								}
-								else
-								{
-									mob[i].direction = false;
-								}
-							}
-							else if (!mob[i].outShell)
-							{
-								mob[i].moving = false;
-								mob[i].maxSpeed = 0;
-								player.shellStreak = 1;
-							}
-							else if (!mob[i].hit)
-							{
-								mob[i].hit = true;
-								player.score += 100 * player.streak;
-								mob[i].scoreHit = 100 * player.streak;
-								player.streak += 1;
-								player.velocity = player.jumpVelocity;
-								player.velocity = player.jumpVelocity;
-							}
+							mob[i].hit = true;
+							player.score += 100 * player.streak;
+							mob[i].scoreHit = 100 * player.streak;
+							player.streak += 1;
+							player.velocity = player.jumpVelocity;
+							player.velocity = player.jumpVelocity;
 							PlaySoundMulti(sound.kick);
 						}
-						else if ((mob[i].outShell || (mob[i].moving && mob[i].runningTime > 2 * mob[i].updateTime)))
+						else if (player.hitTime > player.rehitTime)
 						{
 							Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 40 * window.scale, (32 * window.scale), (24 * window.scale) };
 							
@@ -1610,6 +1591,7 @@ int main()
 		player.iPosXL = (player.posX - (28 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
 		player.iPosXLD = (player.posX - (24 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
 		player.iPosXC = (player.posX - (16 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
+		player.hitTime += window.dT;
 
 		window.renderPosDistance = player.iPosX - (player.posX / window.blockHeight) + 4;
 
@@ -2019,6 +2001,19 @@ int main()
 
 		//BLOCK STUFF
 
+		//collide noise
+		if (player.collideU && (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] != 'o' || level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '-'))
+		{
+			if (player.tall == 1 && (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '_' || level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '#'))
+			{
+				PlaySoundMulti(sound.breakBlock);
+			}
+			else
+			{
+				PlaySoundMulti(sound.bump);
+			}
+		}
+
 		//break block
 		if (player.collideU && (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '_' || level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '#'))
 		{
@@ -2038,7 +2033,6 @@ int main()
 				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'M';
 				level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'c';
 			}
-			PlaySoundMulti(sound.bump);
 		}
 
 		if (player.collideU && level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'o')
@@ -2052,10 +2046,6 @@ int main()
 			if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'w')
 			{
 				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'M';
-			}
-			else
-			{
-				PlaySoundMulti(sound.bump);
 			}
 		}
 
