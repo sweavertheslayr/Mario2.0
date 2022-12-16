@@ -31,11 +31,12 @@ struct Window {
 }window;
 
 struct Sounds {
-	Music runningAbout = LoadMusicStream("DevAssets/sounds/runningAbout.mp3");
-	Music underground = LoadMusicStream("DevAssets/sounds/underground.mp3");
-	Sound smallJump = LoadSound("DevAssets/sounds/smallJump.wav");
-	Sound bigJump = LoadSound("DevAssets/sounds/bigJump.wav");
-	Sound die = LoadSound("DevAssets/sounds/die.mp3");
+	Music currentBackground;
+	Music runningAbout;
+	Music underground;
+	Sound smallJump;
+	Sound bigJump;
+	Sound die;
 }sound;
 
 struct BadGuy {
@@ -476,6 +477,15 @@ struct Levels {
 
 }level;
 
+void loadSounds()
+{
+	sound.runningAbout = LoadMusicStream("DevAssets/sounds/runningAbout.mp3");
+	sound.underground = LoadMusicStream("DevAssets/sounds/underground.mp3");
+	sound.smallJump = LoadSound("DevAssets/sounds/smallJump.wav");
+	sound.bigJump = LoadSound("DevAssets/sounds/bigJump.wav");
+	sound.die = LoadSound("DevAssets/sounds/die.mp3");
+}
+
 void emptyArray(std::string arr[32])
 {
 	for (int i = 0; i < 32; i++)
@@ -490,6 +500,9 @@ void setArray(int currentLevel)
 	if (currentLevel == 2) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoA[i];  level.currentScene[i] = level.twoSceneA[i]; } level.type = 1; player.world = 1; player.level = 2; }
 	if (currentLevel == 3) { for (int i = 0; i < 30; i++) { level.current[i] = level.threeA[i];  level.currentScene[i] = level.threeSceneA[i]; } level.type = 0; player.world = 1; player.level = 3; }
 	if (currentLevel == 4) { for (int i = 0; i < 30; i++) { level.current[i] = level.fourA[i];  level.currentScene[i] = level.fourSceneA[i]; } level.type = 2; player.world = 1; player.level = 4; }
+	
+	if (level.type == 0)
+	{ sound.currentBackground = sound.runningAbout; }
 }
 
 void findSize(std::string arr[32])
@@ -1033,6 +1046,8 @@ int main()
 	int pauseMenu = 0;
 	InitAudioDevice();
 
+	loadSounds();
+
 	window.font = LoadFont("DevAssets/super-mario-bros-nes.ttf");
 	player.texture = LoadTexture("DevAssets/marioLargeRunSheet.png");
 	block.texture = LoadTexture("DevAssets/blockSheet.png");
@@ -1040,7 +1055,7 @@ int main()
 	scenery.texture2 = LoadTexture("DevAssets/castleSheet.png");
 	SetSoundVolume(sound.bigJump, 0.25f);
 	SetSoundVolume(sound.smallJump, 0.25f);
-	SetSoundVolume(sound.die, 0.25f);
+	SetSoundVolume(sound.die, 1.0f);
 
 	window.width = GetScreenWidth();
 	window.height = GetScreenHeight();
@@ -1049,6 +1064,7 @@ int main()
 	emptyArray(level.currentScene);
 	setArray(window.currentLevel);
 	findSize(level.current);
+
 
 	window.scale = (window.height / (508 + ((level.size - 16) * 16)));
 	window.blockHeight = window.height / level.size;
@@ -1065,7 +1081,8 @@ int main()
 	float winTime = 400;
 	while (!window.exit)
 	{
-		UpdateMusicStream(sound.runningAbout);
+		PlayMusicStream(sound.currentBackground);
+		UpdateMusicStream(sound.currentBackground);
 		window.dT = GetFrameTime();
 
 		BeginDrawing();
@@ -1706,11 +1723,11 @@ int main()
 					player.bufferCollide = true;
 					player.collidePlatform = false;
 				}
-				if (player.tall)
+				if (player.tall && !window.pause && !window.levelSelect)
 				{
 					PlaySoundMulti(sound.bigJump);
 				}
-				else
+				else if (!window.pause && !window.levelSelect)
 				{
 					PlaySoundMulti(sound.smallJump);
 				}
@@ -2018,6 +2035,7 @@ int main()
 
 			if ((!window.pause) && (!window.levelSelect))
 			{
+				ResumeMusicStream(sound.currentBackground);
 				player.posX = player.tempPosX;
 				player.posY = player.tempPosY;
 				player.velocity = player.tempVelocity;
@@ -2026,6 +2044,7 @@ int main()
 			}
 			else if (!window.levelSelect)
 			{
+				PauseMusicStream(sound.currentBackground);
 				player.tempPosX = player.posX;
 				player.tempPosY = player.posY;
 				player.tempVelocity = player.velocity;
@@ -2155,6 +2174,7 @@ int main()
 			player.lives--;
 			player.score = 0;
 			player.tall = 0;
+			StopMusicStream(sound.currentBackground);
 			PlaySoundMulti(sound.die);
 			restartLevel();
 		}
@@ -2165,6 +2185,7 @@ int main()
 			player.lives--;
 			player.tall = 0;
 			player.score = 0;
+			StopMusicStream(sound.currentBackground);
 			PlaySoundMulti(sound.die);
 			restartLevel();
 		}
@@ -2177,6 +2198,7 @@ int main()
 			player.velocity = 0;
 			player.lives--;
 			player.score = 0;
+			StopMusicStream(sound.currentBackground);
 			PlaySoundMulti(sound.die);
 			restartLevel();
 		}
@@ -2254,7 +2276,6 @@ int main()
 		else if (window.pause)
 		{
 			outputPause();
-
 			DrawTextEx(window.font, "resume", Vector2{ 13 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight, 0, WHITE);
 			DrawTextEx(window.font, "levels", Vector2{ 13 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight, 0, WHITE);
 			DrawTextEx(window.font, "quit", Vector2{ 13 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight, 0, WHITE);
