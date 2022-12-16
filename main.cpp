@@ -38,6 +38,8 @@ struct Sounds {
 	Sound smallJump;
 	Sound bigJump;
 	Sound die;
+	Sound kick;
+	Sound bump;
 }sound;
 
 struct BadGuy {
@@ -486,6 +488,8 @@ void loadSounds()
 	sound.smallJump = LoadSound("DevAssets/sounds/smallJump.wav");
 	sound.bigJump = LoadSound("DevAssets/sounds/bigJump.wav");
 	sound.die = LoadSound("DevAssets/sounds/die.mp3");
+	sound.kick = LoadSound("DevAssets/sounds/kick.wav");
+	sound.bump = LoadSound("DevAssets/sounds/bump.wav");
 }
 
 void emptyArray(std::string arr[32])
@@ -1060,8 +1064,10 @@ int main()
 	block.texture = LoadTexture("DevAssets/blockSheet.png");
 	scenery.texture = LoadTexture("DevAssets/sceneryOneSheet.png");
 	scenery.texture2 = LoadTexture("DevAssets/castleSheet.png");
-	SetSoundVolume(sound.bigJump, 0.25f);
-	SetSoundVolume(sound.smallJump, 0.25f);
+	SetSoundVolume(sound.bigJump, 0.75f);
+	SetSoundVolume(sound.smallJump, 0.75f);
+	SetSoundVolume(sound.bump, 0.75f);
+	SetSoundVolume(sound.kick, 0.75f);
 	SetSoundVolume(sound.die, 1.0f);
 
 	window.width = GetScreenWidth();
@@ -1377,6 +1383,7 @@ int main()
 								player.velocity = player.jumpVelocity;
 								player.velocity = player.jumpVelocity;
 							}
+							PlaySoundMulti(sound.kick);
 						}
 						else if ((mob[i].outShell || (mob[i].moving && mob[i].runningTime > 2 * mob[i].updateTime)))
 						{
@@ -2026,12 +2033,12 @@ int main()
 			{
 				level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = ' ';
 			}
-
 			if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'w')
 			{
 				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'M';
 				level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'c';
 			}
+			PlaySoundMulti(sound.bump);
 		}
 
 		if (player.collideU && level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'o')
@@ -2045,6 +2052,10 @@ int main()
 			if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'w')
 			{
 				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'M';
+			}
+			else
+			{
+				PlaySoundMulti(sound.bump);
 			}
 		}
 
@@ -2357,6 +2368,8 @@ int main()
 	UnloadSound(sound.smallJump);
 	UnloadSound(sound.bigJump);
 	UnloadSound(sound.die);
+	UnloadSound(sound.kick);
+	UnloadSound(sound.bump);
 	UnloadMusicStream(sound.runningAbout);
 	UnloadMusicStream(sound.underground);
 	CloseAudioDevice();
