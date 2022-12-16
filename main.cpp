@@ -30,6 +30,14 @@ struct Window {
 	const char* title = "Super Mario Bros";
 }window;
 
+struct Sounds {
+	Music runningAbout = LoadMusicStream("DevAssets/sounds/runningAbout.mp3");
+	Music underground = LoadMusicStream("DevAssets/sounds/underground.mp3");
+	Sound smallJump = LoadSound("DevAssets/sounds/smallJump.wav");
+	Sound bigJump = LoadSound("DevAssets/sounds/bigJump.wav");
+	Sound die = LoadSound("DevAssets/sounds/die.mp3");
+}sound;
+
 struct BadGuy {
 	float mob = 0;
 	float type = 0;
@@ -1030,10 +1038,9 @@ int main()
 	block.texture = LoadTexture("DevAssets/blockSheet.png");
 	scenery.texture = LoadTexture("DevAssets/sceneryOneSheet.png");
 	scenery.texture2 = LoadTexture("DevAssets/castleSheet.png");
-	Music runningAbout = LoadMusicStream("DevAssets/sounds/runningAbout.mp3");
-	Sound smallJump = LoadSound("DevAssets/sounds/smallJump.wav");
-	SetSoundVolume(smallJump, 0.25f);
-	PlayMusicStream(runningAbout);
+	SetSoundVolume(sound.bigJump, 0.25f);
+	SetSoundVolume(sound.smallJump, 0.25f);
+	SetSoundVolume(sound.die, 0.25f);
 
 	window.width = GetScreenWidth();
 	window.height = GetScreenHeight();
@@ -1058,7 +1065,7 @@ int main()
 	float winTime = 400;
 	while (!window.exit)
 	{
-		UpdateMusicStream(runningAbout);
+		UpdateMusicStream(sound.runningAbout);
 		window.dT = GetFrameTime();
 
 		BeginDrawing();
@@ -1699,7 +1706,14 @@ int main()
 					player.bufferCollide = true;
 					player.collidePlatform = false;
 				}
-				PlaySoundMulti(smallJump);
+				if (player.tall)
+				{
+					PlaySoundMulti(sound.bigJump);
+				}
+				else
+				{
+					PlaySoundMulti(sound.smallJump);
+				}
 			}
 			player.justJumped = true;
 		}
@@ -2141,6 +2155,7 @@ int main()
 			player.lives--;
 			player.score = 0;
 			player.tall = 0;
+			PlaySoundMulti(sound.die);
 			restartLevel();
 		}
 		else if (player.collideU && (level.current[player.iPosY + (level.currentSize - 22)][player.iPosXD] == '-' || level.current[player.iPosY + (level.currentSize - 22)][player.iPosXLD] == '-'))
@@ -2150,6 +2165,7 @@ int main()
 			player.lives--;
 			player.tall = 0;
 			player.score = 0;
+			PlaySoundMulti(sound.die);
 			restartLevel();
 		}
 
@@ -2161,6 +2177,7 @@ int main()
 			player.velocity = 0;
 			player.lives--;
 			player.score = 0;
+			PlaySoundMulti(sound.die);
 			restartLevel();
 		}
 		else if (player.collision)
@@ -2260,8 +2277,11 @@ int main()
 	UnloadTexture(block.texture2);
 	UnloadTexture(player.texture);
 	UnloadTexture(scenery.texture);
-	UnloadSound(smallJump);
-	UnloadMusicStream(runningAbout);
+	UnloadSound(sound.smallJump);
+	UnloadSound(sound.bigJump);
+	UnloadSound(sound.die);
+	UnloadMusicStream(sound.runningAbout);
+	UnloadMusicStream(sound.underground);
 	CloseAudioDevice();
 	CloseWindow();
 }
