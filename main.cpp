@@ -1,4 +1,3 @@
-
 #include "raylib.h"
 #include <iostream>
 #include <math.h>
@@ -1024,18 +1023,17 @@ int main()
 	ToggleFullscreen();
 	int a = 1;
 	int pauseMenu = 0;
+	InitAudioDevice();
 
 	window.font = LoadFont("DevAssets/super-mario-bros-nes.ttf");
 	player.texture = LoadTexture("DevAssets/marioLargeRunSheet.png");
 	block.texture = LoadTexture("DevAssets/blockSheet.png");
 	scenery.texture = LoadTexture("DevAssets/sceneryOneSheet.png");
 	scenery.texture2 = LoadTexture("DevAssets/castleSheet.png");
-	Music runningAbout = LoadMusicStream("gameDevAssets/sounds/runningAbout.mp3");
-	Sound smallJump = LoadSound("gameDevAssets/sounds/smallJump.wav");
+	Music runningAbout = LoadMusicStream("DevAssets/sounds/runningAbout.mp3");
+	Sound smallJump = LoadSound("DevAssets/sounds/smallJump.wav");
 	SetSoundVolume(smallJump, 0.25f);
 	PlayMusicStream(runningAbout);
-	SetMusicVolume(runningAbout, 0.25f);
-	InitAudioDevice();
 
 	window.width = GetScreenWidth();
 	window.height = GetScreenHeight();
@@ -2262,6 +2260,8 @@ int main()
 	UnloadTexture(block.texture2);
 	UnloadTexture(player.texture);
 	UnloadTexture(scenery.texture);
+	UnloadSound(smallJump);
+	UnloadMusicStream(runningAbout);
 	CloseAudioDevice();
 	CloseWindow();
 }
