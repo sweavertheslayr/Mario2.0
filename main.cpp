@@ -1030,6 +1030,13 @@ int main()
 	block.texture = LoadTexture("DevAssets/blockSheet.png");
 	scenery.texture = LoadTexture("DevAssets/sceneryOneSheet.png");
 	scenery.texture2 = LoadTexture("DevAssets/castleSheet.png");
+	Music runningAbout = LoadMusicStream("gameDevAssets/sounds/runningAbout.mp3");
+	Sound smallJump = LoadSound("gameDevAssets/sounds/smallJump.wav");
+	SetSoundVolume(smallJump, 0.25f);
+	PlayMusicStream(runningAbout);
+	SetMusicVolume(runningAbout, 0.25f);
+	InitAudioDevice();
+
 	window.width = GetScreenWidth();
 	window.height = GetScreenHeight();
 
@@ -1048,11 +1055,12 @@ int main()
 	player.posY = window.blockHeight * 7;
 	SetTargetFPS(60);
 	const float gravity = 2200;
+	SetExitKey(KEY_Y);
 
 	float winTime = 400;
 	while (!window.exit)
 	{
-		SetExitKey(KEY_Y);
+		UpdateMusicStream(runningAbout);
 		window.dT = GetFrameTime();
 
 		BeginDrawing();
@@ -1693,6 +1701,7 @@ int main()
 					player.bufferCollide = true;
 					player.collidePlatform = false;
 				}
+				PlaySoundMulti(smallJump);
 			}
 			player.justJumped = true;
 		}
@@ -2201,7 +2210,7 @@ int main()
 				0,
 				WHITE);
 
-			DrawRectangleLines( player.posX, player.posY, ((-player.width) * window.scale), (-player.width * 2 * window.scale), GREEN);
+			//DrawRectangle( player.posX, player.posY, ((-player.width) * window.scale), (-player.width * player.spriteHeight * window.scale), GREEN);
 
 			for (int i = 0; i < window.mobCount; i++)
 			{
@@ -2248,9 +2257,11 @@ int main()
 	{
 		UnloadTexture(mob[i].texture);
 	}
+	StopSoundMulti();
 	UnloadTexture(block.texture);
 	UnloadTexture(block.texture2);
 	UnloadTexture(player.texture);
 	UnloadTexture(scenery.texture);
+	CloseAudioDevice();
 	CloseWindow();
 }
