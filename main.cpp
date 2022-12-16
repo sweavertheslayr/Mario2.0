@@ -2292,7 +2292,7 @@ int main()
 					}
 					else if (mob[i].isPlatform)
 					{
-						DrawRectangleLines(mob[i].posX - (2 * window.blockHeight), mob[i].posY - (5 * window.blockHeight) + 9, (32 * window.scale) + ((mob[i].length - 1) * window.blockHeight), 4 * window.scale, BLUE );
+						DrawRectangleLines(mob[i].posX, mob[i].posY, (32 * window.scale) + ((mob[i].length - 1) * window.blockHeight), 4 * window.scale, BLUE );
 					}
 					else if (!mob[i].hit)
 					{
