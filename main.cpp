@@ -1030,6 +1030,7 @@ void restartLevel()
 	setArray(window.currentLevel);
 	findSize(level.current);
 	window.renderPosX = 0;
+	StopMusicStream(sound.currentBackground);
 	PlayMusicStream(sound.currentBackground);
 	for (int i = 0; i < window.mobCount; i++)
 	{
@@ -1362,12 +1363,12 @@ int main()
 				//CHARACTER COLLISION
 				if (mob[i].hostile)
 				{
+					Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 4 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (24 * window.scale), (16 * window.scale) };
+
 					//player
 					if (!mob[i].hit)
 					{
-						Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 4 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (24 * window.scale), (4 * window.scale) };
-					
-						if (CheckCollisionRecs(boxCollider, playerCollider) && player.hitTime > player.rehitTime)
+						if (CheckCollisionRecs(boxCollider, playerCollider) && player.hitTime > player.rehitTime + 2)
 						{
 							mob[i].hit = true;
 							player.score += 100 * player.streak;
@@ -1379,7 +1380,7 @@ int main()
 						}
 						else if (player.hitTime > player.rehitTime)
 						{
-							Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 40 * window.scale, (32 * window.scale), (24 * window.scale) };
+							Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale) };
 						
 							if (CheckCollisionRecs(boxCollider, playerCollider))
 							{
@@ -1431,8 +1432,7 @@ int main()
 				}
 				else if (!mob[i].hit)
 				{
-					Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (2.5 * window.blockHeight), mob[i].width * window.scale * 2, mob[i].height * window.scale };
-					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32) + (2 * window.blockHeight), player.width * window.scale, player.height * player.spriteHeight * window.scale };
+					Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (32 * window.scale), (32 * window.scale) };
 
 					if (CheckCollisionRecs(boxCollider, playerCollider))
 					{
@@ -1445,12 +1445,12 @@ int main()
 				}
 
 				//other mobs
-				Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
+				Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale) };
 				for (int j = 0; j < window.mobCount; j++)
 				{
 					if (mob[j].hostile)
 					{
-						Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale, mob[j].height * window.scale * 2 };
+						Rectangle boxCollider2{ mob[j].posX - window.renderPosX - (2 * window.blockHeight), mob[j].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale) };
 						if (CheckCollisionRecs(boxCollider, boxCollider2) && mob[j].loaded)
 						{
 							if (!mob[i].outShell && mob[i].speed != 0)
@@ -2308,29 +2308,13 @@ int main()
 						//player
 						if (!mob[i].hit || !mob[i].outShell)
 						{
-							DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 4 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (24 * window.scale), (4 * window.scale), GREEN);
-							DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 40 * window.scale, (32 * window.scale), (24 * window.scale), RED);
+							DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 4 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (24 * window.scale), (16 * window.scale), GREEN);
+							DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale), RED);
 						}
 					}
-					else if (mob[i].isPlatform)
+					else if (!mob[i].hit && !mob[i].isPlatform)
 					{
-						DrawRectangleLines(mob[i].posX, mob[i].posY, (32 * window.scale) + ((mob[i].length - 1) * window.blockHeight), 4 * window.scale, BLUE );
-					}
-					else if (!mob[i].hit)
-					{
-						Rectangle mobFour{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (2.5 * window.blockHeight), mob[i].width * window.scale * 2, mob[i].height * window.scale };
-						
-					}
-
-					//other mobs
-					Rectangle mobFive{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
-					for (int j = 0; j < window.mobCount; j++)
-					{
-						if (mob[j].hostile)
-						{
-							Rectangle mobSix{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale, mob[j].height * window.scale * 2 };
-
-						}
+						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (32 * window.scale), (32 * window.scale), GREEN);
 					}
 				}
 			}
