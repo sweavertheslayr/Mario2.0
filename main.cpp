@@ -1314,7 +1314,7 @@ int main()
 					mob[window.mobCount].upDown = false;
 					mob[window.mobCount].isPlatform = false;
 					mob[window.mobCount].flip = false;
-					mob[window.mobCount].gravity = true;
+					mob[window.mobCount].gravity = false;
 					mob[window.mobCount].blockCollide = true;
 					mob[window.mobCount].outShell = true;
 					mob[window.mobCount].isCoin = true;
@@ -1472,6 +1472,10 @@ int main()
 						}
 					}
 				}
+				else if (mob[i].isCoin)
+				{
+
+				}
 				else if (!mob[i].hit)
 				{
 					Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (32 * window.scale), (32 * window.scale) };
@@ -1593,7 +1597,17 @@ int main()
 				}
 
 				//ANIMATE
-				if (mob[i].runningTime >= mob[i].updateTime && !mob[i].hit)
+				if (mob[i].isCoin)
+				{
+					if (mob[i].runningTime >= mob[i].updateTime)
+					{
+						mob[i].frame++;
+						mob[i].runningTime = 0;
+					}
+					mob[i].posY += 0.5;
+				}
+
+				if (mob[i].runningTime >= mob[i].updateTime && !mob[i].hit && !mob[i].isCoin)
 				{
 					if (mob[i].direction)
 					{
