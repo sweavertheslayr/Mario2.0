@@ -1119,6 +1119,7 @@ int main()
 		{
 			while (1)
 			{
+				player.currentSprite = 0;
 				if (IsMusicStreamPlaying(sound.currentBackground))
 				{
 					StopMusicStream(sound.currentBackground);
