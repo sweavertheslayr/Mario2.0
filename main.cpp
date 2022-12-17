@@ -34,7 +34,9 @@ struct Window {
 struct Sounds {
 	Music currentBackground;
 	Music runningAbout;
+	Music runningAboutFast;
 	Music underground;
+	Music undergroundFast;
 	Sound smallJump;
 	Sound bigJump;
 	Sound die;
@@ -491,7 +493,9 @@ struct Levels {
 void loadSounds()
 {
 	sound.runningAbout = LoadMusicStream("DevAssets/sounds/runningAbout.mp3");
+	sound.runningAboutFast = LoadMusicStream("DevAssets/sounds/runningAboutFast.mp3");
 	sound.underground = LoadMusicStream("DevAssets/sounds/underground.mp3");
+	sound.undergroundFast = LoadMusicStream("DevAssets/sounds/undergroundFast.mp3");
 	sound.smallJump = LoadSound("DevAssets/sounds/smallJump.wav");
 	sound.bigJump = LoadSound("DevAssets/sounds/bigJump.wav");
 	sound.die = LoadSound("DevAssets/sounds/die.mp3");
@@ -1410,7 +1414,6 @@ int main()
 						{
 							player.platform = i;
 							player.collidePlatform = true;
-
 
 							if (mob[i].directionUp)
 							{
