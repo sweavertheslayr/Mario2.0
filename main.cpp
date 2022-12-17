@@ -188,6 +188,7 @@ struct Player {
 	bool isDucking = false;
 	bool isHit = false;
 	bool isDead = false;
+	bool shrinking = false;
 	float tall = 0;
 }player;
 
@@ -1070,6 +1071,101 @@ void outputPlatform(float type, int i, int length)
 	}
 }
 
+void outputEverything()
+{
+	//OUTPUT LEVEL
+	if ((!window.pause && !window.levelSelect) || player.isDead)
+	{
+		outputLevel();
+
+		for (int i = 0; i < window.mobCount; i++)
+		{
+			if (mob[i].isPlatform)
+			{
+				outputPlatform(mob[i].mob, i, mob[i].length);
+			}
+			else if (mob[i].loaded)
+			{
+				DrawTexturePro(
+					mob[i].texture,
+					Rectangle{ (mob[i].frame) * 16, ((mob[i].mob + mob[i].type) * 32), 16, 32 },
+					Rectangle{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8, (32 * window.scale), (64 * window.scale) },
+					Vector2{ 0, 0 },
+					0,
+					WHITE);
+			}
+		}
+
+		outputPipes();
+
+		DrawTextEx(window.font, TextFormat("world %i-%i", player.world, player.level), Vector2{ 0 * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
+		DrawTextEx(window.font, TextFormat("score: %i", player.score), Vector2{ (window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
+		DrawTextEx(window.font, TextFormat("coins: %i", player.coins), Vector2{ (2 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
+		DrawTextEx(window.font, TextFormat("time: %i", player.time), Vector2{ (3 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
+		DrawTextEx(window.font, TextFormat("lives: %i", player.lives), Vector2{ (4 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
+
+		DrawTexturePro(
+			player.texture,
+			Rectangle{ player.currentSprite * 16, (32 * player.tall), -player.width / 2, -player.width },
+			Rectangle{ player.posX, player.posY, ((-player.width) * window.scale), (-player.width * 2 * window.scale) },
+			Vector2{ 0, 0 },
+			0,
+			WHITE);
+
+		for (int i = 0; i < window.mobCount; i++)
+		{
+			if (mob[i].loaded && mob[i].hit && mob[i].runningTime <= 4 * mob[i].updateTime)
+			{
+				DrawTextEx(window.font, TextFormat("%i", mob[i].scoreHit), Vector2{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (7 * window.blockHeight) - 8 - mob[i].runningTime * window.blockHeight }, window.blockHeight / 2.5, 0, WHITE);
+			}
+		}
+
+		if (window.debug)
+		{
+			DrawRectangleLines(player.posX - player.width * window.scale + 4 * window.scale, player.posY - player.width * player.spriteHeight * window.scale, ((player.width - 8) * window.scale), (player.width * player.spriteHeight * window.scale), GREEN);
+			for (int i = 0; i < window.mobCount; i++)
+			{
+				if (mob[i].hostile)
+				{
+					//player
+					if (!mob[i].hit || !mob[i].outShell)
+					{
+						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 4 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (24 * window.scale), (16 * window.scale), GREEN);
+						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale), RED);
+					}
+				}
+				else if (!mob[i].hit && !mob[i].isPlatform)
+				{
+					DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (32 * window.scale), (32 * window.scale), GREEN);
+				}
+			}
+		}
+	}
+	else if (window.levelSelect)
+	{
+		if (IsKeyPressed(KEY_ESCAPE))
+		{
+			window.levelSelect = false;
+			window.pause = true;
+		}
+		else
+		{
+			levelSelection();
+
+			DrawTextEx(window.font, "level 1", Vector2{ 13 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
+			DrawTextEx(window.font, "level 2", Vector2{ 13 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
+			DrawTextEx(window.font, "level 3", Vector2{ 13 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
+		}
+	}
+	else if (window.pause)
+	{
+		outputPause();
+		DrawTextEx(window.font, "resume", Vector2{ 13 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight, 0, WHITE);
+		DrawTextEx(window.font, "levels", Vector2{ 13 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight, 0, WHITE);
+		DrawTextEx(window.font, "quit", Vector2{ 13 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight, 0, WHITE);
+	}
+}
+
 int main()
 {
 	InitWindow(window.width, window.height, window.title);
@@ -1119,20 +1215,48 @@ int main()
 
 	while (!window.exit)
 	{
+		window.dT = GetFrameTime();
+
 		if (player.isDead)
 		{
 			while (1)
 			{
-				player.currentSprite = 0;
 				if (IsMusicStreamPlaying(sound.currentBackground))
 				{
 					StopMusicStream(sound.currentBackground);
 					PlaySoundMulti(sound.die);
 				}
 
+				player.currentSprite = 13;
+				BeginDrawing();
+				(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
+				outputEverything();
+				EndDrawing();
+
 				if (GetSoundsPlaying() == 0)
 				{
 					restartLevel(); 
+					break;
+				}
+			}
+		}
+
+		if (player.shrinking)
+		{
+			while (1)
+			{
+
+
+				BeginDrawing();
+				(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
+				outputEverything();
+				EndDrawing();
+
+				UpdateMusicStream(sound.currentBackground);
+
+				if (GetSoundsPlaying() == 0)
+				{
+					player.shrinking = false;
 					break;
 				}
 			}
@@ -1145,12 +1269,6 @@ int main()
 		}
 
 		UpdateMusicStream(sound.currentBackground);
-		
-		window.dT = GetFrameTime();
-
-		BeginDrawing();
-
-		(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
 
 		player.runningTime += window.dT;
 		block.runningTime += window.dT;
@@ -1337,9 +1455,12 @@ int main()
 			if (mob[i].loaded && !window.pause && !window.levelSelect)
 			{
 				//POSITION
-				mob[i].posX += mob[i].speed * window.dT;
-				mob[i].posY += mob[i].velocity * window.dT;
-				mob[i].runningTime += window.dT;
+				if (window.dT < 0.02)
+				{
+					mob[i].posX += mob[i].speed * window.dT;
+					mob[i].posY += mob[i].velocity * window.dT;
+					mob[i].runningTime += window.dT;
+				}
 
 				if (mob[i].stationary)
 				{
@@ -1419,7 +1540,7 @@ int main()
 					//player
 					if (!mob[i].hit)
 					{
-						if (CheckCollisionRecs(boxCollider, playerCollider) && player.hitTime > player.rehitTime + 2)
+						if (CheckCollisionRecs(boxCollider, playerCollider) && player.hitTime > player.rehitTime + 0.25)
 						{
 							mob[i].hit = true;
 							player.score += 100 * player.streak;
@@ -1553,6 +1674,7 @@ int main()
 					//down
 					if (!mob[i].collideD)
 					{
+						if (window.dT < 0.02)
 						mob[i].velocity += gravity * window.dT;
 					}
 					else
@@ -1672,14 +1794,17 @@ int main()
 
 
 		//PLAYER INFO
-		player.posY -= player.velocity * window.dT;
-		player.posX += player.sidewaysVelocity * window.dT;
-		player.iPosX = (player.posX - (4 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
-		player.iPosXD = (player.posX - (8 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
-		player.iPosXL = (player.posX - (28 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
-		player.iPosXLD = (player.posX - (24 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
-		player.iPosXC = (player.posX - (16 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
-		player.hitTime += window.dT;
+		if (window.dT < 0.02)
+		{
+			player.posY -= player.velocity * window.dT;
+			player.posX += player.sidewaysVelocity * window.dT;
+			player.iPosX = (player.posX - (4 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
+			player.iPosXD = (player.posX - (8 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
+			player.iPosXL = (player.posX - (28 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
+			player.iPosXLD = (player.posX - (24 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
+			player.iPosXC = (player.posX - (16 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
+			player.hitTime += window.dT;
+		}
 
 		window.renderPosDistance = player.iPosX - (player.posX / window.blockHeight) + 4;
 
@@ -2330,100 +2455,14 @@ int main()
 		{
 			player.tall = 0;
 			player.collision = false;
+			player.shrinking = true;
 			PlaySoundMulti(sound.pipe);
 		}
 
-		//OUTPUT LEVEL
-		if (!window.pause && !window.levelSelect)
-		{
-			outputLevel();
+		BeginDrawing();
+		(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
 
-			for (int i = 0; i < window.mobCount; i++)
-			{
-				if (mob[i].isPlatform)
-				{
-					outputPlatform(mob[i].mob, i, mob[i].length);
-				}
-				else if (mob[i].loaded)
-				{
-					DrawTexturePro(
-						mob[i].texture,
-						Rectangle{ (mob[i].frame) * 16, ((mob[i].mob + mob[i].type) * 32), 16, 32 },
-						Rectangle{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8, (32 * window.scale), (64 * window.scale) },
-						Vector2{ 0, 0 },
-						0,
-						WHITE);
-				}
-			}
-
-			outputPipes();
-
-			DrawTextEx(window.font, TextFormat("world %i-%i", player.world, player.level), Vector2{0 * window.blockHeight + 10, 10}, window.blockHeight / 2., 0, WHITE);
-			DrawTextEx(window.font, TextFormat("score: %i", player.score), Vector2{ (window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
-			DrawTextEx(window.font, TextFormat("coins: %i", player.coins), Vector2{ (2 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
-			DrawTextEx(window.font, TextFormat("time: %i", player.time), Vector2{ (3 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
-			DrawTextEx(window.font, TextFormat("lives: %i", player.lives), Vector2{ (4 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
-
-			DrawTexturePro(
-				player.texture,
-				Rectangle{ player.currentSprite * 16, (32 * player.tall), -player.width / 2, -player.width },
-				Rectangle{ player.posX, player.posY, ((-player.width) * window.scale), (-player.width * 2 * window.scale) },
-				Vector2{ 0, 0 },
-				0,
-				WHITE);
-
-			for (int i = 0; i < window.mobCount; i++)
-			{
-				if (mob[i].loaded && mob[i].hit && mob[i].runningTime <= 4 * mob[i].updateTime)
-				{
-					DrawTextEx(window.font, TextFormat("%i", mob[i].scoreHit), Vector2{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (7 * window.blockHeight) - 8 - mob[i].runningTime * window.blockHeight }, window.blockHeight / 2.5, 0, WHITE);
-				}
-			}
-
-			if (window.debug)
-			{
-				DrawRectangleLines(player.posX - player.width * window.scale + 4 * window.scale, player.posY - player.width * player.spriteHeight * window.scale, ((player.width - 8) * window.scale), (player.width * player.spriteHeight * window.scale), GREEN);
-				for (int i = 0; i < window.mobCount; i++)
-				{
-					if (mob[i].hostile)
-					{
-						//player
-						if (!mob[i].hit || !mob[i].outShell)
-						{
-							DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 4 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (24 * window.scale), (16 * window.scale), GREEN);
-							DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale), RED);
-						}
-					}
-					else if (!mob[i].hit && !mob[i].isPlatform)
-					{
-						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (32 * window.scale), (32 * window.scale), GREEN);
-					}
-				}
-			}
-		}
-		else if (window.levelSelect)
-		{
-			if (IsKeyPressed(KEY_ESCAPE))
-			{
-				window.levelSelect = false;
-				window.pause = true;
-			}
-			else
-			{
-				levelSelection();
-
-				DrawTextEx(window.font, "level 1", Vector2{ 13 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
-				DrawTextEx(window.font, "level 2", Vector2{ 13 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
-				DrawTextEx(window.font, "level 3", Vector2{ 13 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
-			}
-		}
-		else if (window.pause)
-		{
-			outputPause();
-			DrawTextEx(window.font, "resume", Vector2{ 13 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight, 0, WHITE);
-			DrawTextEx(window.font, "levels", Vector2{ 13 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight, 0, WHITE);
-			DrawTextEx(window.font, "quit", Vector2{ 13 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight, 0, WHITE);
-		}
+		outputEverything();
 
 		EndDrawing();
 
