@@ -1149,7 +1149,7 @@ int main()
 		player.time = winTime;
 
 		//MAKE MOBS
-		if (!window.pause && !window.exit)
+		if (!window.pause)
 		{
 			for (int i = 0; i < 30; i++)
 			{
@@ -1283,7 +1283,7 @@ int main()
 
 		for (int i = 0; i < window.mobCount; i++)
 		{
-			if (mob[i].loaded && !window.pause)
+			if (mob[i].loaded && !window.pause && !window.levelSelect)
 			{
 				//POSITION
 				mob[i].posX += mob[i].speed * window.dT;
@@ -1381,7 +1381,7 @@ int main()
 						else if (player.hitTime > player.rehitTime)
 						{
 							Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale) };
-						
+
 							if (CheckCollisionRecs(boxCollider, playerCollider))
 							{
 								player.collision = true;
