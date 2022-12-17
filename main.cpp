@@ -44,6 +44,7 @@ struct Sounds {
 	Sound pipe;
 	Sound powerup;
 	Sound newPowerup;
+	Sound pause;
 }sound;
 
 struct BadGuy {
@@ -500,6 +501,7 @@ void loadSounds()
 	sound.pipe = LoadSound("DevAssets/sounds/pipe.wav");
 	sound.powerup = LoadSound("DevAssets/sounds/powerup.wav");
 	sound.newPowerup = LoadSound("DevAssets/sounds/newPowerup.wav");
+	sound.pause = LoadSound("DevAssets/sounds/pause.wav");
 }
 
 void emptyArray(std::string arr[32])
@@ -1438,6 +1440,7 @@ int main()
 						player.score += 1000;
 						mob[i].scoreHit = 1000;
 						mob[i].hit = true;
+						PlaySoundMulti(sound.powerup);
 					}
 				}
 
@@ -2042,6 +2045,7 @@ int main()
 			{
 				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'M';
 				level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'c';
+				PlaySoundMulti(sound.newPowerup);
 			}
 		}
 
@@ -2056,6 +2060,7 @@ int main()
 			if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'w')
 			{
 				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'M';
+				PlaySoundMulti(sound.newPowerup);
 			}
 		}
 
@@ -2085,6 +2090,8 @@ int main()
 			else if (!window.levelSelect)
 			{
 				PauseMusicStream(sound.currentBackground);
+				StopSoundMulti();
+				PlaySoundMulti(sound.pause);
 				player.tempPosX = player.posX;
 				player.tempPosY = player.posY;
 				player.tempVelocity = player.velocity;
