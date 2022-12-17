@@ -47,6 +47,7 @@ struct Sounds {
 	Sound powerup;
 	Sound newPowerup;
 	Sound pause;
+	Sound coin;
 }sound;
 
 struct BadGuy {
@@ -506,6 +507,7 @@ void loadSounds()
 	sound.powerup = LoadSound("DevAssets/sounds/powerup.wav");
 	sound.newPowerup = LoadSound("DevAssets/sounds/newPowerup.wav");
 	sound.pause = LoadSound("DevAssets/sounds/pause.wav");
+	sound.coin = LoadSound("DevAssets/sounds/coin.wav");
 }
 
 void emptyArray(std::string arr[32])
@@ -1287,6 +1289,29 @@ int main()
 							mob[window.mobCount].length = 3;
 						}
 						window.mobCount += 1;
+					}
+					//coin
+					else if (level.currentScene[i][j] == 'C')
+					{
+					mob[window.mobCount].texture = LoadTexture("DevAssets/boxCoin.png");
+					level.currentScene[i][j] = ' ';
+					mob[window.mobCount].width = 8;
+					mob[window.mobCount].height = 14;
+					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+					mob[window.mobCount].posY = (i)*window.blockHeight;
+					mob[window.mobCount].mob = 6;
+					mob[window.mobCount].type = level.type;
+					mob[window.mobCount].hostile = false;
+					mob[window.mobCount].startY = i * window.blockHeight;
+					mob[window.mobCount].direction = false;
+					mob[window.mobCount].stationary = false;
+					mob[window.mobCount].upDown = false;
+					mob[window.mobCount].isPlatform = false;
+					mob[window.mobCount].flip = false;
+					mob[window.mobCount].gravity = true;
+					mob[window.mobCount].blockCollide = true;
+					mob[window.mobCount].outShell = true;
+					window.mobCount += 1;
 					}
 				}
 			}
@@ -2071,6 +2096,10 @@ int main()
 			{
 				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'M';
 				PlaySoundMulti(sound.newPowerup);
+			}
+			else
+			{
+				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'C';
 			}
 		}
 
