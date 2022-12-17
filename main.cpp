@@ -41,6 +41,9 @@ struct Sounds {
 	Sound kick;
 	Sound bump;
 	Sound breakBlock;
+	Sound pipe;
+	Sound powerup;
+	Sound newPowerup;
 }sound;
 
 struct BadGuy {
@@ -130,7 +133,7 @@ struct Player {
 	int iPosY = 0;
 
 	float hitTime = 0;
-	float rehitTime = 1 / 2.0;
+	float rehitTime = 1.0;
 
 	//stuff
 	int score = 0;
@@ -494,6 +497,9 @@ void loadSounds()
 	sound.kick = LoadSound("DevAssets/sounds/kick.wav");
 	sound.bump = LoadSound("DevAssets/sounds/bump.wav");
 	sound.breakBlock = LoadSound("DevAssets/sounds/breakBlock.wav");
+	sound.pipe = LoadSound("DevAssets/sounds/pipe.wav");
+	sound.powerup = LoadSound("DevAssets/sounds/powerup.wav");
+	sound.newPowerup = LoadSound("DevAssets/sounds/newPowerup.wav");
 }
 
 void emptyArray(std::string arr[32])
@@ -1073,6 +1079,9 @@ int main()
 	SetSoundVolume(sound.bump, 0.75f);
 	SetSoundVolume(sound.kick, 0.75f);
 	SetSoundVolume(sound.die, 1.0f);
+	SetSoundVolume(sound.pipe, 0.75f);
+	SetSoundVolume(sound.powerup, 0.75f);
+	SetSoundVolume(sound.newPowerup, 0.75f);
 
 	window.width = GetScreenWidth();
 	window.height = GetScreenHeight();
@@ -1356,7 +1365,7 @@ int main()
 					{
 						Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 4 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (24 * window.scale), (4 * window.scale) };
 					
-						if (CheckCollisionRecs(boxCollider, playerCollider))
+						if (CheckCollisionRecs(boxCollider, playerCollider) && player.hitTime > player.rehitTime)
 						{
 							mob[i].hit = true;
 							player.score += 100 * player.streak;
@@ -1369,10 +1378,11 @@ int main()
 						else if (player.hitTime > player.rehitTime)
 						{
 							Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 40 * window.scale, (32 * window.scale), (24 * window.scale) };
-							
+						
 							if (CheckCollisionRecs(boxCollider, playerCollider))
 							{
 								player.collision = true;
+								player.hitTime = 0;
 							}
 						}
 					}
@@ -2224,10 +2234,13 @@ int main()
 			player.lives--;
 			player.score = 0;
 			player.isDead = true;
+			player.collision = false;
 		}
 		else if (player.collision)
 		{
 			player.tall = 0;
+			player.collision = false;
+			PlaySoundMulti(sound.pipe);
 		}
 
 		//OUTPUT LEVEL
