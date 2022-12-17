@@ -88,6 +88,7 @@ struct BadGuy {
 	bool collideR = false;
 	bool collideL = false;
 	bool hostile = false;
+	bool mobCollide = false;
 	bool isCoin = false;
 
 	bool stationary = false;
@@ -1183,6 +1184,7 @@ int main()
 						mob[window.mobCount].startY = i * window.blockHeight;
 						mob[window.mobCount].direction = true;
 						mob[window.mobCount].stationary = false;
+						mob[window.mobCount].mobCollide = true;
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].isPlatform = false;
 						mob[window.mobCount].flip = false;
@@ -1205,6 +1207,7 @@ int main()
 						mob[window.mobCount].startY = i * window.blockHeight;
 						mob[window.mobCount].direction = true;
 						mob[window.mobCount].stationary = false;
+						mob[window.mobCount].mobCollide = true;
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].isPlatform = false;
 						mob[window.mobCount].flip = false;
@@ -1229,6 +1232,7 @@ int main()
 						mob[window.mobCount].direction = true;
 						mob[window.mobCount].stationary = true;
 						mob[window.mobCount].upDown = true;
+						mob[window.mobCount].mobCollide = false;
 						mob[window.mobCount].isPlatform = false;
 						mob[window.mobCount].flip = false;
 						mob[window.mobCount].gravity = false;
@@ -1252,6 +1256,7 @@ int main()
 						mob[window.mobCount].stationary = false;
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].isPlatform = false;
+						mob[window.mobCount].mobCollide = false;
 						mob[window.mobCount].flip = false;
 						mob[window.mobCount].gravity = true;
 						mob[window.mobCount].blockCollide = true;
@@ -1272,6 +1277,7 @@ int main()
 						mob[window.mobCount].startY = i * window.blockHeight;
 						mob[window.mobCount].direction = false;
 						mob[window.mobCount].stationary = true;
+						mob[window.mobCount].mobCollide = false;
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].isPlatform = true;
 						mob[window.mobCount].gravity = false;
@@ -1306,17 +1312,18 @@ int main()
 					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 					mob[window.mobCount].posY = (i)*window.blockHeight;
 					mob[window.mobCount].mob = 6;
-					mob[window.mobCount].velocity = 10;
+					mob[window.mobCount].velocity = 7;
 					mob[window.mobCount].type = level.type;
 					mob[window.mobCount].hostile = false;
 					mob[window.mobCount].startY = i * window.blockHeight;
 					mob[window.mobCount].direction = false;
 					mob[window.mobCount].stationary = true;
+					mob[window.mobCount].mobCollide = false;
 					mob[window.mobCount].upDown = false;
 					mob[window.mobCount].isPlatform = false;
 					mob[window.mobCount].flip = false;
 					mob[window.mobCount].gravity = false;
-					mob[window.mobCount].blockCollide = true;
+					mob[window.mobCount].blockCollide = false;
 					mob[window.mobCount].outShell = true;
 					mob[window.mobCount].isCoin = true;
 					window.mobCount += 1;
@@ -1495,7 +1502,7 @@ int main()
 				Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale) };
 				for (int j = 0; j < window.mobCount; j++)
 				{
-					if (mob[j].hostile)
+					if (mob[j].mobCollide && mob[i].mobCollide)
 					{
 						Rectangle boxCollider2{ mob[j].posX - window.renderPosX - (2 * window.blockHeight), mob[j].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale) };
 						if (CheckCollisionRecs(boxCollider, boxCollider2) && mob[j].loaded)
@@ -1606,12 +1613,17 @@ int main()
 						mob[i].runningTime = 0;
 					}
 
-					if (mob[i].posY < mob[i].startY - 2 * window.blockHeight)
+					if (mob[i].posY < mob[i].startY - 3 * window.blockHeight)
 					{
-						mob[i].velocity = -10;
+						mob[i].velocity = -7;
 					}
 
 					mob[i].posY -= mob[i].velocity;
+
+					if (mob[i].posY >= mob[i].startY && mob[i].velocity == -7)
+					{
+						mob[i].loaded = false;
+					}
 				}
 
 				if (mob[i].runningTime >= mob[i].updateTime && !mob[i].hit && !mob[i].isCoin)
@@ -2130,6 +2142,7 @@ int main()
 				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'C';
 				PlaySoundMulti(sound.coin);
 				player.coins += 1;
+				player.score += 100;
 			}
 		}
 
