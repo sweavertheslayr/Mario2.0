@@ -2172,6 +2172,7 @@ int main()
 				player.posX = player.tempPosX;
 				player.posY = player.tempPosY;
 				window.renderPosX = window.tempRenderX;
+				ResumeMusicStream(sound.currentBackground);
 				window.pause = false;
 				break;
 			case 1:
