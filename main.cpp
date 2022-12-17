@@ -1152,6 +1152,12 @@ int main()
 		winTime -= 2 * window.dT;
 		player.time = winTime;
 
+		if (player.time == 100)
+		{
+			sound.currentBackground = sound.runningAboutFast;
+			PlayMusicStream(sound.currentBackground);
+		}
+
 		//MAKE MOBS
 		if (!window.pause)
 		{
