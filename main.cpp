@@ -1245,7 +1245,30 @@ int main()
 		{
 			while (1)
 			{
+				player.runningTime += window.dT;
 
+				if (player.runningTime >= player.updateTime)
+				{
+					player.tall = !player.tall;
+					if (player.currentSprite == 0 && !player.tall)
+					{
+						player.currentSprite = 6;
+					}
+					else if (player.currentSprite == 13 && !player.tall)
+					{
+						player.currentSprite = 7;
+					}
+					player.runningTime = 0;
+				}
+
+				if (player.tall == 0)
+				{
+					player.spriteHeight = 1;
+				}
+				else
+				{
+					player.spriteHeight = 2;
+				}
 
 				BeginDrawing();
 				(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
@@ -1257,6 +1280,7 @@ int main()
 				if (GetSoundsPlaying() == 0)
 				{
 					player.shrinking = false;
+					player.tall = 0;
 					break;
 				}
 			}
@@ -1288,7 +1312,6 @@ int main()
 			{
 				for (int j = (window.renderPosDistance); j < window.blocksWide + window.renderPosX / window.blockHeight; j++)
 				{
-
 					//goombas
 					if (level.currentScene[i][j] == 'G')
 					{
@@ -1806,7 +1829,7 @@ int main()
 			player.hitTime += window.dT;
 		}
 
-		window.renderPosDistance = player.iPosX - (player.posX / window.blockHeight) + 4;
+		window.renderPosDistance = player.iPosX - (player.posX / window.blockHeight);
 
 		player.iPosY = (player.posY) / window.blockHeight;
 
