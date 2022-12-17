@@ -88,6 +88,7 @@ struct BadGuy {
 	bool collideR = false;
 	bool collideL = false;
 	bool hostile = false;
+	bool isCoin = false;
 
 	bool stationary = false;
 	bool upDown = false;
@@ -1188,6 +1189,7 @@ int main()
 						mob[window.mobCount].gravity = true;
 						mob[window.mobCount].blockCollide = true;
 						mob[window.mobCount].outShell = true;
+						mob[window.mobCount].isCoin = false;
 						window.mobCount += 1;
 					}
 					//koopas
@@ -1209,6 +1211,7 @@ int main()
 						mob[window.mobCount].gravity = true;
 						mob[window.mobCount].blockCollide = true;
 						mob[window.mobCount].outShell = true;
+						mob[window.mobCount].isCoin = false;
 						window.mobCount += 1;
 					}
 					//tube thing 
@@ -1231,6 +1234,7 @@ int main()
 						mob[window.mobCount].gravity = false;
 						mob[window.mobCount].blockCollide = false;
 						mob[window.mobCount].outShell = true;
+						mob[window.mobCount].isCoin = false;
 						window.mobCount += 1;
 					}
 					//mushroom
@@ -1252,6 +1256,7 @@ int main()
 						mob[window.mobCount].gravity = true;
 						mob[window.mobCount].blockCollide = true;
 						mob[window.mobCount].outShell = true;
+						mob[window.mobCount].isCoin = false;
 						window.mobCount += 1;
 					}
 					//platform
@@ -1273,6 +1278,7 @@ int main()
 						mob[window.mobCount].flip = false;
 						mob[window.mobCount].blockCollide = false;
 						mob[window.mobCount].outShell = true;
+						mob[window.mobCount].isCoin = false;
 
 
 						if (level.currentScene[i][j + 2] == 'u')
@@ -1304,13 +1310,14 @@ int main()
 					mob[window.mobCount].hostile = false;
 					mob[window.mobCount].startY = i * window.blockHeight;
 					mob[window.mobCount].direction = false;
-					mob[window.mobCount].stationary = false;
+					mob[window.mobCount].stationary = true;
 					mob[window.mobCount].upDown = false;
 					mob[window.mobCount].isPlatform = false;
 					mob[window.mobCount].flip = false;
 					mob[window.mobCount].gravity = true;
 					mob[window.mobCount].blockCollide = true;
 					mob[window.mobCount].outShell = true;
+					mob[window.mobCount].isCoin = true;
 					window.mobCount += 1;
 					}
 				}
