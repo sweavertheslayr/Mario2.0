@@ -1306,6 +1306,7 @@ int main()
 					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 					mob[window.mobCount].posY = (i)*window.blockHeight;
 					mob[window.mobCount].mob = 6;
+					mob[window.mobCount].velocity = 10;
 					mob[window.mobCount].type = level.type;
 					mob[window.mobCount].hostile = false;
 					mob[window.mobCount].startY = i * window.blockHeight;
@@ -1604,7 +1605,13 @@ int main()
 						mob[i].frame++;
 						mob[i].runningTime = 0;
 					}
-					mob[i].posY += 0.5;
+
+					if (mob[i].posY < mob[i].startY - 2 * window.blockHeight)
+					{
+						mob[i].velocity = -10;
+					}
+
+					mob[i].posY -= mob[i].velocity;
 				}
 
 				if (mob[i].runningTime >= mob[i].updateTime && !mob[i].hit && !mob[i].isCoin)
@@ -2121,6 +2128,8 @@ int main()
 			else
 			{
 				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'C';
+				PlaySoundMulti(sound.coin);
+				player.coins += 1;
 			}
 		}
 
