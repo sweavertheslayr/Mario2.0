@@ -1,7 +1,7 @@
 #include "raylib.h"
 #include <iostream>
 #include <math.h>
-
+//f(x)=abs(2*\sin(x))
 struct Window {
 	float width = 0;
 	float height = 0;
