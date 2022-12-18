@@ -1583,6 +1583,18 @@ int main()
 							mob[i].direction = false;
 						}
 					}
+
+					if (mob[i].movingShell)
+					{
+						if ((level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || level.current[mob[i].iPosY + 1][mob[i].iPosX] != ' ') && !mob[i].collideD)
+						{
+							mob[i].direction = true;
+						}
+						if ((level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ' || level.current[mob[i].iPosY + 1][mob[i].iPosX - 1] != ' ') && !mob[i].collideD)
+						{
+							mob[i].direction = false;
+						}
+					}
 				}
 
 				Rectangle playerCollider{ player.posX - player.width * window.scale + 4 * window.scale, player.posY - player.width * player.spriteHeight * window.scale, ((player.width - 8) * window.scale), (player.width * player.spriteHeight * window.scale) };
@@ -1755,9 +1767,9 @@ int main()
 						Rectangle boxCollider2{ mob[j].posX - window.renderPosX - (2 * window.blockHeight), mob[j].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale) };
 						if (CheckCollisionRecs(boxCollider, boxCollider2) && mob[j].loaded)
 						{
-							if (!mob[i].outShell && mob[i].speed != 0)
+							if (mob[i].movingShell)
 							{
-								if (!mob[j].hit)
+								if ((!mob[j].hit && !mob[j].movingShell) || mob[j].stillShell)
 								{
 									player.score += 100 * player.shellStreak;
 									mob[j].scoreHit = 100 * player.shellStreak;
@@ -1767,9 +1779,9 @@ int main()
 
 								mob[j].hit = true;
 							}
-							else if (!mob[j].outShell && mob[j].speed != 0)
+							else if (mob[j].movingShell)
 							{
-								if (!mob[i].hit)
+								if ((!mob[i].hit && !mob[i].movingShell) || mob[i].stillShell)
 								{
 									player.score += 100 * player.shellStreak;
 									mob[i].scoreHit = 100 * player.shellStreak;
@@ -1899,7 +1911,7 @@ int main()
 					}
 					mob[i].runningTime = 0;
 				}
-				else if (mob[i].hit && mob[i].runningTime >= 4 * mob[i].updateTime && mob[i].mob != 3)
+				else if (mob[i].hit && mob[i].runningTime >= 4 * mob[i].updateTime && (mob[i].mob != 3 || (!mob[i].stillShell && !mob[i].movingShell)))
 				{
 					mob[i].loaded = false;
 				}
