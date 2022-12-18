@@ -146,7 +146,7 @@ struct Player {
 	int iPosXC = 0;
 	int iPosY = 0;
 
-	float hitTime = 2;
+	float hitTime = 4;
 	float invisTime = 0;
 	float rehitTime = 2.0;
 	float visTime = 1/6.0;
@@ -1048,6 +1048,7 @@ void outputPipes()
 void restartLevel()
 {
 	player.isDead = false;
+	player.hitTime = 2.2;
 	emptyArray(level.current);
 	emptyArray(level.currentScene);
 	setArray(window.currentLevel);
@@ -1531,33 +1532,33 @@ int main()
 					//coin
 					else if (level.currentScene[i][j] == 'C')
 					{
-					mob[window.mobCount].texture = LoadTexture("DevAssets/boxCoin.png");
-					level.currentScene[i][j] = ' ';
-					mob[window.mobCount].width = 8;
-					mob[window.mobCount].height = 14;
-					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
-					mob[window.mobCount].posY = (i)*window.blockHeight;
-					mob[window.mobCount].mob = 0;
-					mob[window.mobCount].currentMob = 0;
-					mob[window.mobCount].velocity = 7;
-					mob[window.mobCount].type = level.type;
-					mob[window.mobCount].hostile = false;
-					mob[window.mobCount].startY = i * window.blockHeight;
-					mob[window.mobCount].direction = false;
-					mob[window.mobCount].stationary = true;
-					mob[window.mobCount].stillShell = false;
-					mob[window.mobCount].isPipe = false;
-					mob[window.mobCount].isSmart = false;
-					mob[window.mobCount].movingShell = false;
-					mob[window.mobCount].mobCollide = false;
-					mob[window.mobCount].upDown = false;
-					mob[window.mobCount].isPlatform = false;
-					mob[window.mobCount].flip = false;
-					mob[window.mobCount].gravity = false;
-					mob[window.mobCount].blockCollide = false;
-					mob[window.mobCount].outShell = true;
-					mob[window.mobCount].isCoin = true;
-					window.mobCount += 1;
+						mob[window.mobCount].texture = LoadTexture("DevAssets/boxCoin.png");
+						level.currentScene[i][j] = ' ';
+						mob[window.mobCount].width = 8;
+						mob[window.mobCount].height = 14;
+						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+						mob[window.mobCount].posY = (i)*window.blockHeight;
+						mob[window.mobCount].mob = 0;
+						mob[window.mobCount].currentMob = 0;
+						mob[window.mobCount].velocity = 7;
+						mob[window.mobCount].type = level.type;
+						mob[window.mobCount].hostile = false;
+						mob[window.mobCount].startY = i * window.blockHeight;
+						mob[window.mobCount].direction = false;
+						mob[window.mobCount].stationary = true;
+						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].isPipe = false;
+						mob[window.mobCount].isSmart = false;
+						mob[window.mobCount].movingShell = false;
+						mob[window.mobCount].mobCollide = false;
+						mob[window.mobCount].upDown = false;
+						mob[window.mobCount].isPlatform = false;
+						mob[window.mobCount].flip = false;
+						mob[window.mobCount].gravity = false;
+						mob[window.mobCount].blockCollide = false;
+						mob[window.mobCount].outShell = true;
+						mob[window.mobCount].isCoin = true;
+						window.mobCount += 1;
 					}
 				}
 			}
@@ -1630,7 +1631,7 @@ int main()
 					}
 
 					//right
-					if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX] != ' ' && (mob[i].mob == 3 || mob[i].mob == 4) && !mob[i].moving))
+					if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX] != ' ' && (mob[i].mob == 3 || mob[i].mob == 5) && !mob[i].moving))
 					{
 						mob[i].direction = true;
 					}
@@ -1646,7 +1647,7 @@ int main()
 					}
 					else
 					{
-						if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX - 1] != ' ' && (mob[i].mob == 3 || mob[i].mob == 4) && !mob[i].moving))
+						if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX - 1] != ' ' && (mob[i].mob == 3 || mob[i].mob == 5) && !mob[i].moving))
 						{
 							mob[i].direction = false;
 						}
@@ -1694,7 +1695,7 @@ int main()
 							player.streak += 1;
 							player.velocity = player.jumpVelocity;
 
-							if ((mob[i].mob == 3 || mob[i].mob == 4))
+							if ((mob[i].mob == 3 || mob[i].mob == 5))
 							{
 								mob[i].stillShell = true;
 							}
@@ -2057,7 +2058,7 @@ int main()
 						mob[i].frame = 0;
 					}
 				}
-				else if (mob[i].hit && mob[i].runningTime >= 4 * mob[i].updateTime && ((mob[i].mob != 3 && mob[i].mob != 4) || (!mob[i].stillShell && !mob[i].movingShell)))
+				else if (mob[i].hit && mob[i].runningTime >= 4 * mob[i].updateTime && ((mob[i].mob != 3 && mob[i].mob != 5) || (!mob[i].stillShell && !mob[i].movingShell)))
 				{
 					mob[i].loaded = false;
 				}
