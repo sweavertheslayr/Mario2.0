@@ -103,6 +103,8 @@ struct BadGuy {
 
 	bool gravity = false;
 	bool blockCollide = false;
+	bool stillShell = false;
+	bool movingShell = false;
 
 	bool loaded = true;
 }reset, mob[30];
@@ -138,7 +140,7 @@ struct Player {
 	int iPosXC = 0;
 	int iPosY = 0;
 
-	float hitTime = 0;
+	float hitTime = 2;
 	float invisTime = 0;
 	float rehitTime = 2.0;
 	float visTime = 1/6.0;
@@ -233,7 +235,7 @@ struct Levels {
 	"                 o   _o_o_                     tk         tk                   _o_              _     __    o  o  o     _          __      O  O          OO  O            __o_            OOOOOO                                                                                               ",
 	"                                       tk      |h         |h                                                                              OO  OO        OOO  OO                          OOOOOOO                                                                                               ",
 	"                             tk        |h      |h         |h                                                                             OOO  OOO      OOOO  OOO     tk              tk OOOOOOOO                       tk                                                                      ",
-	"                             |h        |h      |h         |h                                                                            OOOO  OOOO    OOOOO  OOOO    |h              |hOOOOOOOOO        O              |h                                                                      ",
+	"%                            |h        |h      |h         |h                                                                            OOOO  OOOO    OOOOO  OOOO    |h              |hOOOOOOOOO        O              |h                                                                      ",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
@@ -266,7 +268,7 @@ struct Levels {
 	"                      w                                                         w                                                                                                                       o                                                                                      ",
 	"                                                                                                                                                                                                        o                                                                                      ",
 	"                                                                                                                                                                                                        o   xcvcx                                                                              ",
-	" 1          2    5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1     O                                                                                     ",
+	" 1          2 K  5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1     O                                                                                     ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
@@ -1131,7 +1133,17 @@ void outputEverything()
 				if (mob[i].hostile)
 				{
 					//player
-					if (!mob[i].hit || !mob[i].outShell)
+					if (!mob[i].hit)
+					{
+						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 4 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (24 * window.scale), (16 * window.scale), GREEN);
+						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale), RED);
+					}
+					else if (mob[i].stillShell)
+					{
+						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (16 * window.scale), (32 * window.scale), GREEN);
+						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 16 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (16 * window.scale), (32 * window.scale), BLUE);
+					}
+					else if (mob[i].movingShell)
 					{
 						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 4 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (24 * window.scale), (16 * window.scale), GREEN);
 						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale), RED);
@@ -1336,6 +1348,8 @@ int main()
 						mob[window.mobCount].flip = false;
 						mob[window.mobCount].gravity = true;
 						mob[window.mobCount].blockCollide = true;
+						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].movingShell = false;
 						mob[window.mobCount].outShell = true;
 						mob[window.mobCount].isCoin = false;
 						window.mobCount += 1;
@@ -1355,6 +1369,8 @@ int main()
 						mob[window.mobCount].stationary = false;
 						mob[window.mobCount].mobCollide = true;
 						mob[window.mobCount].upDown = false;
+						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].movingShell = false;
 						mob[window.mobCount].isPlatform = false;
 						mob[window.mobCount].flip = false;
 						mob[window.mobCount].gravity = true;
@@ -1378,6 +1394,8 @@ int main()
 						mob[window.mobCount].direction = true;
 						mob[window.mobCount].stationary = true;
 						mob[window.mobCount].upDown = true;
+						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].movingShell = false;
 						mob[window.mobCount].mobCollide = false;
 						mob[window.mobCount].isPlatform = false;
 						mob[window.mobCount].flip = false;
@@ -1401,6 +1419,8 @@ int main()
 						mob[window.mobCount].direction = false;
 						mob[window.mobCount].stationary = false;
 						mob[window.mobCount].upDown = false;
+						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].movingShell = false;
 						mob[window.mobCount].isPlatform = false;
 						mob[window.mobCount].mobCollide = false;
 						mob[window.mobCount].flip = false;
@@ -1424,6 +1444,8 @@ int main()
 						mob[window.mobCount].direction = false;
 						mob[window.mobCount].stationary = true;
 						mob[window.mobCount].mobCollide = false;
+						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].movingShell = false;
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].isPlatform = true;
 						mob[window.mobCount].gravity = false;
@@ -1464,6 +1486,8 @@ int main()
 					mob[window.mobCount].startY = i * window.blockHeight;
 					mob[window.mobCount].direction = false;
 					mob[window.mobCount].stationary = true;
+					mob[window.mobCount].stillShell = false;
+					mob[window.mobCount].movingShell = false;
 					mob[window.mobCount].mobCollide = false;
 					mob[window.mobCount].upDown = false;
 					mob[window.mobCount].isPlatform = false;
@@ -1575,7 +1599,73 @@ int main()
 							mob[i].scoreHit = 100 * player.streak;
 							player.streak += 1;
 							player.velocity = player.jumpVelocity;
+
+							if (mob[i].mob == 3)
+							{
+								mob[i].stillShell = true;
+							}
+
+							PlaySoundMulti(sound.kick);
+						}
+						else if (player.hitTime > player.rehitTime && !player.invincibleFive)
+						{
+							Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale) };
+
+							if (CheckCollisionRecs(boxCollider, playerCollider))
+							{
+								player.collision = true;
+								player.hitTime = 0;
+							}
+						}
+					}
+					else if (mob[i].stillShell)
+					{
+						Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (16 * window.scale), (32 * window.scale) };
+
+						if (CheckCollisionRecs(boxCollider, playerCollider))
+						{
+							mob[i].movingShell = true;
+							mob[i].maxSpeed = 800;
+							mob[i].moving = true;
+							mob[i].direction = false;
+							mob[i].stillShell = false;
+							if (!player.isGrounded)
+							{
+								player.velocity = player.jumpVelocity;
+							}
+							PlaySoundMulti(sound.kick);
+						}
+						else
+						{
+							Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 16 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (16 * window.scale), (32 * window.scale) };
+
+							if (CheckCollisionRecs(boxCollider, playerCollider))
+							{
+								mob[i].movingShell = true;
+								mob[i].maxSpeed = 800;
+								mob[i].moving = true;
+								mob[i].direction = true;
+								mob[i].stillShell = false;
+								if (!player.isGrounded)
+								{
+									player.velocity = player.jumpVelocity;
+								}
+								PlaySoundMulti(sound.kick);
+							}
+						}
+					}
+					else if (mob[i].movingShell)
+					{
+						if (CheckCollisionRecs(boxCollider, playerCollider) && player.hitTime > player.rehitTime + 0.1 && !player.invincibleFive)
+						{
+							player.score += 100 * player.streak;
+							mob[i].scoreHit = 100 * player.streak;
+							player.streak += 1;
 							player.velocity = player.jumpVelocity;
+							mob[i].velocity = 0;
+							mob[i].moving = 0;
+							mob[i].movingShell = 0;
+							mob[i].stillShell = 1;
 							PlaySoundMulti(sound.kick);
 						}
 						else if (player.hitTime > player.rehitTime && !player.invincibleFive)
@@ -1663,6 +1753,7 @@ int main()
 									player.score += 100 * player.shellStreak;
 									mob[j].scoreHit = 100 * player.shellStreak;
 									player.shellStreak += 1;
+									PlaySoundMulti(sound.kick);
 								}
 
 								mob[j].hit = true;
@@ -1674,6 +1765,7 @@ int main()
 									player.score += 100 * player.shellStreak;
 									mob[i].scoreHit = 100 * player.shellStreak;
 									player.shellStreak += 1;
+									PlaySoundMulti(sound.kick);
 								}
 
 								mob[i].hit = true;
@@ -1805,11 +1897,6 @@ int main()
 				else if (mob[i].hit && mob[i].runningTime >= 2 * mob[i].updateTime)
 				{
 					mob[i].outShell = false;
-				}
-				else if (!mob[i].outShell && mob[i].runningTime >= 60 * mob[i].updateTime)
-				{
-					mob[i].hit = false;
-					player.shellStreak = 1;
 				}
 				if (mob[i].hit && mob[i].loaded && !mob[i].moving)
 				{
