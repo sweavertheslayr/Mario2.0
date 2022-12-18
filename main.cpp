@@ -1838,8 +1838,21 @@ int main()
 								{
 									mob[i].shellStreak += 1;
 									mob[j].stillShell = false;
+									mob[j].runningTime = 0;
 									player.score += 100 * mob[i].shellStreak;
 									mob[j].scoreHit = 100 * mob[i].shellStreak;
+									PlaySoundMulti(sound.kick);
+								}
+								else if (mob[j].movingShell)
+								{
+									mob[i].shellStreak += 1;
+									mob[j].shellStreak += 1;
+									mob[j].movingShell = false;
+									mob[i].movingShell = false;
+									mob[i].runningTime = 0;
+									player.score += 100 * mob[i].shellStreak;
+									mob[j].scoreHit = 100 * mob[i].shellStreak;
+									mob[i].scoreHit = 100 * mob[i].shellStreak;
 									PlaySoundMulti(sound.kick);
 								}
 
@@ -1855,7 +1868,17 @@ int main()
 									mob[i].scoreHit = 100 * mob[i].shellStreak;
 									PlaySoundMulti(sound.kick);
 								}
-
+								else if (mob[i].movingShell)
+								{
+									mob[i].shellStreak += 1;
+									mob[j].shellStreak += 1;
+									mob[j].movingShell = false;
+									mob[i].movingShell = false;
+									player.score += 100 * mob[i].shellStreak;
+									mob[j].scoreHit = 100 * mob[i].shellStreak;
+									mob[i].scoreHit = 100 * mob[i].shellStreak;
+									PlaySoundMulti(sound.kick);
+								}
 								mob[i].hit = true;
 							}
 							else
