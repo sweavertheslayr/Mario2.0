@@ -160,6 +160,9 @@ struct Player {
 	int coins = 0;
 	int streak = 1;
 	int shellStreak = 1;
+	int coinsStreak = 0;
+	float coinsTime = 0;
+	float coinsOver = 1 / 2.0;
 
 	//jump
 	int tempVelocity = 0;
@@ -335,7 +338,7 @@ struct Levels {
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                                ",
 	"                                                                                                                                        G G                                                                                                                                                    ",
-	"                                                                       w      G G                             P                                         w                                                                                                                                      ",
+	"                               B                                       w      G G                             P                                         w                                                                                                                                      ",
 	"            w                                                                                           P                                                                                                                                                                                      ",
 	"                                                                                                                    P                                                                                                                                                                          ",
 	"                  G                                                                                                                                                                                                                                                                            ",
@@ -2078,7 +2081,8 @@ int main()
 			player.iPosXL = (player.posX - (28 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
 			player.iPosXLD = (player.posX - (24 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
 			player.iPosXC = (player.posX - (16 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
-			player.hitTime += window.dT;
+			player.hitTime += window.dT; 
+			player.coinsTime += window.dT;
 		}
 
 		window.renderPosDistance = player.iPosX - (player.posX / window.blockHeight);
@@ -2513,7 +2517,7 @@ int main()
 		//BLOCK STUFF
 
 		//collide noise
-		if (player.collideU && (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] != 'o' || level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '-' || level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] != 'B'))
+		if (player.collideU && (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] != 'o' &&  level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] != 'B'))
 		{
 			if (player.tall == 1 && (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '_' || level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '#'))
 			{
@@ -2526,7 +2530,7 @@ int main()
 		}
 
 		//break block
-		if (player.collideU && (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '_' || level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '#'))
+		if (player.collideU && (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '_' || level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '#') && level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] != 'B')
 		{
 			if (player.tall == 0)
 			{
@@ -2549,7 +2553,10 @@ int main()
 
 		if (player.collideU && (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'o' || level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'B'))
 		{
-			level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'q';
+			if (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'o')
+			{
+				level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'q';
+			}
 			block.selectedX = player.iPosXC;
 			block.selectedY = player.iPosY - player.spriteHeight + (level.currentSize - 21);
 			block.runningTime = 0;
@@ -2566,7 +2573,8 @@ int main()
 				PlaySoundMulti(sound.coin);
 				player.coins += 1;
 				player.score += 100;
-				
+				player.coinsStreak += 1;
+				player.coinsTime = 0;
 			}
 			else
 			{
@@ -2575,6 +2583,17 @@ int main()
 				player.coins += 1;
 				player.score += 100;
 			}
+		}
+
+		if (player.coinsStreak == 15)
+		{
+			player.coinsStreak = 0;
+			level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = ' ';
+			level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'c';
+		}
+		else if (player.coinsTime >= player.coinsOver && player.coinsStreak > 0)
+		{
+			player.coinsStreak = 14;
 		}
 
 		if ((level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 't' || player.collideD && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 'k') && (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
