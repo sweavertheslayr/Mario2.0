@@ -1830,8 +1830,20 @@ int main()
 					if (mob[j].mobCollide && mob[i].mobCollide)
 					{
 						Rectangle boxCollider2{ mob[j].posX - window.renderPosX - (2 * window.blockHeight), mob[j].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale) };
-						if (CheckCollisionRecs(boxCollider, boxCollider2) && mob[j].loaded)
+						if (CheckCollisionRecs(boxCollider, boxCollider2) && mob[j].loaded && j != i)
 						{
+							if (mob[i].movingShell && mob[j].movingShell)
+							{
+								mob[i].shellStreak += 1;
+								mob[j].shellStreak += 1;
+								mob[i].movingShell = false;
+								mob[j].movingShell = false;
+								player.score += 100 * mob[i].shellStreak;
+								player.score += 100 * mob[j].shellStreak;
+								mob[i].scoreHit = 100 * mob[i].shellStreak;
+								mob[j].scoreHit = 100 * mob[i].shellStreak;
+								PlaySoundMulti(sound.kick);
+							}
 							if (mob[i].movingShell)
 							{
 								if ((!mob[j].hit && !mob[j].movingShell) || mob[j].stillShell)
@@ -1843,18 +1855,6 @@ int main()
 									mob[j].scoreHit = 100 * mob[i].shellStreak;
 									PlaySoundMulti(sound.kick);
 								}
-								else if (mob[j].movingShell)
-								{
-									mob[i].shellStreak += 1;
-									mob[j].shellStreak += 1;
-									mob[j].movingShell = false;
-									mob[i].movingShell = false;
-									mob[i].runningTime = 0;
-									player.score += 100 * mob[i].shellStreak;
-									mob[j].scoreHit = 100 * mob[i].shellStreak;
-									mob[i].scoreHit = 100 * mob[i].shellStreak;
-									PlaySoundMulti(sound.kick);
-								}
 
 								mob[j].hit = true;
 							}
@@ -1864,18 +1864,8 @@ int main()
 								{
 									mob[j].shellStreak += 1;
 									mob[i].stillShell = false;
+									mob[i].runningTime = 0;
 									player.score += 100 * mob[i].shellStreak;
-									mob[i].scoreHit = 100 * mob[i].shellStreak;
-									PlaySoundMulti(sound.kick);
-								}
-								else if (mob[i].movingShell)
-								{
-									mob[i].shellStreak += 1;
-									mob[j].shellStreak += 1;
-									mob[j].movingShell = false;
-									mob[i].movingShell = false;
-									player.score += 100 * mob[i].shellStreak;
-									mob[j].scoreHit = 100 * mob[i].shellStreak;
 									mob[i].scoreHit = 100 * mob[i].shellStreak;
 									PlaySoundMulti(sound.kick);
 								}
