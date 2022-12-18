@@ -1637,7 +1637,7 @@ int main()
 						}
 					}
 
-					if (mob[i].isSmart)
+					if (mob[i].isSmart && !mob[i].movingShell)
 					{
 						if ((level.current[mob[i].iPosY + 1][mob[i].iPosX] == ' ') && mob[i].collideD)
 						{
@@ -1964,7 +1964,7 @@ int main()
 					}
 					mob[i].runningTime = 0;
 				}
-				else if (mob[i].hit && mob[i].runningTime >= 4 * mob[i].updateTime && ((mob[i].mob != 3 || mob[i].mob != 4) || (!mob[i].stillShell && !mob[i].movingShell)))
+				else if (mob[i].hit && mob[i].runningTime >= 4 * mob[i].updateTime && ((mob[i].mob != 3 && mob[i].mob != 4) || (!mob[i].stillShell && !mob[i].movingShell)))
 				{
 					mob[i].loaded = false;
 				}
