@@ -139,7 +139,9 @@ struct Player {
 	int iPosY = 0;
 
 	float hitTime = 0;
-	float rehitTime = 1.0;
+	float invisTime = 0;
+	float rehitTime = 2.0;
+	float visTime = 1/6.0;
 
 	//stuff
 	int score = 0;
@@ -170,6 +172,7 @@ struct Player {
 	bool collision = false;
 	bool collidePlatform = false;
 	bool bufferCollide = false;
+	bool invincibleFive = false;
 
 	//animation
 	float width = 32;
@@ -1171,6 +1174,7 @@ int main()
 	InitWindow(window.width, window.height, window.title);
 	ToggleFullscreen();
 	int a = 1;
+	int b = 1;
 	int pauseMenu = 0;
 	InitAudioDevice();
 
@@ -1280,6 +1284,7 @@ int main()
 				if (GetSoundsPlaying() == 0)
 				{
 					player.shrinking = false;
+					player.invincibleFive = true;
 					player.tall = 0;
 					break;
 				}
@@ -1563,7 +1568,7 @@ int main()
 					//player
 					if (!mob[i].hit)
 					{
-						if (CheckCollisionRecs(boxCollider, playerCollider) && player.hitTime > player.rehitTime + 0.25)
+						if (CheckCollisionRecs(boxCollider, playerCollider) && player.hitTime > player.rehitTime + 0.1 && !player.invincibleFive)
 						{
 							mob[i].hit = true;
 							player.score += 100 * player.streak;
@@ -1573,7 +1578,7 @@ int main()
 							player.velocity = player.jumpVelocity;
 							PlaySoundMulti(sound.kick);
 						}
-						else if (player.hitTime > player.rehitTime)
+						else if (player.hitTime > player.rehitTime && !player.invincibleFive)
 						{
 							Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale) };
 
@@ -2234,6 +2239,29 @@ int main()
 			}
 		}
 
+		//invincible five
+		if (player.invincibleFive)
+		{
+			if (player.hitTime >= player.rehitTime)
+			{
+				player.invincibleFive = 0;
+			}
+			player.invisTime += window.dT;
+			if (player.invisTime >= player.visTime)
+			{
+				player.invisTime = 0;
+				if (b != 0)
+				{
+					b = 0;
+				}
+				else
+				{
+					b = player.frame;
+				}
+			}
+			player.currentSprite = b;
+		}
+
 
 		//BLOCK STUFF
 
@@ -2480,6 +2508,17 @@ int main()
 			player.collision = false;
 			player.shrinking = true;
 			PlaySoundMulti(sound.pipe);
+		}
+
+		if (player.time <= 0)
+		{
+			player.sidewaysVelocity = 0;
+			player.velocity = 0;
+			player.tall = 0;
+			player.lives--;
+			player.score = 0;
+			player.isDead = true;
+			player.collision = false;
 		}
 
 		BeginDrawing();
