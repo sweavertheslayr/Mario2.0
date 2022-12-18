@@ -237,7 +237,7 @@ struct Levels {
 	"                 o   _o_o_                     tk         tk                   _o_              _     __    o  o  o     _          __      O  O          OO  O            __o_            OOOOOO                                                                                               ",
 	"                                       tk      |h         |h                                                                              OO  OO        OOO  OO                          OOOOOOO                                                                                               ",
 	"                             tk        |h      |h         |h                                                                             OOO  OOO      OOOO  OOO     tk              tk OOOOOOOO                       tk                                                                      ",
-	"%                            |h        |h      |h         |h                                                                            OOOO  OOOO    OOOOO  OOOO    |h              |hOOOOOOOOO        O              |h                                                                      ",
+	"                             |h        |h      |h         |h                                                                            OOOO  OOOO    OOOOO  OOOO    |h              |hOOOOOOOOO        O              |h                                                                      ",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
@@ -270,7 +270,7 @@ struct Levels {
 	"                      w                                                         w                                                                                                                       o                                                                                      ",
 	"                                                                                                                                                                                                        o                                                                                      ",
 	"                                                                                                                                                                                                        o   xcvcx                                                                              ",
-	" 1          2 K  5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1     O                                                                                     ",
+	" 1          2    5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1     O                                                                                     ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
@@ -1147,7 +1147,7 @@ void outputEverything()
 					}
 					else if (mob[i].movingShell)
 					{
-						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 4 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (24 * window.scale), (16 * window.scale), GREEN);
+						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 6 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (20 * window.scale), (16 * window.scale), GREEN);
 						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale), RED);
 					}
 				}
@@ -1662,6 +1662,7 @@ int main()
 					else if (mob[i].movingShell)
 					{
 						mob[i].hitDelay += window.dT;
+						Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 6 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (20 * window.scale), (16 * window.scale) };
 						if (CheckCollisionRecs(boxCollider, playerCollider) && player.hitTime > player.rehitTime + 0.1 && !player.invincibleFive && mob[i].hitDelay >= mob[i].hitDelayTime)
 						{
 							mob[i].runningTime = 0;
@@ -1901,10 +1902,6 @@ int main()
 				else if (mob[i].hit && mob[i].runningTime >= 4 * mob[i].updateTime && mob[i].mob != 3)
 				{
 					mob[i].loaded = false;
-				}
-				else if (mob[i].hit && mob[i].runningTime >= 2 * mob[i].updateTime)
-				{
-					mob[i].outShell = false;
 				}
 				if (mob[i].hit && mob[i].loaded && !mob[i].moving)
 				{
