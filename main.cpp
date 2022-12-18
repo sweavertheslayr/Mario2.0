@@ -74,6 +74,7 @@ struct BadGuy {
 	float velocity = 0;
 	float speed = 0;
 	float maxSpeed = 80;
+	float currentMob = 0;
 
 	float startY = 0;
 
@@ -102,6 +103,7 @@ struct BadGuy {
 	bool directionUp = true;
 
 	bool isPlatform = false;
+	bool isSmart = false;
 
 	bool gravity = false;
 	bool blockCollide = false;
@@ -335,7 +337,7 @@ struct Levels {
 	"            w                                                                                           P                                                                                                                                                                                      ",
 	"                                                                                                                    P                                                                                                                                                                          ",
 	"                  G                                                                                                                                                                                                                                                                            ",
-	"                G              G              K K            K  G G                                G G G           G                          Lqd   K        Lqu                                                                                                                               ",
+	"                G              G              K K            K  G G                                G G G           G                          Lqd   J        Lqu                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
@@ -1095,7 +1097,7 @@ void outputEverything()
 			{
 				DrawTexturePro(
 					mob[i].texture,
-					Rectangle{ (mob[i].frame) * 16, ((mob[i].mob + mob[i].type) * 32), 16, 32 },
+					Rectangle{ (mob[i].frame) * 16, ((mob[i].currentMob) * 32), 16, 32 },
 					Rectangle{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8, (32 * window.scale), (64 * window.scale) },
 					Vector2{ 0, 0 },
 					0,
@@ -1339,6 +1341,7 @@ int main()
 						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
 						mob[window.mobCount].mob = 0;
+						mob[window.mobCount].currentMob = 0;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = true;
 						mob[window.mobCount].startY = i * window.blockHeight;
@@ -1347,7 +1350,8 @@ int main()
 						mob[window.mobCount].mobCollide = true;
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].isPlatform = false;
-						mob[window.mobCount].flip = false;
+						mob[window.mobCount].flip = false; 
+						mob[window.mobCount].isSmart = false;
 						mob[window.mobCount].gravity = true;
 						mob[window.mobCount].blockCollide = true;
 						mob[window.mobCount].stillShell = false;
@@ -1364,6 +1368,7 @@ int main()
 						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
 						mob[window.mobCount].mob = 3;
+						mob[window.mobCount].currentMob = 3;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = true;
 						mob[window.mobCount].startY = i * window.blockHeight;
@@ -1372,6 +1377,34 @@ int main()
 						mob[window.mobCount].mobCollide = true;
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].isSmart = false;
+						mob[window.mobCount].movingShell = false;
+						mob[window.mobCount].isPlatform = false;
+						mob[window.mobCount].flip = false;
+						mob[window.mobCount].gravity = true;
+						mob[window.mobCount].blockCollide = true;
+						mob[window.mobCount].outShell = true;
+						mob[window.mobCount].isCoin = false;
+						window.mobCount += 1;
+					}
+					//smart koopas
+					else if (level.currentScene[i][j] == 'J')
+					{
+						mob[window.mobCount].texture = LoadTexture("DevAssets/mobSheet.png");
+						level.currentScene[i][j] = ' ';
+						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+						mob[window.mobCount].posY = (i)*window.blockHeight;
+						mob[window.mobCount].mob = 4;
+						mob[window.mobCount].currentMob = 4;
+						mob[window.mobCount].type = level.type;
+						mob[window.mobCount].hostile = true;
+						mob[window.mobCount].startY = i * window.blockHeight;
+						mob[window.mobCount].direction = true;
+						mob[window.mobCount].stationary = false;
+						mob[window.mobCount].mobCollide = true;
+						mob[window.mobCount].upDown = false;
+						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].isSmart = true;
 						mob[window.mobCount].movingShell = false;
 						mob[window.mobCount].isPlatform = false;
 						mob[window.mobCount].flip = false;
@@ -1389,6 +1422,7 @@ int main()
 						mob[window.mobCount].posX = (j + 2.48) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
 						mob[window.mobCount].mob = 0;
+						mob[window.mobCount].currentMob = 0;
 						mob[window.mobCount].velocity = 0;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = true;
@@ -1397,6 +1431,7 @@ int main()
 						mob[window.mobCount].stationary = true;
 						mob[window.mobCount].upDown = true;
 						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].isSmart = false;
 						mob[window.mobCount].movingShell = false;
 						mob[window.mobCount].mobCollide = false;
 						mob[window.mobCount].isPlatform = false;
@@ -1415,6 +1450,7 @@ int main()
 						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
 						mob[window.mobCount].mob = 6;
+						mob[window.mobCount].currentMob = 6;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = false;
 						mob[window.mobCount].startY = i * window.blockHeight;
@@ -1423,6 +1459,7 @@ int main()
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].stillShell = false;
 						mob[window.mobCount].movingShell = false;
+						mob[window.mobCount].isSmart = false;
 						mob[window.mobCount].isPlatform = false;
 						mob[window.mobCount].mobCollide = false;
 						mob[window.mobCount].flip = false;
@@ -1440,12 +1477,14 @@ int main()
 						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
 						mob[window.mobCount].mob = 6;
+						mob[window.mobCount].currentMob = 6;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = false;
 						mob[window.mobCount].startY = i * window.blockHeight;
 						mob[window.mobCount].direction = false;
 						mob[window.mobCount].stationary = true;
 						mob[window.mobCount].mobCollide = false;
+						mob[window.mobCount].isSmart = false;
 						mob[window.mobCount].stillShell = false;
 						mob[window.mobCount].movingShell = false;
 						mob[window.mobCount].upDown = false;
@@ -1481,7 +1520,8 @@ int main()
 					mob[window.mobCount].height = 14;
 					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 					mob[window.mobCount].posY = (i)*window.blockHeight;
-					mob[window.mobCount].mob = 6;
+					mob[window.mobCount].mob = 0;
+					mob[window.mobCount].currentMob = 0;
 					mob[window.mobCount].velocity = 7;
 					mob[window.mobCount].type = level.type;
 					mob[window.mobCount].hostile = false;
@@ -1489,6 +1529,7 @@ int main()
 					mob[window.mobCount].direction = false;
 					mob[window.mobCount].stationary = true;
 					mob[window.mobCount].stillShell = false;
+					mob[window.mobCount].isSmart = false;
 					mob[window.mobCount].movingShell = false;
 					mob[window.mobCount].mobCollide = false;
 					mob[window.mobCount].upDown = false;
@@ -1562,7 +1603,7 @@ int main()
 					}
 
 					//right
-					if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX] != ' ' && mob[i].mob == 3 && !mob[i].moving))
+					if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX] != ' ' && (mob[i].mob == 3 || mob[i].mob == 4) && !mob[i].moving))
 					{
 						mob[i].direction = true;
 					}
@@ -1578,7 +1619,7 @@ int main()
 					}
 					else
 					{
-						if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX - 1] != ' ' && mob[i].mob == 3 && !mob[i].moving))
+						if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX - 1] != ' ' && (mob[i].mob == 3 || mob[i].mob == 4) && !mob[i].moving))
 						{
 							mob[i].direction = false;
 						}
@@ -1591,6 +1632,18 @@ int main()
 							mob[i].direction = true;
 						}
 						if ((level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ' || level.current[mob[i].iPosY + 1][mob[i].iPosX - 1] != ' ') && !mob[i].collideD)
+						{
+							mob[i].direction = false;
+						}
+					}
+
+					if (mob[i].isSmart)
+					{
+						if ((level.current[mob[i].iPosY + 1][mob[i].iPosX] == ' ') && mob[i].collideD)
+						{
+							mob[i].direction = true;
+						}
+						if ((level.current[mob[i].iPosY + 1][mob[i].iPosX - 1] == ' ') && mob[i].collideD)
 						{
 							mob[i].direction = false;
 						}
@@ -1614,7 +1667,7 @@ int main()
 							player.streak += 1;
 							player.velocity = player.jumpVelocity;
 
-							if (mob[i].mob == 3)
+							if ((mob[i].mob == 3 || mob[i].mob == 4))
 							{
 								mob[i].stillShell = true;
 							}
@@ -1911,7 +1964,7 @@ int main()
 					}
 					mob[i].runningTime = 0;
 				}
-				else if (mob[i].hit && mob[i].runningTime >= 4 * mob[i].updateTime && (mob[i].mob != 3 || (!mob[i].stillShell && !mob[i].movingShell)))
+				else if (mob[i].hit && mob[i].runningTime >= 4 * mob[i].updateTime && ((mob[i].mob != 3 || mob[i].mob != 4) || (!mob[i].stillShell && !mob[i].movingShell)))
 				{
 					mob[i].loaded = false;
 				}
