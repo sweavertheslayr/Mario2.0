@@ -399,16 +399,16 @@ struct Levels {
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                   0                                               0                                             0                                             ,.m            ",
-	"    0                                               0                                             0                                                3                          ",
-	"                                                                                                                                                                              ",
-	"                                          ppppp                                                                                               OO              xcvcx           ",
-	"                            ppp        7  ppppp               pp                                                                              OO                              ",
+	"    0                                       G G     0                                             0                                                3                          ",
+	"                              J                                                                                                                                               ",
+	"                                          ppppp                                 G                                                             OO              xcvcx           ",
+	"                            ppp        7  ppppp               pp                                            J                                 OO                              ",
 	"           7                ppp     7     ppppp               pp              ppp     7                                              7      OOOO                              ",
 	"  ,.m                       ppp      ppp  ppppp           7   pp              ppp  7                    pppppp                    7         OOOO            cccvcvccccccccccccccc",
-	"              G                      ppp  ppppp               pp              ppp                       pppppp                            OOOOOO                              ",
-	"                          pppppp     ppp  ppppp               pp        p     ppp                       pppppp      pp    pp              OOOOOO                              ",
+	"                                     ppp  ppppp               pp              ppp                       pppppp                            OOOOOO                              ",
+	"                          pppppp     ppp  ppppp             w pp        p     ppp                       pppppp      pp    pp              OOOOOO                              ",
 	" xcvcx                    pppppp     ppp  ppppp7              pp        p  7  ppp                       pppppp      pp    pp              OOOOOO            nnbnbnbnnnnnnnnnnnnnn",
-	"                          pppppp     ppp  ppppp               pp        p     ppp            7    pp    pppppp      pp    pp7             OOOO7O         O                    ",
+	"                          pppppp     ppp  ppppp               pp        p     ppp            7    pp    pppppp      pp    pp7       J     OOOO7O         O                    ",
 	"                    pp    pppppp  p  ppp  ppppp     pp                  p     ppp                 pp    pppppp      pp    pp    ############################################# ",
 	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
 	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
@@ -1048,6 +1048,7 @@ void outputPipes()
 void restartLevel()
 {
 	player.isDead = false;
+	player.justJumped = false;
 	player.hitTime = 2.2;
 	emptyArray(level.current);
 	emptyArray(level.currentScene);
