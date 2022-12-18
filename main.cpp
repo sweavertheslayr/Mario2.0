@@ -1658,6 +1658,7 @@ int main()
 					{
 						if (CheckCollisionRecs(boxCollider, playerCollider) && player.hitTime > player.rehitTime + 0.1 && !player.invincibleFive)
 						{
+							mob[i].runningTime = 0;
 							player.score += 100 * player.streak;
 							mob[i].scoreHit = 100 * player.streak;
 							player.streak += 1;
