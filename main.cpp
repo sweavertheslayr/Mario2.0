@@ -75,6 +75,7 @@ struct BadGuy {
 	float speed = 0;
 	float maxSpeed = 80;
 	float currentMob = 0;
+	float shellStreak = 0;
 
 	float startY = 0;
 
@@ -1144,8 +1145,8 @@ void outputEverything()
 					}
 					else if (mob[i].stillShell)
 					{
-						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (16 * window.scale), (32 * window.scale), GREEN);
-						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 16 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (16 * window.scale), (32 * window.scale), BLUE);
+						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 36 * window.scale, (8 * window.scale), (28 * window.scale), GREEN);
+						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 24 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 36 * window.scale, (8 * window.scale), (28 * window.scale), BLUE);
 					}
 					else if (mob[i].movingShell)
 					{
@@ -1375,6 +1376,7 @@ int main()
 						mob[window.mobCount].direction = true;
 						mob[window.mobCount].stationary = false;
 						mob[window.mobCount].mobCollide = true;
+						mob[window.mobCount].shellStreak = 0;
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].stillShell = false;
 						mob[window.mobCount].isSmart = false;
@@ -1394,8 +1396,8 @@ int main()
 						level.currentScene[i][j] = ' ';
 						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
-						mob[window.mobCount].mob = 4;
-						mob[window.mobCount].currentMob = 4;
+						mob[window.mobCount].mob = 5;
+						mob[window.mobCount].currentMob = 5;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = true;
 						mob[window.mobCount].startY = i * window.blockHeight;
@@ -1405,6 +1407,7 @@ int main()
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].stillShell = false;
 						mob[window.mobCount].isSmart = true;
+						mob[window.mobCount].shellStreak = 0;
 						mob[window.mobCount].movingShell = false;
 						mob[window.mobCount].isPlatform = false;
 						mob[window.mobCount].flip = false;
@@ -1567,7 +1570,7 @@ int main()
 				}
 				else if (mob[i].moving)
 				{
-					mob[i].maxSpeed = 800;
+					mob[i].maxSpeed = 700;
 				}
 				else
 				{
@@ -1602,6 +1605,15 @@ int main()
 						mob[i].posY = mob[i].iPosY * window.blockHeight;
 					}
 
+					if (level.current[mob[i].iPosY + 1][mob[i].iPosXD] == '-')
+					{
+						mob[i].loaded = false;
+						if (mob[i].movingShell)
+						{
+							mob[i].shellStreak = 0;
+						}
+					}
+
 					//right
 					if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX] != ' ' && (mob[i].mob == 3 || mob[i].mob == 4) && !mob[i].moving))
 					{
@@ -1614,7 +1626,7 @@ int main()
 						mob[i].loaded = false;
 						if (mob[i].moving)
 						{
-							player.shellStreak = 1;
+							mob[i].shellStreak = 0;
 						}
 					}
 					else
@@ -1688,13 +1700,13 @@ int main()
 					else if (mob[i].stillShell)
 					{
 						mob[i].hitDelay += window.dT;
-						Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (16 * window.scale), (32 * window.scale) };
+						Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 36 * window.scale, (8 * window.scale), (28 * window.scale) };
 
 						if (CheckCollisionRecs(boxCollider, playerCollider) && mob[i].hitDelay >= mob[i].hitDelayTime)
 						{
 							mob[i].movingShell = true;
 							mob[i].hitDelay = 0;
-							mob[i].maxSpeed = 800;
+							mob[i].maxSpeed = 700;
 							mob[i].moving = true;
 							mob[i].direction = false;
 							mob[i].stillShell = false;
@@ -1706,13 +1718,13 @@ int main()
 						}
 						else
 						{
-							Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 16 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (16 * window.scale), (32 * window.scale) };
+							Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 24 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 36 * window.scale, (8 * window.scale), (28 * window.scale) };
 
 							if (CheckCollisionRecs(boxCollider, playerCollider) && mob[i].hitDelay >= mob[i].hitDelayTime)
 							{
 								mob[i].movingShell = true;
 								mob[i].hitDelay = 0;
-								mob[i].maxSpeed = 800;
+								mob[i].maxSpeed = 700;
 								mob[i].moving = true;
 								mob[i].direction = true;
 								mob[i].stillShell = false;
@@ -1732,7 +1744,7 @@ int main()
 						{
 							mob[i].runningTime = 0;
 							mob[i].hitDelay = 0;
-							player.score += 100 * player.streak;
+							player.score += 100 * mob[i].shellStreak;
 							mob[i].scoreHit = 100 * player.streak;
 							player.streak += 1;
 							player.velocity = player.jumpVelocity;
@@ -1824,9 +1836,10 @@ int main()
 							{
 								if ((!mob[j].hit && !mob[j].movingShell) || mob[j].stillShell)
 								{
-									player.score += 100 * player.shellStreak;
-									mob[j].scoreHit = 100 * player.shellStreak;
-									player.shellStreak += 1;
+									mob[i].shellStreak += 1;
+									mob[j].stillShell = false;
+									player.score += 100 * mob[i].shellStreak;
+									mob[j].scoreHit = 100 * mob[i].shellStreak;
 									PlaySoundMulti(sound.kick);
 								}
 
@@ -1836,9 +1849,10 @@ int main()
 							{
 								if ((!mob[i].hit && !mob[i].movingShell) || mob[i].stillShell)
 								{
-									player.score += 100 * player.shellStreak;
-									mob[i].scoreHit = 100 * player.shellStreak;
-									player.shellStreak += 1;
+									mob[j].shellStreak += 1;
+									mob[i].stillShell = false;
+									player.score += 100 * mob[i].shellStreak;
+									mob[i].scoreHit = 100 * mob[i].shellStreak;
 									PlaySoundMulti(sound.kick);
 								}
 
@@ -1921,6 +1935,36 @@ int main()
 				}
 
 				//ANIMATE
+
+				if (level.type == 0)
+				{
+					mob[i].currentMob = mob[i].mob;
+				}
+				if (level.type == 1)
+				{
+					mob[i].currentMob = mob[i].mob + 1;
+					if (mob[i].mob == 5)
+					{
+						mob[i].currentMob = 4;
+					}
+					if (mob[i].mob == 6)
+					{
+						mob[i].currentMob = 6;
+					}
+				}
+				if (level.type == 2)
+				{
+					mob[i].currentMob = mob[i].mob + 2;
+					if (mob[i].mob == 5)
+					{
+						mob[i].currentMob = 5;
+					}
+					if (mob[i].mob == 6)
+					{
+						mob[i].currentMob = 6;
+					}
+				}
+
 				if (mob[i].isCoin)
 				{
 					if (mob[i].runningTime >= mob[i].updateTime)
@@ -1963,6 +2007,17 @@ int main()
 						}
 					}
 					mob[i].runningTime = 0;
+				}
+				if (mob[i].mob == 6)
+				{
+					if (mob[i].direction)
+					{
+						mob[i].frame = 2;
+					}
+					else
+					{
+						mob[i].frame = 0;
+					}
 				}
 				else if (mob[i].hit && mob[i].runningTime >= 4 * mob[i].updateTime && ((mob[i].mob != 3 && mob[i].mob != 4) || (!mob[i].stillShell && !mob[i].movingShell)))
 				{
