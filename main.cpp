@@ -80,7 +80,9 @@ struct BadGuy {
 	Texture2D texture;
 
 	float runningTime = 0;
+	float hitDelay = 0;
 	float updateTime = 1.0 / 6.0;
+	float hitDelayTime = 1.0 / 6.0;
 
 	float frame = 0;
 
@@ -1588,7 +1590,7 @@ int main()
 				if (mob[i].hostile)
 				{
 					Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 4 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (24 * window.scale), (16 * window.scale) };
-
+					
 					//player
 					if (!mob[i].hit)
 					{
@@ -1620,11 +1622,13 @@ int main()
 					}
 					else if (mob[i].stillShell)
 					{
+						mob[i].hitDelay += window.dT;
 						Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (16 * window.scale), (32 * window.scale) };
 
-						if (CheckCollisionRecs(boxCollider, playerCollider))
+						if (CheckCollisionRecs(boxCollider, playerCollider) && mob[i].hitDelay >= mob[i].hitDelayTime)
 						{
 							mob[i].movingShell = true;
+							mob[i].hitDelay = 0;
 							mob[i].maxSpeed = 800;
 							mob[i].moving = true;
 							mob[i].direction = false;
@@ -1639,9 +1643,10 @@ int main()
 						{
 							Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 16 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (16 * window.scale), (32 * window.scale) };
 
-							if (CheckCollisionRecs(boxCollider, playerCollider))
+							if (CheckCollisionRecs(boxCollider, playerCollider) && mob[i].hitDelay >= mob[i].hitDelayTime)
 							{
 								mob[i].movingShell = true;
+								mob[i].hitDelay = 0;
 								mob[i].maxSpeed = 800;
 								mob[i].moving = true;
 								mob[i].direction = true;
@@ -1656,9 +1661,11 @@ int main()
 					}
 					else if (mob[i].movingShell)
 					{
-						if (CheckCollisionRecs(boxCollider, playerCollider) && player.hitTime > player.rehitTime + 0.1 && !player.invincibleFive)
+						mob[i].hitDelay += window.dT;
+						if (CheckCollisionRecs(boxCollider, playerCollider) && player.hitTime > player.rehitTime + 0.1 && !player.invincibleFive && mob[i].hitDelay >= mob[i].hitDelayTime)
 						{
 							mob[i].runningTime = 0;
+							mob[i].hitDelay = 0;
 							player.score += 100 * player.streak;
 							mob[i].scoreHit = 100 * player.streak;
 							player.streak += 1;
