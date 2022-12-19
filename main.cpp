@@ -1,8 +1,7 @@
-
 #include "raylib.h"
 #include <iostream>
 #include <math.h>
-
+//f(x)=abs(2*\sin(x))
 struct Window {
 	float width = 0;
 	float height = 0;
@@ -27,9 +26,29 @@ struct Window {
 	bool pause = false;
 	bool levelSelect = false;
 	bool exit = false;
+	bool debug = false;
 
 	const char* title = "Super Mario Bros";
 }window;
+
+struct Sounds {
+	Music currentBackground;
+	Music runningAbout;
+	Music runningAboutFast;
+	Music underground;
+	Music undergroundFast;
+	Sound smallJump;
+	Sound bigJump;
+	Sound die;
+	Sound kick;
+	Sound bump;
+	Sound breakBlock;
+	Sound pipe;
+	Sound powerup;
+	Sound newPowerup;
+	Sound pause;
+	Sound coin;
+}sound;
 
 struct BadGuy {
 	float mob = 0;
@@ -55,13 +74,19 @@ struct BadGuy {
 	float velocity = 0;
 	float speed = 0;
 	float maxSpeed = 80;
+	float currentMob = 0;
+	float shellStreak = 0;
+	int start = 0;
+	int stop = 0;
 
 	float startY = 0;
 
 	Texture2D texture;
 
 	float runningTime = 0;
+	float hitDelay = 0;
 	float updateTime = 1.0 / 6.0;
+	float hitDelayTime = 1.0 / 6.0;
 
 	float frame = 0;
 
@@ -69,6 +94,10 @@ struct BadGuy {
 	bool collideR = false;
 	bool collideL = false;
 	bool hostile = false;
+	bool mobCollide = false;
+	bool isCoin = false;
+	bool bounds = false;
+	bool boundsSide = false;
 
 	bool stationary = false;
 	bool upDown = false;
@@ -79,12 +108,16 @@ struct BadGuy {
 	bool directionUp = true;
 
 	bool isPlatform = false;
+	bool isPipe = false;
+	bool isSmart = false;
 
 	bool gravity = false;
 	bool blockCollide = false;
+	bool stillShell = false;
+	bool movingShell = false;
 
 	bool loaded = true;
-}reset, mob[30];
+}reset, mob[99];
 
 struct Block {
 	Texture2D texture;
@@ -117,6 +150,10 @@ struct Player {
 	int iPosXC = 0;
 	int iPosY = 0;
 
+	float hitTime = 4;
+	float invisTime = 0;
+	float rehitTime = 2.0;
+	float visTime = 1/6.0;
 
 	//stuff
 	int score = 0;
@@ -127,6 +164,9 @@ struct Player {
 	int coins = 0;
 	int streak = 1;
 	int shellStreak = 1;
+	int coinsStreak = 0;
+	float coinsTime = 0;
+	float coinsOver = 1 / 2.0;
 
 	//jump
 	int tempVelocity = 0;
@@ -147,6 +187,7 @@ struct Player {
 	bool collision = false;
 	bool collidePlatform = false;
 	bool bufferCollide = false;
+	bool invincibleFive = false;
 
 	//animation
 	float width = 32;
@@ -164,6 +205,8 @@ struct Player {
 	bool isTurning = false;
 	bool isDucking = false;
 	bool isHit = false;
+	bool isDead = false;
+	bool shrinking = false;
 	float tall = 0;
 }player;
 
@@ -184,8 +227,8 @@ struct Levels {
 	float type = 0;
 
 	std::string oneA[30] = {
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                               ",
+	"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------",
+	"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
@@ -235,7 +278,7 @@ struct Levels {
 	"                                                                                                                                                                                                        o                                                                                      ",
 	"                                                                                                                                                                                                        o                                                                                      ",
 	"                                                                                                                                                                                                        o    ,.m                                                                               ",
-	"                      w                                                         w                                                                                                                       o                                                                                      ",
+	"                      w                                                         w               B                                                                                                       o                                                                                      ",
 	"                                                                                                                                                                                                        o                                                                                      ",
 	"                                                                                                                                                                                                        o   xcvcx                                                                              ",
 	" 1          2    5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1     O                                                                                     ",
@@ -299,11 +342,11 @@ struct Levels {
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                                ",
 	"                                                                                                                                        G G                                                                                                                                                    ",
-	"                                                                       w      G G                             P                                         w                                                                                                                                      ",
+	"                               B                                       w      G G                             P                                         w                                                                                                                                      ",
 	"            w                                                                                           P                                                                                                                                                                                      ",
 	"                                                                                                                    P                                                                                                                                                                          ",
 	"                  G                                                                                                                                                                                                                                                                            ",
-	"                G              G              K K            K  G G                                G G G           G                          Lqd   K        Lqu                                                                                                                               ",
+	"                G              G              K K            K  G G                                G G G           G                          Lqd   J        Lqu                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
@@ -327,15 +370,15 @@ struct Levels {
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
-	"                                                                                                                                                         r                    ",
-	"                                         xaaaaav                                                                                                        nf                    ",
-	"                           xaaav                             xaav                                                                             OO         l                    ",
-	"                                                        ooo                  xaaav                                                ooo         OO         l                    ",
-	"                                    xaaav                                                              xaaaaaav                             OOOO         l                    ",
-	"                                                                                      ooo                                                   OOOO         l                    ",
-	"                         xaaaaaav                                      xav                   ooo                   xaav  xaav             OOOOOO         l                    ",
-	"                                                            o                                                                             OOOOOO         l                    ",
-	"                                                                                                 xaav                                     OOOOOO         l                    ",
+	"                                                                                                                                                                              ",
+	"                                         xaaaaav                                                                                                                              ",
+	"                           xaaav                             xaav                                                                             OO                              ",
+	"                                                                             xaaav                                                            OO                              ",
+	"                                    xaaav                                                              xaaaaaav                             OOOO                              ",
+	"                                                                                                                                            OOOO                              ",
+	"                         xaaaaaav                                      xav                                         xaav  xaav             OOOOOO                              ",
+	"                                                            o                                                                             OOOOOO                              ",
+	"                                                                                                 xaav                                     OOOOOO                              ",
 	"                   xaav          xav               xaav                                                                                   OOOOOO         O                    ",
 	"%%%%%%%%%%%%%%%%%                                           xaaav xaaav                                         xav             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%                                                                                                               %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
@@ -360,24 +403,24 @@ struct Levels {
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                   0                                               0                                             0                                             ,.m            ",
-	"    0                                               0                                             0                                                3                          ",
-	"                                                                                                                                                                              ",
-	"                                          ppppp                                                                                               OO              xcvcx           ",
-	"                            ppp        7  ppppp               pp                                                                              OO                              ",
-	"           7                ppp     7     ppppp               pp              ppp     7                                              7      OOOO                              ",
-	"  ,.m                       ppp      ppp  ppppp           7   pp              ppp  7                    pppppp                    7         OOOO            cccvcvccccccccccccccc",
-	"              G                      ppp  ppppp               pp              ppp                       pppppp                            OOOOOO                              ",
-	"                          pppppp     ppp  ppppp               pp        p     ppp                       pppppp      pp    pp              OOOOOO                              ",
-	" xcvcx                    pppppp     ppp  ppppp7              pp        p  7  ppp                       pppppp      pp    pp              OOOOOO            nnbnbnbnnnnnnnnnnnnnn",
-	"                          pppppp     ppp  ppppp               pp        p     ppp            7    pp    pppppp      pp    pp7             OOOO7O         O                    ",
-	"                    pp    pppppp  p  ppp  ppppp     pp                  p     ppp                 pp    pppppp      pp    pp    ############################################# ",
-	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
-	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
-	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
-	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
-	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
-	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
-	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# "
+	"    0                                       G G     0                                             0                                                3     j                    ",
+	"                              J                                                                                                                         ki                    ",
+	"                                          ppppp                                 G                                                                        o    xcvcx           ",
+	"                            ppp        7  ppppp         Lq>(  pp                                            J                     Lq<$                   o                    ",
+	"           7                ppp     7     ppppp               pp              ppp     7                                              7                   o                    ",
+	"  ,.m                       ppp      ppp  ppppp           7   pp              ppp  7Lq<$                pppppp                    7                      o  xxcvcvcxxxxxxxxxxxxxx",
+	"                                     ppp  ppppp               pp              ppp       Lq<&            pppppp                                           o                    ",
+	"                          pppppp     ppp  ppppp             w pp        p     ppp                       pppppp      pp    pp                             o                    ",
+	" xcvcx                    pppppp     ppp  ppppp7              pp        p  7  ppp                       pppppp      pp    pp                             o  nnbnbnbnnnnnnnnnnnnnn",
+	"                          pppppp     ppp  ppppp               pp        p     ppp            7    pp    pppppp      pp    pp7       J         7          O                    ",
+	"                    pp    pppppp  p  ppp  ppppp     pp                  p     ppp                 pp    pppppp      pp    pp                                                  ",
+	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp                                                  ",
+	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp                                                  ",
+	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp                                                  ",
+	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp                                                  ",
+	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp                                                  ",
+	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp                                                  ",
+	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp                                                  "
 	};
 
 	std::string fourA[30]  = {
@@ -469,6 +512,25 @@ struct Levels {
 
 }level;
 
+void loadSounds()
+{
+	sound.runningAbout = LoadMusicStream("DevAssets/sounds/runningAbout.mp3");
+	sound.runningAboutFast = LoadMusicStream("DevAssets/sounds/runningAboutFast.mp3");
+	sound.underground = LoadMusicStream("DevAssets/sounds/underground.mp3");
+	sound.undergroundFast = LoadMusicStream("DevAssets/sounds/undergroundFast.mp3");
+	sound.smallJump = LoadSound("DevAssets/sounds/smallJump.wav");
+	sound.bigJump = LoadSound("DevAssets/sounds/bigJump.wav");
+	sound.die = LoadSound("DevAssets/sounds/die.mp3");
+	sound.kick = LoadSound("DevAssets/sounds/kick.wav");
+	sound.bump = LoadSound("DevAssets/sounds/bump.wav");
+	sound.breakBlock = LoadSound("DevAssets/sounds/breakBlock.wav");
+	sound.pipe = LoadSound("DevAssets/sounds/pipe.wav");
+	sound.powerup = LoadSound("DevAssets/sounds/powerup.wav");
+	sound.newPowerup = LoadSound("DevAssets/sounds/newPowerup.wav");
+	sound.pause = LoadSound("DevAssets/sounds/pause.wav");
+	sound.coin = LoadSound("DevAssets/sounds/coin.wav");
+}
+
 void emptyArray(std::string arr[32])
 {
 	for (int i = 0; i < 32; i++)
@@ -483,6 +545,11 @@ void setArray(int currentLevel)
 	if (currentLevel == 2) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoA[i];  level.currentScene[i] = level.twoSceneA[i]; } level.type = 1; player.world = 1; player.level = 2; }
 	if (currentLevel == 3) { for (int i = 0; i < 30; i++) { level.current[i] = level.threeA[i];  level.currentScene[i] = level.threeSceneA[i]; } level.type = 0; player.world = 1; player.level = 3; }
 	if (currentLevel == 4) { for (int i = 0; i < 30; i++) { level.current[i] = level.fourA[i];  level.currentScene[i] = level.fourSceneA[i]; } level.type = 2; player.world = 1; player.level = 4; }
+	
+	if (level.type == 0)
+	{ sound.currentBackground = sound.runningAbout; }
+	if (level.type == 1)
+	{ sound.currentBackground = sound.underground; }
 }
 
 void findSize(std::string arr[32])
@@ -984,12 +1051,16 @@ void outputPipes()
 
 void restartLevel()
 {
+	player.isDead = false;
+	player.justJumped = false;
+	player.hitTime = 2.2;
 	emptyArray(level.current);
 	emptyArray(level.currentScene);
 	setArray(window.currentLevel);
 	findSize(level.current);
 	window.renderPosX = 0;
-
+	StopMusicStream(sound.currentBackground);
+	PlayMusicStream(sound.currentBackground);
 	for (int i = 0; i < window.mobCount; i++)
 	{
 		mob[i] = reset;
@@ -1000,6 +1071,8 @@ void restartLevel()
 	player.posX = window.blockHeight * 4;
 
 	player.posY = window.blockHeight * 7;
+
+	player.velocity = 0;
 
 	player.collision = false;
 }
@@ -1018,18 +1091,140 @@ void outputPlatform(float type, int i, int length)
 	}
 }
 
+void outputEverything()
+{
+	//OUTPUT LEVEL
+	if ((!window.pause && !window.levelSelect) || player.isDead)
+	{
+		outputLevel();
+
+		for (int i = 0; i < window.mobCount; i++)
+		{
+			if (mob[i].isPlatform)
+			{
+				outputPlatform(mob[i].mob, i, mob[i].length);
+			}
+			else if (mob[i].loaded)
+			{
+				DrawTexturePro(
+					mob[i].texture,
+					Rectangle{ (mob[i].frame) * 16, ((mob[i].currentMob) * 32), 16, 32 },
+					Rectangle{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8, (32 * window.scale), (64 * window.scale) },
+					Vector2{ 0, 0 },
+					0,
+					WHITE);
+			}
+		}
+
+		outputPipes();
+
+		DrawTextEx(window.font, TextFormat("world %i-%i", player.world, player.level), Vector2{ 0 * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
+		DrawTextEx(window.font, TextFormat("score: %i", player.score), Vector2{ (window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
+		DrawTextEx(window.font, TextFormat("coins: %i", player.coins), Vector2{ (2 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
+		DrawTextEx(window.font, TextFormat("time: %i", player.time), Vector2{ (3 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
+		DrawTextEx(window.font, TextFormat("lives: %i", player.lives), Vector2{ (4 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
+
+		DrawTexturePro(
+			player.texture,
+			Rectangle{ player.currentSprite * 16, (32 * player.tall), -player.width / 2, -player.width },
+			Rectangle{ player.posX, player.posY, ((-player.width) * window.scale), (-player.width * 2 * window.scale) },
+			Vector2{ 0, 0 },
+			0,
+			WHITE);
+
+		for (int i = 0; i < window.mobCount; i++)
+		{
+			if (mob[i].loaded && mob[i].hit && mob[i].runningTime <= 4 * mob[i].updateTime)
+			{
+				DrawTextEx(window.font, TextFormat("%i", mob[i].scoreHit), Vector2{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (7 * window.blockHeight) - 8 - mob[i].runningTime * window.blockHeight }, window.blockHeight / 2.5, 0, WHITE);
+			}
+		}
+
+		if (window.debug)
+		{
+			DrawRectangleLines(player.posX - player.width * window.scale + 4 * window.scale, player.posY - player.width * player.spriteHeight * window.scale, ((player.width - 8) * window.scale), (player.width * player.spriteHeight * window.scale), GREEN);
+			for (int i = 0; i < window.mobCount; i++)
+			{
+				if (mob[i].hostile)
+				{
+					//player
+					if (!mob[i].hit && !mob[i].isPipe)
+					{
+						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 4 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (24 * window.scale), (16 * window.scale), GREEN);
+						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale), RED);
+					}
+					else if (mob[i].stillShell)
+					{
+						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 36 * window.scale, (8 * window.scale), (28 * window.scale), GREEN);
+						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 24 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 36 * window.scale, (8 * window.scale), (28 * window.scale), BLUE);
+					}
+					else if (mob[i].movingShell)
+					{
+						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 6 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (20 * window.scale), (16 * window.scale), GREEN);
+						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale), RED);
+					}
+					else if (mob[i].isPipe)
+					{
+						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 2 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (28 * window.scale), (32 * window.scale), RED);
+					}
+				}
+				else if (!mob[i].hit && !mob[i].isPlatform)
+				{
+					DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (32 * window.scale), (32 * window.scale), GREEN);
+				}
+			}
+		}
+	}
+	else if (window.levelSelect)
+	{
+		if (IsKeyPressed(KEY_ESCAPE))
+		{
+			window.levelSelect = false;
+			window.pause = true;
+		}
+		else
+		{
+			levelSelection();
+
+			DrawTextEx(window.font, "level 1", Vector2{ 13 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
+			DrawTextEx(window.font, "level 2", Vector2{ 13 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
+			DrawTextEx(window.font, "level 3", Vector2{ 13 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
+		}
+	}
+	else if (window.pause)
+	{
+		outputPause();
+		DrawTextEx(window.font, "resume", Vector2{ 13 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight, 0, WHITE);
+		DrawTextEx(window.font, "levels", Vector2{ 13 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight, 0, WHITE);
+		DrawTextEx(window.font, "quit", Vector2{ 13 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight, 0, WHITE);
+	}
+}
+
 int main()
 {
 	InitWindow(window.width, window.height, window.title);
 	ToggleFullscreen();
 	int a = 1;
+	int b = 1;
 	int pauseMenu = 0;
+	InitAudioDevice();
+
+	loadSounds();
 
 	window.font = LoadFont("DevAssets/super-mario-bros-nes.ttf");
 	player.texture = LoadTexture("DevAssets/marioLargeRunSheet.png");
 	block.texture = LoadTexture("DevAssets/blockSheet.png");
 	scenery.texture = LoadTexture("DevAssets/sceneryOneSheet.png");
 	scenery.texture2 = LoadTexture("DevAssets/castleSheet.png");
+	SetSoundVolume(sound.bigJump, 0.75f);
+	SetSoundVolume(sound.smallJump, 0.75f);
+	SetSoundVolume(sound.bump, 0.75f);
+	SetSoundVolume(sound.kick, 0.75f);
+	SetSoundVolume(sound.die, 1.0f);
+	SetSoundVolume(sound.pipe, 0.75f);
+	SetSoundVolume(sound.powerup, 0.75f);
+	SetSoundVolume(sound.newPowerup, 0.75f);
+
 	window.width = GetScreenWidth();
 	window.height = GetScreenHeight();
 
@@ -1037,6 +1232,7 @@ int main()
 	emptyArray(level.currentScene);
 	setArray(window.currentLevel);
 	findSize(level.current);
+
 
 	window.scale = (window.height / (508 + ((level.size - 16) * 16)));
 	window.blockHeight = window.height / level.size;
@@ -1048,30 +1244,110 @@ int main()
 	player.posY = window.blockHeight * 7;
 	SetTargetFPS(60);
 	const float gravity = 2200;
-
+	SetExitKey(KEY_Y);
+	restartLevel();
 	float winTime = 400;
+
 	while (!window.exit)
 	{
-		SetExitKey(KEY_Y);
 		window.dT = GetFrameTime();
 
-		BeginDrawing();
+		if (player.isDead)
+		{
+			while (1)
+			{
+				if (IsMusicStreamPlaying(sound.currentBackground))
+				{
+					StopMusicStream(sound.currentBackground);
+					PlaySoundMulti(sound.die);
+				}
 
-		(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
+				player.currentSprite = 13;
+				BeginDrawing();
+				(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
+				outputEverything();
+				EndDrawing();
+
+				if (GetSoundsPlaying() == 0)
+				{
+					restartLevel(); 
+					break;
+				}
+			}
+		}
+
+		if (player.shrinking)
+		{
+			while (1)
+			{
+				player.runningTime += window.dT;
+
+				if (player.runningTime >= player.updateTime)
+				{
+					player.tall = !player.tall;
+					if (player.currentSprite == 0 && !player.tall)
+					{
+						player.currentSprite = 6;
+					}
+					else if (player.currentSprite == 13 && !player.tall)
+					{
+						player.currentSprite = 7;
+					}
+					player.runningTime = 0;
+				}
+
+				if (player.tall == 0)
+				{
+					player.spriteHeight = 1;
+				}
+				else
+				{
+					player.spriteHeight = 2;
+				}
+
+				BeginDrawing();
+				(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
+				outputEverything();
+				EndDrawing();
+
+				UpdateMusicStream(sound.currentBackground);
+
+				if (GetSoundsPlaying() == 0)
+				{
+					player.shrinking = false;
+					player.invincibleFive = true;
+					player.tall = 0;
+					break;
+				}
+			}
+		}
+
+		//enter debug mode
+		if (IsKeyPressed(KEY_BACKSPACE))
+		{
+			window.debug = !window.debug;
+		}
+
+		UpdateMusicStream(sound.currentBackground);
 
 		player.runningTime += window.dT;
 		block.runningTime += window.dT;
-		winTime -= 1 * window.dT;
+		winTime -= 2 * window.dT;
 		player.time = winTime;
 
+		if (player.time == 100)
+		{
+			sound.currentBackground = sound.runningAboutFast;
+			PlayMusicStream(sound.currentBackground);
+		}
+
 		//MAKE MOBS
-		if (!window.pause && !window.exit)
+		if (!window.pause)
 		{
 			for (int i = 0; i < 30; i++)
 			{
 				for (int j = (window.renderPosDistance); j < window.blocksWide + window.renderPosX / window.blockHeight; j++)
 				{
-
 					//goombas
 					if (level.currentScene[i][j] == 'G')
 					{
@@ -1080,17 +1356,25 @@ int main()
 						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
 						mob[window.mobCount].mob = 0;
+						mob[window.mobCount].currentMob = 0;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = true;
 						mob[window.mobCount].startY = i * window.blockHeight;
 						mob[window.mobCount].direction = true;
 						mob[window.mobCount].stationary = false;
+						mob[window.mobCount].mobCollide = true;
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].isPlatform = false;
-						mob[window.mobCount].flip = false;
+						mob[window.mobCount].bounds = false;
+						mob[window.mobCount].isPipe = false;
+						mob[window.mobCount].flip = false; 
+						mob[window.mobCount].isSmart = false;
 						mob[window.mobCount].gravity = true;
 						mob[window.mobCount].blockCollide = true;
+						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].movingShell = false;
 						mob[window.mobCount].outShell = true;
+						mob[window.mobCount].isCoin = false;
 						window.mobCount += 1;
 					}
 					//koopas
@@ -1101,17 +1385,56 @@ int main()
 						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
 						mob[window.mobCount].mob = 3;
+						mob[window.mobCount].currentMob = 3;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = true;
 						mob[window.mobCount].startY = i * window.blockHeight;
 						mob[window.mobCount].direction = true;
 						mob[window.mobCount].stationary = false;
+						mob[window.mobCount].mobCollide = true;
+						mob[window.mobCount].shellStreak = 0;
+						mob[window.mobCount].isPipe = false;
+						mob[window.mobCount].bounds = false;
 						mob[window.mobCount].upDown = false;
+						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].isSmart = false;
+						mob[window.mobCount].movingShell = false;
 						mob[window.mobCount].isPlatform = false;
 						mob[window.mobCount].flip = false;
 						mob[window.mobCount].gravity = true;
 						mob[window.mobCount].blockCollide = true;
 						mob[window.mobCount].outShell = true;
+						mob[window.mobCount].isCoin = false;
+						window.mobCount += 1;
+					}
+					//smart koopas
+					else if (level.currentScene[i][j] == 'J')
+					{
+						mob[window.mobCount].texture = LoadTexture("DevAssets/mobSheet.png");
+						level.currentScene[i][j] = ' ';
+						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+						mob[window.mobCount].posY = (i)*window.blockHeight;
+						mob[window.mobCount].mob = 5;
+						mob[window.mobCount].currentMob = 5;
+						mob[window.mobCount].type = level.type;
+						mob[window.mobCount].hostile = true;
+						mob[window.mobCount].startY = i * window.blockHeight;
+						mob[window.mobCount].direction = true;
+						mob[window.mobCount].bounds = false;
+						mob[window.mobCount].stationary = false;
+						mob[window.mobCount].isPipe = false;
+						mob[window.mobCount].mobCollide = true;
+						mob[window.mobCount].upDown = false;
+						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].isSmart = true;
+						mob[window.mobCount].shellStreak = 0;
+						mob[window.mobCount].movingShell = false;
+						mob[window.mobCount].isPlatform = false;
+						mob[window.mobCount].flip = false;
+						mob[window.mobCount].gravity = true;
+						mob[window.mobCount].blockCollide = true;
+						mob[window.mobCount].outShell = true;
+						mob[window.mobCount].isCoin = false;
 						window.mobCount += 1;
 					}
 					//tube thing 
@@ -1122,6 +1445,7 @@ int main()
 						mob[window.mobCount].posX = (j + 2.48) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
 						mob[window.mobCount].mob = 0;
+						mob[window.mobCount].currentMob = 0;
 						mob[window.mobCount].velocity = 0;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = true;
@@ -1129,11 +1453,18 @@ int main()
 						mob[window.mobCount].direction = true;
 						mob[window.mobCount].stationary = true;
 						mob[window.mobCount].upDown = true;
+						mob[window.mobCount].isPipe = true;
+						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].isSmart = false;
+						mob[window.mobCount].bounds = false;
+						mob[window.mobCount].movingShell = false;
+						mob[window.mobCount].mobCollide = false;
 						mob[window.mobCount].isPlatform = false;
 						mob[window.mobCount].flip = false;
 						mob[window.mobCount].gravity = false;
 						mob[window.mobCount].blockCollide = false;
 						mob[window.mobCount].outShell = true;
+						mob[window.mobCount].isCoin = false;
 						window.mobCount += 1;
 					}
 					//mushroom
@@ -1144,17 +1475,25 @@ int main()
 						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
 						mob[window.mobCount].mob = 6;
+						mob[window.mobCount].currentMob = 6;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = false;
 						mob[window.mobCount].startY = i * window.blockHeight;
 						mob[window.mobCount].direction = false;
 						mob[window.mobCount].stationary = false;
 						mob[window.mobCount].upDown = false;
+						mob[window.mobCount].bounds = false;
+						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].isPipe = false;
+						mob[window.mobCount].movingShell = false;
+						mob[window.mobCount].isSmart = false;
 						mob[window.mobCount].isPlatform = false;
+						mob[window.mobCount].mobCollide = false;
 						mob[window.mobCount].flip = false;
 						mob[window.mobCount].gravity = true;
 						mob[window.mobCount].blockCollide = true;
 						mob[window.mobCount].outShell = true;
+						mob[window.mobCount].isCoin = false;
 						window.mobCount += 1;
 					}
 					//platform
@@ -1165,26 +1504,51 @@ int main()
 						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
 						mob[window.mobCount].mob = 6;
+						mob[window.mobCount].currentMob = 6;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = false;
 						mob[window.mobCount].startY = i * window.blockHeight;
 						mob[window.mobCount].direction = false;
 						mob[window.mobCount].stationary = true;
+						mob[window.mobCount].mobCollide = false;
+						mob[window.mobCount].isPipe = false;
+						mob[window.mobCount].isSmart = false;
+						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].movingShell = false;
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].isPlatform = true;
 						mob[window.mobCount].gravity = false;
 						mob[window.mobCount].flip = false;
 						mob[window.mobCount].blockCollide = false;
 						mob[window.mobCount].outShell = true;
+						mob[window.mobCount].isCoin = false;
 
 
 						if (level.currentScene[i][j + 2] == 'u')
 						{
 							mob[window.mobCount].directionUp = true;
+							mob[window.mobCount].bounds = false;
 						}
 						else if (level.currentScene[i][j + 2] == 'd')
 						{
 							mob[window.mobCount].directionUp = false;
+							mob[window.mobCount].bounds = false;
+						}
+						else if (level.currentScene[i][j + 2] == '<')
+						{
+							mob[window.mobCount].direction = true;
+							mob[window.mobCount].bounds = true;
+							mob[window.mobCount].boundsSide = true;
+							mob[window.mobCount].start = j + 2;
+							mob[window.mobCount].stop = ((int)level.currentScene[i][j + 3]) - 32;
+						}
+						else if (level.currentScene[i][j + 2] == '>')
+						{
+							mob[window.mobCount].directionUp = true;
+							mob[window.mobCount].bounds = true;
+							mob[window.mobCount].boundsSide = false;
+							mob[window.mobCount].start = i;
+							mob[window.mobCount].stop = ((int)level.currentScene[i][j + 3]) - 32;
 						}
 
 						if (level.currentScene[i][j + 1] == 'q')
@@ -1193,18 +1557,53 @@ int main()
 						}
 						window.mobCount += 1;
 					}
+					//coin
+					else if (level.currentScene[i][j] == 'C')
+					{
+						mob[window.mobCount].texture = LoadTexture("DevAssets/boxCoin.png");
+						level.currentScene[i][j] = ' ';
+						mob[window.mobCount].width = 8;
+						mob[window.mobCount].height = 14;
+						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+						mob[window.mobCount].posY = (i)*window.blockHeight;
+						mob[window.mobCount].mob = 0;
+						mob[window.mobCount].currentMob = 0;
+						mob[window.mobCount].velocity = 7;
+						mob[window.mobCount].type = level.type;
+						mob[window.mobCount].hostile = false;
+						mob[window.mobCount].startY = i * window.blockHeight;
+						mob[window.mobCount].direction = false;
+						mob[window.mobCount].stationary = true;
+						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].bounds = false;
+						mob[window.mobCount].isPipe = false;
+						mob[window.mobCount].isSmart = false;
+						mob[window.mobCount].movingShell = false;
+						mob[window.mobCount].mobCollide = false;
+						mob[window.mobCount].upDown = false;
+						mob[window.mobCount].isPlatform = false;
+						mob[window.mobCount].flip = false;
+						mob[window.mobCount].gravity = false;
+						mob[window.mobCount].blockCollide = false;
+						mob[window.mobCount].outShell = true;
+						mob[window.mobCount].isCoin = true;
+						window.mobCount += 1;
+					}
 				}
 			}
 		}
 
 		for (int i = 0; i < window.mobCount; i++)
 		{
-			if (mob[i].loaded && !window.pause)
+			if (mob[i].loaded && !window.pause && !window.levelSelect)
 			{
 				//POSITION
-				mob[i].posX += mob[i].speed * window.dT;
-				mob[i].posY += mob[i].velocity * window.dT;
-				mob[i].runningTime += window.dT;
+				if (window.dT < 0.02)
+				{
+					mob[i].posX += mob[i].speed * window.dT;
+					mob[i].posY += mob[i].velocity * window.dT;
+					mob[i].runningTime += window.dT;
+				}
 
 				if (mob[i].stationary)
 				{
@@ -1216,7 +1615,7 @@ int main()
 				}
 				else if (mob[i].moving)
 				{
-					mob[i].maxSpeed = 800;
+					mob[i].maxSpeed = 700;
 				}
 				else
 				{
@@ -1251,8 +1650,17 @@ int main()
 						mob[i].posY = mob[i].iPosY * window.blockHeight;
 					}
 
+					if (level.current[mob[i].iPosY + 1][mob[i].iPosXD] == '-')
+					{
+						mob[i].loaded = false;
+						if (mob[i].movingShell)
+						{
+							mob[i].shellStreak = 0;
+						}
+					}
+
 					//right
-					if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX] != ' ' && mob[i].mob == 3 && !mob[i].moving))
+					if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX] != ' ' && (mob[i].mob == 3 || mob[i].mob == 5) && !mob[i].moving))
 					{
 						mob[i].direction = true;
 					}
@@ -1263,69 +1671,153 @@ int main()
 						mob[i].loaded = false;
 						if (mob[i].moving)
 						{
-							player.shellStreak = 1;
+							mob[i].shellStreak = 0;
 						}
 					}
 					else
 					{
-						if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX - 1] != ' ' && mob[i].mob == 3 && !mob[i].moving))
+						if (level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX - 1] != ' ' && (mob[i].mob == 3 || mob[i].mob == 5) && !mob[i].moving))
+						{
+							mob[i].direction = false;
+						}
+					}
+
+					if (mob[i].movingShell)
+					{
+						if ((level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || level.current[mob[i].iPosY + 1][mob[i].iPosX] != ' ') && !mob[i].collideD)
+						{
+							mob[i].direction = true;
+						}
+						if ((level.current[mob[i].iPosY][mob[i].iPosX - 1] != ' ' || level.current[mob[i].iPosY + 1][mob[i].iPosX - 1] != ' ') && !mob[i].collideD)
+						{
+							mob[i].direction = false;
+						}
+					}
+
+					if (mob[i].isSmart && !mob[i].movingShell)
+					{
+						if ((level.current[mob[i].iPosY + 1][mob[i].iPosX] == ' ') && mob[i].collideD)
+						{
+							mob[i].direction = true;
+						}
+						if ((level.current[mob[i].iPosY + 1][mob[i].iPosX - 1] == ' ') && mob[i].collideD)
 						{
 							mob[i].direction = false;
 						}
 					}
 				}
 
-
+				Rectangle playerCollider{ player.posX - player.width * window.scale + 4 * window.scale, player.posY - player.width * player.spriteHeight * window.scale, ((player.width - 8) * window.scale), (player.width * player.spriteHeight * window.scale) };
 				//CHARACTER COLLISION
 				if (mob[i].hostile)
 				{
+					Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 4 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (24 * window.scale), (16 * window.scale) };
+					
 					//player
-					if (!mob[i].hit || !mob[i].outShell)
+					if (!mob[i].hit && !mob[i].isPipe)
 					{
-						Rectangle boxCollider{ mob[i].posX - (0.6 * window.blockHeight), mob[i].posY - ((4.0 - mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 0.4, mob[i].height * window.scale };
-						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
+						if (CheckCollisionRecs(boxCollider, playerCollider) && player.hitTime > player.rehitTime + 0.1 && !player.invincibleFive)
+						{
+							mob[i].hit = true;
+							player.score += 100 * player.streak;
+							mob[i].scoreHit = 100 * player.streak;
+							player.streak += 1;
+							player.velocity = player.jumpVelocity;
 
-						if (CheckCollisionRecs(boxCollider, playerCollider))
-						{
-							if (!mob[i].outShell && !mob[i].moving && mob[i].mob == 3)
+							if ((mob[i].mob == 3 || mob[i].mob == 5))
 							{
-								mob[i].moving = true;
-								mob[i].maxSpeed = 800;
-								mob[i].runningTime = 0;
-								if (player.posX + 1.4 * window.blockHeight > mob[i].posX)
-								{
-									mob[i].direction = true;
-								}
-								else
-								{
-									mob[i].direction = false;
-								}
+								mob[i].stillShell = true;
 							}
-							else if (!mob[i].outShell)
-							{
-								mob[i].moving = false;
-								mob[i].maxSpeed = 0;
-								player.shellStreak = 1;
-							}
-							else if (!mob[i].hit)
-							{
-								mob[i].hit = true;
-								player.score += 100 * player.streak;
-								mob[i].scoreHit = 100 * player.streak;
-								player.streak += 1;
-								player.velocity = player.jumpVelocity;
-								player.velocity = player.jumpVelocity;
-							}
+
+							PlaySoundMulti(sound.kick);
 						}
-						else if ((mob[i].outShell || (mob[i].moving && mob[i].runningTime > 2 * mob[i].updateTime)))
+						else if (player.hitTime > player.rehitTime && !player.invincibleFive)
 						{
-							Rectangle boxCollider{ mob[i].posX - (0.8 * window.blockHeight), mob[i].posY - ((3.4 + mob[i].stationary) * window.blockHeight) - 8, mob[i].width * window.scale * 1.2, mob[i].height * window.scale * 0.1 };
-							Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32), player.width * window.scale, player.height * window.scale };
-						
+							Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale) };
+
 							if (CheckCollisionRecs(boxCollider, playerCollider))
 							{
 								player.collision = true;
+								player.hitTime = 0;
 							}
+						}
+					}
+					else if (mob[i].stillShell)
+					{
+						mob[i].hitDelay += window.dT;
+						Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 36 * window.scale, (8 * window.scale), (28 * window.scale) };
+
+						if (CheckCollisionRecs(boxCollider, playerCollider) && mob[i].hitDelay >= mob[i].hitDelayTime)
+						{
+							mob[i].movingShell = true;
+							mob[i].hitDelay = 0;
+							mob[i].maxSpeed = 700;
+							mob[i].moving = true;
+							mob[i].direction = false;
+							mob[i].stillShell = false;
+							if (!player.isGrounded)
+							{
+								player.velocity = player.jumpVelocity;
+							}
+							PlaySoundMulti(sound.kick);
+						}
+						else
+						{
+							Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 24 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 36 * window.scale, (8 * window.scale), (28 * window.scale) };
+
+							if (CheckCollisionRecs(boxCollider, playerCollider) && mob[i].hitDelay >= mob[i].hitDelayTime)
+							{
+								mob[i].movingShell = true;
+								mob[i].hitDelay = 0;
+								mob[i].maxSpeed = 700;
+								mob[i].moving = true;
+								mob[i].direction = true;
+								mob[i].stillShell = false;
+								if (!player.isGrounded)
+								{
+									player.velocity = player.jumpVelocity;
+								}
+								PlaySoundMulti(sound.kick);
+							}
+						}
+					}
+					else if (mob[i].movingShell)
+					{
+						mob[i].hitDelay += window.dT;
+						Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 6 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (20 * window.scale), (16 * window.scale) };
+						if (CheckCollisionRecs(boxCollider, playerCollider) && player.hitTime > player.rehitTime + 0.1 && !player.invincibleFive && mob[i].hitDelay >= mob[i].hitDelayTime)
+						{
+							mob[i].runningTime = 0;
+							mob[i].hitDelay = 0;
+							player.score += 100 * mob[i].shellStreak;
+							mob[i].scoreHit = 100 * player.streak;
+							player.streak += 1;
+							player.velocity = player.jumpVelocity;
+							mob[i].velocity = 0;
+							mob[i].moving = 0;
+							mob[i].movingShell = 0;
+							mob[i].stillShell = 1;
+							PlaySoundMulti(sound.kick);
+						}
+						else if (player.hitTime > player.rehitTime && !player.invincibleFive)
+						{
+							Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale) };
+
+							if (CheckCollisionRecs(boxCollider, playerCollider))
+							{
+								player.collision = true;
+								player.hitTime = 0;
+							}
+						}
+					}
+					else if (mob[i].isPipe)
+					{
+						Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 2 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (28 * window.scale), (32 * window.scale) };
+
+						if (CheckCollisionRecs(boxCollider, playerCollider) && player.hitTime > player.rehitTime && !player.invincibleFive)
+						{
+							player.collision = true;
+							player.hitTime = 0;
 						}
 					}
 				}
@@ -1350,14 +1842,17 @@ int main()
 							player.platform = i;
 							player.collidePlatform = true;
 
-
-							if (mob[i].directionUp)
+							if (mob[i].directionUp && !mob[i].boundsSide)
 							{
 								player.velocity = 80;
 							}
-							else
+							else if (!mob[i].boundsSide)
 							{
 								player.velocity = -80;
+							}
+							else
+							{
+								player.velocity = 0;
 							}
 
 							player.posY = mob[i].posY - (7 * window.blockHeight) + 2;
@@ -1369,10 +1864,13 @@ int main()
 						}
 					}
 				}
+				else if (mob[i].isCoin)
+				{
+
+				}
 				else if (!mob[i].hit)
 				{
-					Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (2.5 * window.blockHeight), mob[i].width * window.scale * 2, mob[i].height * window.scale };
-					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (!player.tall * 32) + (2 * window.blockHeight), player.width * window.scale, player.height * player.spriteHeight * window.scale };
+					Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (32 * window.scale), (32 * window.scale) };
 
 					if (CheckCollisionRecs(boxCollider, playerCollider))
 					{
@@ -1380,38 +1878,56 @@ int main()
 						player.score += 1000;
 						mob[i].scoreHit = 1000;
 						mob[i].hit = true;
+						PlaySoundMulti(sound.powerup);
 					}
 				}
 
 				//other mobs
-				Rectangle boxCollider{ mob[i].posX - (1 * window.blockHeight), mob[i].posY - (4 * window.blockHeight) - 8, mob[i].width * window.scale * 2, mob[i].height * window.scale * 2 };
+				Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale) };
 				for (int j = 0; j < window.mobCount; j++)
 				{
-					if (mob[j].hostile)
+					if (mob[j].mobCollide && mob[i].mobCollide)
 					{
-						Rectangle boxCollider2{ mob[j].posX - (1 * window.blockHeight), mob[j].posY - (4 * window.blockHeight) - 8, mob[j].width * window.scale, mob[j].height * window.scale * 2 };
-						if (CheckCollisionRecs(boxCollider, boxCollider2) && mob[j].loaded)
+						Rectangle boxCollider2{ mob[j].posX - window.renderPosX - (2 * window.blockHeight), mob[j].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale) };
+						if (CheckCollisionRecs(boxCollider, boxCollider2) && mob[j].loaded && j != i)
 						{
-							if (!mob[i].outShell && mob[i].speed != 0)
+							if (mob[i].movingShell && mob[j].movingShell)
 							{
-								if (!mob[j].hit)
+								mob[i].shellStreak += 1;
+								mob[j].shellStreak += 1;
+								mob[i].movingShell = false;
+								mob[j].movingShell = false;
+								player.score += 100 * mob[i].shellStreak;
+								player.score += 100 * mob[j].shellStreak;
+								mob[i].scoreHit = 100 * mob[i].shellStreak;
+								mob[j].scoreHit = 100 * mob[i].shellStreak;
+								PlaySoundMulti(sound.kick);
+							}
+							if (mob[i].movingShell)
+							{
+								if ((!mob[j].hit && !mob[j].movingShell) || mob[j].stillShell)
 								{
-									player.score += 100 * player.shellStreak;
-									mob[j].scoreHit = 100 * player.shellStreak;
-									player.shellStreak += 1;
+									mob[i].shellStreak += 1;
+									mob[j].stillShell = false;
+									mob[j].runningTime = 0;
+									player.score += 100 * mob[i].shellStreak;
+									mob[j].scoreHit = 100 * mob[i].shellStreak;
+									PlaySoundMulti(sound.kick);
 								}
 
 								mob[j].hit = true;
 							}
-							else if (!mob[j].outShell && mob[j].speed != 0)
+							else if (mob[j].movingShell)
 							{
-								if (!mob[i].hit)
+								if ((!mob[i].hit && !mob[i].movingShell) || mob[i].stillShell)
 								{
-									player.score += 100 * player.shellStreak;
-									mob[i].scoreHit = 100 * player.shellStreak;
-									player.shellStreak += 1;
+									mob[j].shellStreak += 1;
+									mob[i].stillShell = false;
+									mob[i].runningTime = 0;
+									player.score += 100 * mob[i].shellStreak;
+									mob[i].scoreHit = 100 * mob[i].shellStreak;
+									PlaySoundMulti(sound.kick);
 								}
-
 								mob[i].hit = true;
 							}
 							else
@@ -1438,6 +1954,7 @@ int main()
 					//down
 					if (!mob[i].collideD)
 					{
+						if (window.dT < 0.02)
 						mob[i].velocity += gravity * window.dT;
 					}
 					else
@@ -1467,30 +1984,129 @@ int main()
 						mob[i].velocity = -40;
 					}
 				}
+				//platform
 				else if (mob[i].isPlatform)
 				{
-					if (mob[i].directionUp)
+					if (!mob[i].bounds)
 					{
-						mob[i].velocity = -120;
-
-						if (mob[i].iPosY < 4)
+						if (mob[i].directionUp)
 						{
-							mob[i].posY = 28 * window.blockHeight;
+							mob[i].velocity = -120;
+
+							if (mob[i].iPosY < 4)
+							{
+								mob[i].posY = 28 * window.blockHeight;
+							}
+						}
+						else
+						{
+							mob[i].velocity = 120;
+
+							if (mob[i].iPosY > 28)
+							{
+								mob[i].posY = 4 * window.blockHeight;
+							}
 						}
 					}
 					else
 					{
-						mob[i].velocity = 120;
-
-						if (mob[i].iPosY > 28)
+						if (mob[i].boundsSide)
 						{
-							mob[i].posY = 4 * window.blockHeight;
+							if (mob[i].direction)
+							{
+								mob[i].speed = -120;
+
+								if (mob[i].iPosX < mob[i].start)
+								{
+									mob[i].direction = false;
+								}
+							}
+							else
+							{
+								mob[i].speed = 120;
+
+								if (mob[i].iPosX > mob[i].start + mob[i].stop - 1)
+								{
+									mob[i].direction = true;
+								}
+							}
+						}
+						else
+						{
+							if (mob[i].directionUp)
+							{
+								mob[i].velocity = -120;
+								if (mob[i].iPosY < mob[i].start)
+								{
+									mob[i].directionUp = false;
+								}
+							}
+							else
+							{
+								mob[i].velocity = 120;
+
+								if (mob[i].iPosY > mob[i].start + mob[i].stop - 1)
+								{
+									mob[i].directionUp = true;
+								}
+							}
 						}
 					}
 				}
 
 				//ANIMATE
-				if (mob[i].runningTime >= mob[i].updateTime && !mob[i].hit)
+
+				if (level.type == 0)
+				{
+					mob[i].currentMob = mob[i].mob;
+				}
+				if (level.type == 1)
+				{
+					mob[i].currentMob = mob[i].mob + 1;
+					if (mob[i].mob == 5)
+					{
+						mob[i].currentMob = 4;
+					}
+					if (mob[i].mob == 6)
+					{
+						mob[i].currentMob = 6;
+					}
+				}
+				if (level.type == 2)
+				{
+					mob[i].currentMob = mob[i].mob + 2;
+					if (mob[i].mob == 5)
+					{
+						mob[i].currentMob = 5;
+					}
+					if (mob[i].mob == 6)
+					{
+						mob[i].currentMob = 6;
+					}
+				}
+
+				if (mob[i].isCoin)
+				{
+					if (mob[i].runningTime >= mob[i].updateTime)
+					{
+						mob[i].frame++;
+						mob[i].runningTime = 0;
+					}
+
+					if (mob[i].posY < mob[i].startY - 3 * window.blockHeight)
+					{
+						mob[i].velocity = -7;
+					}
+
+					mob[i].posY -= mob[i].velocity;
+
+					if (mob[i].posY >= mob[i].startY && mob[i].velocity == -7)
+					{
+						mob[i].loaded = false;
+					}
+				}
+
+				if (mob[i].runningTime >= mob[i].updateTime && !mob[i].hit && !mob[i].isCoin)
 				{
 					if (mob[i].direction)
 					{
@@ -1512,18 +2128,20 @@ int main()
 					}
 					mob[i].runningTime = 0;
 				}
-				else if (mob[i].hit && mob[i].runningTime >= 4 * mob[i].updateTime && mob[i].mob != 3)
+				if (mob[i].mob == 6)
+				{
+					if (mob[i].direction)
+					{
+						mob[i].frame = 2;
+					}
+					else
+					{
+						mob[i].frame = 0;
+					}
+				}
+				else if (mob[i].hit && mob[i].runningTime >= 4 * mob[i].updateTime && ((mob[i].mob != 3 && mob[i].mob != 5) || (!mob[i].stillShell && !mob[i].movingShell)))
 				{
 					mob[i].loaded = false;
-				}
-				else if (mob[i].hit && mob[i].runningTime >= 2 * mob[i].updateTime)
-				{
-					mob[i].outShell = false;
-				}
-				else if (!mob[i].outShell && mob[i].runningTime >= 60 * mob[i].updateTime)
-				{
-					mob[i].hit = false;
-					player.shellStreak = 1;
 				}
 				if (mob[i].hit && mob[i].loaded && !mob[i].moving)
 				{
@@ -1536,16 +2154,20 @@ int main()
 
 
 		//PLAYER INFO
-		player.posY -= player.velocity * window.dT;
-		player.posX += player.sidewaysVelocity * window.dT;
-		player.iPosX = (player.posX - (4 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
-		player.iPosXD = (player.posX - (8 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
-		player.iPosXL = (player.posX - (28 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
-		player.iPosXLD = (player.posX - (24 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
-		player.iPosXC = (player.posX - (16 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
+		if (window.dT < 0.02)
+		{
+			player.posY -= player.velocity * window.dT;
+			player.posX += player.sidewaysVelocity * window.dT;
+			player.iPosX = (player.posX - (4 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
+			player.iPosXD = (player.posX - (8 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
+			player.iPosXL = (player.posX - (28 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
+			player.iPosXLD = (player.posX - (24 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
+			player.iPosXC = (player.posX - (16 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
+			player.hitTime += window.dT; 
+			player.coinsTime += window.dT;
+		}
 
-
-		window.renderPosDistance = player.iPosX - (player.posX / window.blockHeight) + 4;
+		window.renderPosDistance = player.iPosX - (player.posX / window.blockHeight);
 
 		player.iPosY = (player.posY) / window.blockHeight;
 
@@ -1697,10 +2319,18 @@ int main()
 					player.bufferCollide = true;
 					player.collidePlatform = false;
 				}
+				if (player.tall && !window.pause && !window.levelSelect)
+				{
+					PlaySoundMulti(sound.bigJump);
+				}
+				else if (!window.pause && !window.levelSelect)
+				{
+					PlaySoundMulti(sound.smallJump);
+				}
 			}
 			player.justJumped = true;
 		}
-		else
+		else if (window.dT < 0.02)
 		{
 			player.velocity -= 4000 * window.dT;
 		}
@@ -1796,7 +2426,7 @@ int main()
 		//DECELERATE
 
 		//up
-		if ((!player.isGrounded) && (!player.collidePlatform))
+		if ((!player.isGrounded) && (!player.collidePlatform) && window.dT < 0.02)
 		{
 			player.velocity -= gravity * window.dT;
 		}
@@ -1946,11 +2576,47 @@ int main()
 			}
 		}
 
+		//invincible five
+		if (player.invincibleFive)
+		{
+			if (player.hitTime >= player.rehitTime)
+			{
+				player.invincibleFive = 0;
+			}
+			player.invisTime += window.dT;
+			if (player.invisTime >= player.visTime)
+			{
+				player.invisTime = 0;
+				if (b != 0)
+				{
+					b = 0;
+				}
+				else
+				{
+					b = player.frame;
+				}
+			}
+			player.currentSprite = b;
+		}
+
 
 		//BLOCK STUFF
 
+		//collide noise
+		if (player.collideU && (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] != 'o' &&  level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] != 'B'))
+		{
+			if (player.tall == 1 && (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '_' || level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '#'))
+			{
+				PlaySoundMulti(sound.breakBlock);
+			}
+			else
+			{
+				PlaySoundMulti(sound.bump);
+			}
+		}
+
 		//break block
-		if (player.collideU && (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '_' || level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '#'))
+		if (player.collideU && (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '_' || level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '#') && level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] != 'B')
 		{
 			if (player.tall == 0)
 			{
@@ -1963,17 +2629,20 @@ int main()
 			{
 				level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = ' ';
 			}
-
 			if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'w')
 			{
 				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'M';
 				level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'c';
+				PlaySoundMulti(sound.newPowerup);
 			}
 		}
 
-		if (player.collideU && level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'o')
+		if (player.collideU && (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'o' || level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'B'))
 		{
-			level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'q';
+			if (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'o')
+			{
+				level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'q';
+			}
 			block.selectedX = player.iPosXC;
 			block.selectedY = player.iPosY - player.spriteHeight + (level.currentSize - 21);
 			block.runningTime = 0;
@@ -1982,7 +2651,35 @@ int main()
 			if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'w')
 			{
 				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'M';
+				PlaySoundMulti(sound.newPowerup);
 			}
+			else if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'B')
+			{
+				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'C';
+				PlaySoundMulti(sound.coin);
+				player.coins += 1;
+				player.score += 100;
+				player.coinsStreak += 1;
+				player.coinsTime = 0;
+			}
+			else
+			{
+				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'C';
+				PlaySoundMulti(sound.coin);
+				player.coins += 1;
+				player.score += 100;
+			}
+		}
+
+		if (player.coinsStreak == 15)
+		{
+			player.coinsStreak = 0;
+			level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = ' ';
+			level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'c';
+		}
+		else if (player.coinsTime >= player.coinsOver && player.coinsStreak > 0)
+		{
+			player.coinsStreak = 14;
 		}
 
 		if ((level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 't' || player.collideD && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 'k') && (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
@@ -2001,6 +2698,7 @@ int main()
 
 			if ((!window.pause) && (!window.levelSelect))
 			{
+				ResumeMusicStream(sound.currentBackground);
 				player.posX = player.tempPosX;
 				player.posY = player.tempPosY;
 				player.velocity = player.tempVelocity;
@@ -2009,6 +2707,9 @@ int main()
 			}
 			else if (!window.levelSelect)
 			{
+				PauseMusicStream(sound.currentBackground);
+				StopSoundMulti();
+				PlaySoundMulti(sound.pause);
 				player.tempPosX = player.posX;
 				player.tempPosY = player.posY;
 				player.tempVelocity = player.velocity;
@@ -2089,6 +2790,7 @@ int main()
 				player.posX = player.tempPosX;
 				player.posY = player.tempPosY;
 				window.renderPosX = window.tempRenderX;
+				ResumeMusicStream(sound.currentBackground);
 				window.pause = false;
 				break;
 			case 1:
@@ -2129,16 +2831,14 @@ int main()
 			}
 		}
 
-
 		//DEATH
 		if (player.collideD && (level.current[player.iPosY + (level.currentSize - 21)][player.iPosXD] == '-' || level.current[player.iPosY + (level.currentSize - 21)][player.iPosXLD] == '-'))
 		{
 			player.sidewaysVelocity = 0;
 			player.velocity = 0;
 			player.lives--;
-			player.score = 0;
 			player.tall = 0;
-			restartLevel();
+			player.isDead = true;
 		}
 		else if (player.collideU && (level.current[player.iPosY + (level.currentSize - 22)][player.iPosXD] == '-' || level.current[player.iPosY + (level.currentSize - 22)][player.iPosXLD] == '-'))
 		{
@@ -2146,96 +2846,41 @@ int main()
 			player.velocity = 0;
 			player.lives--;
 			player.tall = 0;
-			player.score = 0;
-			restartLevel();
+			player.isDead = true;
 		}
 
 
 		//do stuff here
-		if (player.collision && player.tall == 0)
+		if (player.collision && player.tall == 0 && !player.isDead)
 		{
 			player.sidewaysVelocity = 0;
 			player.velocity = 0;
 			player.lives--;
-			player.score = 0;
-			restartLevel();
+			player.isDead = true;
+			player.collision = false;
 		}
 		else if (player.collision)
 		{
 			player.tall = 0;
+			player.collision = false;
+			player.shrinking = true;
+			PlaySoundMulti(sound.pipe);
 		}
 
-		//OUTPUT LEVEL
-		if (!window.pause && !window.levelSelect)
+		if (player.time <= 0)
 		{
-			outputLevel();
-
-			for (int i = 0; i < window.mobCount; i++)
-			{
-				if (mob[i].isPlatform)
-				{
-					outputPlatform(mob[i].mob, i, mob[i].length);
-				}
-				else if (mob[i].loaded)
-				{
-					DrawTexturePro(
-						mob[i].texture,
-						Rectangle{ (mob[i].frame) * 16, ((mob[i].mob + mob[i].type) * 32), 16, 32 },
-						Rectangle{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8, (32 * window.scale), (64 * window.scale) },
-						Vector2{ 0, 0 },
-						0,
-						WHITE);
-				}
-			}
-
-			outputPipes();
-
-			DrawTextEx(window.font, TextFormat("world %i-%i", player.world, player.level), Vector2{0 * window.blockHeight + 10, 10}, window.blockHeight / 2., 0, WHITE);
-			DrawTextEx(window.font, TextFormat("score: %i", player.score), Vector2{ (window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
-			DrawTextEx(window.font, TextFormat("coins: %i", player.coins), Vector2{ (2 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
-			DrawTextEx(window.font, TextFormat("time: %i", player.time), Vector2{ (3 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
-			DrawTextEx(window.font, TextFormat("lives: %i", player.lives), Vector2{ (4 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
-
-			DrawTexturePro(
-				player.texture,
-				Rectangle{ player.currentSprite * 16, (32 * player.tall), -player.width / 2, -player.width },
-				Rectangle{ player.posX, player.posY, ((-player.width) * window.scale), (-player.width * 2 * window.scale) },
-				Vector2{ 0, 0 },
-				0,
-				WHITE);
-
-			for (int i = 0; i < window.mobCount; i++)
-			{
-				if (mob[i].loaded && mob[i].hit && mob[i].runningTime <= 4 * mob[i].updateTime)
-				{
-					DrawTextEx(window.font, TextFormat("%i", mob[i].scoreHit), Vector2{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (7 * window.blockHeight) - 8 - mob[i].runningTime * window.blockHeight }, window.blockHeight / 2.5, 0, WHITE);
-				}
-			}
+			player.sidewaysVelocity = 0;
+			player.velocity = 0;
+			player.tall = 0;
+			player.lives--;
+			player.isDead = true;
+			player.collision = false;
 		}
-		else if (window.levelSelect)
-		{
-			if (IsKeyPressed(KEY_ESCAPE))
-			{
-				window.levelSelect = false;
-				window.pause = true;
-			}
-			else
-			{
-				levelSelection();
 
-				DrawTextEx(window.font, "level 1", Vector2{ 13 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
-				DrawTextEx(window.font, "level 2", Vector2{ 13 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
-				DrawTextEx(window.font, "level 3", Vector2{ 13 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
-			}
-		}
-		else if (window.pause)
-		{
-			outputPause();
+		BeginDrawing();
+		(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
 
-			DrawTextEx(window.font, "resume", Vector2{ 13 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight, 0, WHITE);
-			DrawTextEx(window.font, "levels", Vector2{ 13 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight, 0, WHITE);
-			DrawTextEx(window.font, "quit", Vector2{ 13 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight, 0, WHITE);
-		}
+		outputEverything();
 
 		EndDrawing();
 
@@ -2249,9 +2894,18 @@ int main()
 	{
 		UnloadTexture(mob[i].texture);
 	}
+	StopSoundMulti();
 	UnloadTexture(block.texture);
 	UnloadTexture(block.texture2);
 	UnloadTexture(player.texture);
 	UnloadTexture(scenery.texture);
+	UnloadSound(sound.smallJump);
+	UnloadSound(sound.bigJump);
+	UnloadSound(sound.die);
+	UnloadSound(sound.kick);
+	UnloadSound(sound.bump);
+	UnloadMusicStream(sound.runningAbout);
+	UnloadMusicStream(sound.underground);
+	CloseAudioDevice();
 	CloseWindow();
 }
