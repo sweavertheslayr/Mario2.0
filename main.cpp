@@ -277,7 +277,7 @@ struct Levels {
 	"                                                                                                               w                                                                                        o                                                                                      ",
 	"                                                                                                                                                                                                        o                                                                                      ",
 	"                                                                                                                                                                                                        o                                                                                      ",
-	"                                                                                                                                                                                                        o    ,.m                                                                               ",
+	"                                                           .                                                                                                                                            o    ,.m                                                                               ",
 	"                      w                                                         w               B                                                                                                       o                                                                                      ",
 	"                                                                                                                                                                                                        o                                                                                      ",
 	"                                                                                                                                                                                                        o   xcvcx                                                                              ",
@@ -342,7 +342,7 @@ struct Levels {
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                                ",
 	"                                                                                                                                        G G                                                                                                                                                    ",
-	"                               B                                       w      G G                             P                                         w                                                                                                                                      ",
+	"                               B                                       w      G G                       ,     P                                         w                                                                                                                                      ",
 	"            w                                                                                           P                                                                                                                                                                                      ",
 	"                                                                                                                    P                                                                                                                                                                          ",
 	"                  G                                                                                                                                                                                                                                                                            ",
@@ -2682,6 +2682,7 @@ int main()
 			player.coinsStreak = 14;
 		}
 
+		//TUBING
 		if ((level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 't' || player.collideD && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 'k') && (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
 		{
 			window.currentLevel += 1;
