@@ -370,15 +370,15 @@ struct Levels {
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
-	"                                                                                                                                                         r                    ",
-	"                                         xaaaaav                                                                                                        nf                    ",
-	"                           xaaav                             xaav                                                                             OO         l                    ",
-	"                                                                             xaaav                                                            OO         l                    ",
-	"                                    xaaav                                                              xaaaaaav                             OOOO         l                    ",
-	"                                                                                                                                            OOOO         l                    ",
-	"                         xaaaaaav                                      xav                                         xaav  xaav             OOOOOO         l                    ",
-	"                                                            o                                                                             OOOOOO         l                    ",
-	"                                                                                                 xaav                                     OOOOOO         l                    ",
+	"                                                                                                                                                                              ",
+	"                                         xaaaaav                                                                                                                              ",
+	"                           xaaav                             xaav                                                                             OO                              ",
+	"                                                                             xaaav                                                            OO                              ",
+	"                                    xaaav                                                              xaaaaaav                             OOOO                              ",
+	"                                                                                                                                            OOOO                              ",
+	"                         xaaaaaav                                      xav                                         xaav  xaav             OOOOOO                              ",
+	"                                                            o                                                                             OOOOOO                              ",
+	"                                                                                                 xaav                                     OOOOOO                              ",
 	"                   xaav          xav               xaav                                                                                   OOOOOO         O                    ",
 	"%%%%%%%%%%%%%%%%%                                           xaaav xaaav                                         xav             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%                                                                                                               %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
@@ -403,24 +403,24 @@ struct Levels {
 	"                                                                                                                                                                              ",
 	"                                                                                                                                                                              ",
 	"                   0                                               0                                             0                                             ,.m            ",
-	"    0                                       G G     0                                             0                                                3                          ",
-	"                              J                                                                                                                                               ",
-	"                                          ppppp                                 G                                                             OO              xcvcx           ",
-	"                            ppp        7  ppppp         Lq>(  pp                                            J                     Lq<$        OO                              ",
-	"           7                ppp     7     ppppp               pp              ppp     7                                              7      OOOO                              ",
-	"  ,.m                       ppp      ppp  ppppp           7   pp              ppp  7Lq<$                pppppp                    7         OOOO            cccvcvccccccccccccccc",
-	"                                     ppp  ppppp               pp              ppp       Lq<&            pppppp                            OOOOOO                              ",
-	"                          pppppp     ppp  ppppp             w pp        p     ppp                       pppppp      pp    pp              OOOOOO                              ",
-	" xcvcx                    pppppp     ppp  ppppp7              pp        p  7  ppp                       pppppp      pp    pp              OOOOOO            nnbnbnbnnnnnnnnnnnnnn",
-	"                          pppppp     ppp  ppppp               pp        p     ppp            7    pp    pppppp      pp    pp7       J     OOOO7O         O                    ",
-	"                    pp    pppppp  p  ppp  ppppp     pp                  p     ppp                 pp    pppppp      pp    pp    ############################################# ",
-	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
-	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
-	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
-	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
-	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
-	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# ",
-	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp    ############################################# "
+	"    0                                       G G     0                                             0                                                3     j                    ",
+	"                              J                                                                                                                         ki                    ",
+	"                                          ppppp                                 G                                                                        o    xcvcx           ",
+	"                            ppp        7  ppppp         Lq>(  pp                                            J                     Lq<$                   o                    ",
+	"           7                ppp     7     ppppp               pp              ppp     7                                              7                   o                    ",
+	"  ,.m                       ppp      ppp  ppppp           7   pp              ppp  7Lq<$                pppppp                    7                      o  xxcvcvcxxxxxxxxxxxxxx",
+	"                                     ppp  ppppp               pp              ppp       Lq<&            pppppp                                           o                    ",
+	"                          pppppp     ppp  ppppp             w pp        p     ppp                       pppppp      pp    pp                             o                    ",
+	" xcvcx                    pppppp     ppp  ppppp7              pp        p  7  ppp                       pppppp      pp    pp                             o  nnbnbnbnnnnnnnnnnnnnn",
+	"                          pppppp     ppp  ppppp               pp        p     ppp            7    pp    pppppp      pp    pp7       J         7          O                    ",
+	"                    pp    pppppp  p  ppp  ppppp     pp                  p     ppp                 pp    pppppp      pp    pp                                                  ",
+	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp                                                  ",
+	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp                                                  ",
+	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp                                                  ",
+	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp                                                  ",
+	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp                                                  ",
+	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp                                                  ",
+	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp                                                  "
 	};
 
 	std::string fourA[30]  = {
@@ -1853,14 +1853,6 @@ int main()
 							else
 							{
 								player.velocity = 0;
-								if (mob[i].direction)
-								{
-									player.sidewaysVelocity += -120;
-								}
-								else
-								{
-									player.sidewaysVelocity += 120;
-								}
 							}
 
 							player.posY = mob[i].posY - (7 * window.blockHeight) + 2;
@@ -2020,7 +2012,6 @@ int main()
 					{
 						if (mob[i].boundsSide)
 						{
-							std::cout << mob[i].start << " " << mob[i].stop << std::endl;
 							if (mob[i].direction)
 							{
 								mob[i].speed = -120;
