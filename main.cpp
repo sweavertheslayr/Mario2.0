@@ -1672,6 +1672,10 @@ int main()
 			player.collideL = false;
 		}
 
+		//end game
+
+
+
 
 		//MOVEMENT
 
