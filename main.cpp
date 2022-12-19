@@ -1,7 +1,7 @@
 #include "raylib.h"
 #include <iostream>
 #include <math.h>
-//f(x)=abs(2*\sin(x))
+//f(x)=abs(2*sin(x))
 struct Window {
 	float width = 0;
 	float height = 0;
@@ -48,6 +48,7 @@ struct Sounds {
 	Sound newPowerup;
 	Sound pause;
 	Sound coin;
+	Sound flagpole;
 }sound;
 
 struct BadGuy {
@@ -188,6 +189,8 @@ struct Player {
 	bool collidePlatform = false;
 	bool bufferCollide = false;
 	bool invincibleFive = false;
+	bool bigging = false;
+	bool flagging = false;
 
 	//animation
 	float width = 32;
@@ -229,25 +232,25 @@ struct Levels {
 	std::string oneA[30] = {
 	"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------",
 	"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------",
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                               ",
-	"                       o                                                          ________   ___o              o           ___    _oo_                                                        OO                                                                                               ",
-	"                                                                                                                                                                                             OOO                                                                                               ",
-	"                                                                                                                                                                                            OOOO                                                                                               ",
-	"                                                                                                                                                                                           OOOOO                                                                                               ",
-	"                 o   _o_o_                     tk         tk                   _o_              _     __    o  o  o     _          __      O  O          OO  O            __o_            OOOOOO                                                                                               ",
-	"                                       tk      |h         |h                                                                              OO  OO        OOO  OO                          OOOOOOO                                                                                               ",
-	"                             tk        |h      |h         |h                                                                             OOO  OOO      OOOO  OOO     tk              tk OOOOOOOO                       tk                                                                      ",
+	"                                                                                                                                                                                                         *                                                                                     ",
+	"                                                                                                                                                                                                         *                                                                                     ",
+	"                                                                                                                                                                                                         *                                                                                     ",
+	"                                                                                                                                                                                                         *                                                                                     ",
+	"                                                                                                                                                                                                         *                                                                                     ",
+	"                                                                                                                                                                                                         *                                                                                     ",
+	"                                                                                                                                                                                                         *                                                                                     ",
+	"                                                                                                                                                                                                         *                                                                                     ",
+	"                                                                                                                                                                                                         *                                                                                     ",
+	"                                                                                                                                                                                                         *                                                                                     ",
+	"                                                                                                                                                                                                         *                                                                                     ",
+	"                                                                                                                                                                                                         *                                                                                     ",
+	"                       o                                                          ________   ___o              o           ___    _oo_                                                        OO         *                                                                                     ",
+	"                                                                                                                                                                                             OOO         *                                                                                     ",
+	"                                                                                                                                                                                            OOOO         *                                                                                     ",
+	"                                                                                                                                                                                           OOOOO         *                                                                                     ",
+	"                 o   _o_o_                     tk         tk                   _o_              _     __    o  o  o     _          __      O  O          OO  O            __o_            OOOOOO         *                                                                                     ",
+	"                                       tk      |h         |h                                                                              OO  OO        OOO  OO                          OOOOOOO         *                                                                                     ",
+	"                             tk        |h      |h         |h                                                                             OOO  OOO      OOOO  OOO     tk              tk OOOOOOOO         *             tk                                                                      ",
 	"                             |h        |h      |h         |h                                                                            OOOO  OOOO    OOOOO  OOOO    |h              |hOOOOOOOOO        O              |h                                                                      ",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
@@ -529,6 +532,7 @@ void loadSounds()
 	sound.newPowerup = LoadSound("DevAssets/sounds/newPowerup.wav");
 	sound.pause = LoadSound("DevAssets/sounds/pause.wav");
 	sound.coin = LoadSound("DevAssets/sounds/coin.wav");
+	sound.flagpole = LoadSound("DevAssets/sounds/flagpole.wav");
 }
 
 void emptyArray(std::string arr[32])
@@ -1252,73 +1256,135 @@ int main()
 	{
 		window.dT = GetFrameTime();
 
-		if (player.isDead)
+		while (player.isDead)
 		{
-			while (1)
+			if (IsMusicStreamPlaying(sound.currentBackground))
 			{
-				if (IsMusicStreamPlaying(sound.currentBackground))
-				{
-					StopMusicStream(sound.currentBackground);
-					PlaySoundMulti(sound.die);
-				}
+				StopMusicStream(sound.currentBackground);
+				PlaySoundMulti(sound.die);
+			}
 
-				player.currentSprite = 13;
-				BeginDrawing();
-				(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
-				outputEverything();
-				EndDrawing();
+			player.currentSprite = 13;
+			BeginDrawing();
+			(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
+			outputEverything();
+			EndDrawing();
 
-				if (GetSoundsPlaying() == 0)
-				{
-					restartLevel(); 
-					break;
-				}
+			if (GetSoundsPlaying() == 0)
+			{
+				restartLevel(); 
+				break;
 			}
 		}
+		
 
-		if (player.shrinking)
+		while (player.shrinking)
 		{
-			while (1)
+			player.runningTime += window.dT;
+
+			if (player.runningTime >= player.updateTime)
 			{
-				player.runningTime += window.dT;
-
-				if (player.runningTime >= player.updateTime)
+				player.tall = !player.tall;
+				if (player.currentSprite == 0 && !player.tall)
 				{
-					player.tall = !player.tall;
-					if (player.currentSprite == 0 && !player.tall)
-					{
-						player.currentSprite = 6;
-					}
-					else if (player.currentSprite == 13 && !player.tall)
-					{
-						player.currentSprite = 7;
-					}
-					player.runningTime = 0;
+					player.currentSprite = 6;
 				}
-
-				if (player.tall == 0)
+				else if (player.currentSprite == 13 && !player.tall)
 				{
-					player.spriteHeight = 1;
+					player.currentSprite = 7;
 				}
-				else
+				player.runningTime = 0;
+			}
+
+			if (player.tall == 0)
+			{
+				player.spriteHeight = 1;
+			}
+			else
+			{
+				player.spriteHeight = 2;
+			}
+
+			BeginDrawing();
+			(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
+			outputEverything();
+			EndDrawing();
+
+			UpdateMusicStream(sound.currentBackground);
+
+			if (GetSoundsPlaying() == 0)
+			{
+				player.shrinking = false;
+				player.invincibleFive = true;
+				player.tall = 0;
+				break;
+			}
+		}
+		
+
+		while (player.bigging)
+		{
+			player.runningTime += window.dT;
+
+			if (player.runningTime >= player.updateTime)
+			{
+				player.tall = !player.tall;
+				if (player.currentSprite == 0 && !player.tall)
 				{
-					player.spriteHeight = 2;
+					player.currentSprite = 6;
 				}
-
-				BeginDrawing();
-				(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
-				outputEverything();
-				EndDrawing();
-
-				UpdateMusicStream(sound.currentBackground);
-
-				if (GetSoundsPlaying() == 0)
+				else if (player.currentSprite == 13 && !player.tall)
 				{
-					player.shrinking = false;
-					player.invincibleFive = true;
-					player.tall = 0;
-					break;
+					player.currentSprite = 7;
 				}
+				player.runningTime = 0;
+			}
+
+			if (player.tall == 0)
+			{
+				player.spriteHeight = 1;
+			}
+			else
+			{
+				player.spriteHeight = 2;
+			}
+
+			BeginDrawing();
+			(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
+			outputEverything();
+			EndDrawing();
+
+			UpdateMusicStream(sound.currentBackground);
+
+			if (GetSoundsPlaying() == 0)
+			{
+				player.bigging = false;
+				player.tall = 1;
+				break;
+			}
+		}
+		
+		while (player.flagging)
+		{
+			player.runningTime += window.dT;
+			player.posY += 250 * window.dT;
+			player.iPosY = (player.posY) / window.blockHeight;
+
+			if (IsMusicStreamPlaying(sound.currentBackground))
+			{
+				StopMusicStream(sound.currentBackground);
+				PlaySoundMulti(sound.flagpole);
+			}
+
+			BeginDrawing();
+			(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
+			outputEverything();
+			EndDrawing();
+		
+			if (player.iPosY >= 13)
+			{
+				player.flagging = false;
+				break;
 			}
 		}
 
@@ -1875,6 +1941,7 @@ int main()
 					if (CheckCollisionRecs(boxCollider, playerCollider))
 					{
 						player.tall = 1;
+						player.bigging = true;
 						player.score += 1000;
 						mob[i].scoreHit = 1000;
 						mob[i].hit = true;
@@ -2158,6 +2225,7 @@ int main()
 		{
 			player.posY -= player.velocity * window.dT;
 			player.posX += player.sidewaysVelocity * window.dT;
+			player.iPosY = (player.posY) / window.blockHeight;
 			player.iPosX = (player.posX - (4 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
 			player.iPosXD = (player.posX - (8 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
 			player.iPosXL = (player.posX - (28 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
@@ -2169,7 +2237,6 @@ int main()
 
 		window.renderPosDistance = player.iPosX - (player.posX / window.blockHeight);
 
-		player.iPosY = (player.posY) / window.blockHeight;
 
 		if (player.tall == 0 || player.isDucking)
 		{
@@ -2595,6 +2662,11 @@ int main()
 			player.currentSprite = b;
 		}
 
+		//flagging
+		if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 20)][player.iPosXC] == 'o' || level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 20)][player.iPosXC] == 'i' || level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 20)][player.iPosXC] == 'j')
+		{
+			player.flagging = true;
+		}
 
 		//BLOCK STUFF
 
