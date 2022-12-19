@@ -76,6 +76,8 @@ struct BadGuy {
 	float maxSpeed = 80;
 	float currentMob = 0;
 	float shellStreak = 0;
+	int start = 0;
+	int stop = 0;
 
 	float startY = 0;
 
@@ -94,6 +96,8 @@ struct BadGuy {
 	bool hostile = false;
 	bool mobCollide = false;
 	bool isCoin = false;
+	bool bounds = false;
+	bool boundsSide = false;
 
 	bool stationary = false;
 	bool upDown = false;
@@ -369,7 +373,7 @@ struct Levels {
 	"                                                                                                                                                         r                    ",
 	"                                         xaaaaav                                                                                                        nf                    ",
 	"                           xaaav                             xaav                                                                             OO         l                    ",
-	"                                                                             xaaav                                                ooo         OO         l                    ",
+	"                                                                             xaaav                                                            OO         l                    ",
 	"                                    xaaav                                                              xaaaaaav                             OOOO         l                    ",
 	"                                                                                                                                            OOOO         l                    ",
 	"                         xaaaaaav                                      xav                                         xaav  xaav             OOOOOO         l                    ",
@@ -402,10 +406,10 @@ struct Levels {
 	"    0                                       G G     0                                             0                                                3                          ",
 	"                              J                                                                                                                                               ",
 	"                                          ppppp                                 G                                                             OO              xcvcx           ",
-	"                            ppp        7  ppppp        Lqd    pp                                            J                     Lqd         OO                              ",
+	"                            ppp        7  ppppp         Lq>(  pp                                            J                     Lq<$        OO                              ",
 	"           7                ppp     7     ppppp               pp              ppp     7                                              7      OOOO                              ",
-	"  ,.m                       ppp      ppp  ppppp           7   pp              ppp  7 Lqd                pppppp                    7         OOOO            cccvcvccccccccccccccc",
-	"                                     ppp  ppppp               pp              ppp           Lqd         pppppp                            OOOOOO                              ",
+	"  ,.m                       ppp      ppp  ppppp           7   pp              ppp  7Lq<$                pppppp                    7         OOOO            cccvcvccccccccccccccc",
+	"                                     ppp  ppppp               pp              ppp       Lq<&            pppppp                            OOOOOO                              ",
 	"                          pppppp     ppp  ppppp             w pp        p     ppp                       pppppp      pp    pp              OOOOOO                              ",
 	" xcvcx                    pppppp     ppp  ppppp7              pp        p  7  ppp                       pppppp      pp    pp              OOOOOO            nnbnbnbnnnnnnnnnnnnnn",
 	"                          pppppp     ppp  ppppp               pp        p     ppp            7    pp    pppppp      pp    pp7       J     OOOO7O         O                    ",
@@ -1361,6 +1365,7 @@ int main()
 						mob[window.mobCount].mobCollide = true;
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].isPlatform = false;
+						mob[window.mobCount].bounds = false;
 						mob[window.mobCount].isPipe = false;
 						mob[window.mobCount].flip = false; 
 						mob[window.mobCount].isSmart = false;
@@ -1389,6 +1394,7 @@ int main()
 						mob[window.mobCount].mobCollide = true;
 						mob[window.mobCount].shellStreak = 0;
 						mob[window.mobCount].isPipe = false;
+						mob[window.mobCount].bounds = false;
 						mob[window.mobCount].upDown = false;
 						mob[window.mobCount].stillShell = false;
 						mob[window.mobCount].isSmart = false;
@@ -1414,6 +1420,7 @@ int main()
 						mob[window.mobCount].hostile = true;
 						mob[window.mobCount].startY = i * window.blockHeight;
 						mob[window.mobCount].direction = true;
+						mob[window.mobCount].bounds = false;
 						mob[window.mobCount].stationary = false;
 						mob[window.mobCount].isPipe = false;
 						mob[window.mobCount].mobCollide = true;
@@ -1449,6 +1456,7 @@ int main()
 						mob[window.mobCount].isPipe = true;
 						mob[window.mobCount].stillShell = false;
 						mob[window.mobCount].isSmart = false;
+						mob[window.mobCount].bounds = false;
 						mob[window.mobCount].movingShell = false;
 						mob[window.mobCount].mobCollide = false;
 						mob[window.mobCount].isPlatform = false;
@@ -1474,6 +1482,7 @@ int main()
 						mob[window.mobCount].direction = false;
 						mob[window.mobCount].stationary = false;
 						mob[window.mobCount].upDown = false;
+						mob[window.mobCount].bounds = false;
 						mob[window.mobCount].stillShell = false;
 						mob[window.mobCount].isPipe = false;
 						mob[window.mobCount].movingShell = false;
@@ -1518,10 +1527,28 @@ int main()
 						if (level.currentScene[i][j + 2] == 'u')
 						{
 							mob[window.mobCount].directionUp = true;
+							mob[window.mobCount].bounds = false;
 						}
 						else if (level.currentScene[i][j + 2] == 'd')
 						{
 							mob[window.mobCount].directionUp = false;
+							mob[window.mobCount].bounds = false;
+						}
+						else if (level.currentScene[i][j + 2] == '<')
+						{
+							mob[window.mobCount].direction = true;
+							mob[window.mobCount].bounds = true;
+							mob[window.mobCount].boundsSide = true;
+							mob[window.mobCount].start = j + 2;
+							mob[window.mobCount].stop = ((int)level.currentScene[i][j + 3]) - 32;
+						}
+						else if (level.currentScene[i][j + 2] == '>')
+						{
+							mob[window.mobCount].directionUp = true;
+							mob[window.mobCount].bounds = true;
+							mob[window.mobCount].boundsSide = false;
+							mob[window.mobCount].start = i;
+							mob[window.mobCount].stop = ((int)level.currentScene[i][j + 3]) - 32;
 						}
 
 						if (level.currentScene[i][j + 1] == 'q')
@@ -1548,6 +1575,7 @@ int main()
 						mob[window.mobCount].direction = false;
 						mob[window.mobCount].stationary = true;
 						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].bounds = false;
 						mob[window.mobCount].isPipe = false;
 						mob[window.mobCount].isSmart = false;
 						mob[window.mobCount].movingShell = false;
@@ -1814,13 +1842,25 @@ int main()
 							player.platform = i;
 							player.collidePlatform = true;
 
-							if (mob[i].directionUp)
+							if (mob[i].directionUp && !mob[i].boundsSide)
 							{
 								player.velocity = 80;
 							}
-							else
+							else if (!mob[i].boundsSide)
 							{
 								player.velocity = -80;
+							}
+							else
+							{
+								player.velocity = 0;
+								if (mob[i].direction)
+								{
+									player.sidewaysVelocity += -120;
+								}
+								else
+								{
+									player.sidewaysVelocity += 120;
+								}
 							}
 
 							player.posY = mob[i].posY - (7 * window.blockHeight) + 2;
@@ -1952,24 +1992,73 @@ int main()
 						mob[i].velocity = -40;
 					}
 				}
+				//platform
 				else if (mob[i].isPlatform)
 				{
-					if (mob[i].directionUp)
+					if (!mob[i].bounds)
 					{
-						mob[i].velocity = -120;
-
-						if (mob[i].iPosY < 4)
+						if (mob[i].directionUp)
 						{
-							mob[i].posY = 28 * window.blockHeight;
+							mob[i].velocity = -120;
+
+							if (mob[i].iPosY < 4)
+							{
+								mob[i].posY = 28 * window.blockHeight;
+							}
+						}
+						else
+						{
+							mob[i].velocity = 120;
+
+							if (mob[i].iPosY > 28)
+							{
+								mob[i].posY = 4 * window.blockHeight;
+							}
 						}
 					}
 					else
 					{
-						mob[i].velocity = 120;
-
-						if (mob[i].iPosY > 28)
+						if (mob[i].boundsSide)
 						{
-							mob[i].posY = 4 * window.blockHeight;
+							std::cout << mob[i].start << " " << mob[i].stop << std::endl;
+							if (mob[i].direction)
+							{
+								mob[i].speed = -120;
+
+								if (mob[i].iPosX < mob[i].start)
+								{
+									mob[i].direction = false;
+								}
+							}
+							else
+							{
+								mob[i].speed = 120;
+
+								if (mob[i].iPosX > mob[i].start + mob[i].stop - 1)
+								{
+									mob[i].direction = true;
+								}
+							}
+						}
+						else
+						{
+							if (mob[i].directionUp)
+							{
+								mob[i].velocity = -120;
+								if (mob[i].iPosY < mob[i].start)
+								{
+									mob[i].directionUp = false;
+								}
+							}
+							else
+							{
+								mob[i].velocity = 120;
+
+								if (mob[i].iPosY > mob[i].start + mob[i].stop - 1)
+								{
+									mob[i].directionUp = true;
+								}
+							}
 						}
 					}
 				}
