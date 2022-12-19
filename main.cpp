@@ -2833,7 +2833,6 @@ int main()
 			player.sidewaysVelocity = 0;
 			player.velocity = 0;
 			player.lives--;
-			player.score = 0;
 			player.tall = 0;
 			player.isDead = true;
 		}
@@ -2843,7 +2842,6 @@ int main()
 			player.velocity = 0;
 			player.lives--;
 			player.tall = 0;
-			player.score = 0;
 			player.isDead = true;
 		}
 
@@ -2854,7 +2852,6 @@ int main()
 			player.sidewaysVelocity = 0;
 			player.velocity = 0;
 			player.lives--;
-			player.score = 0;
 			player.isDead = true;
 			player.collision = false;
 		}
@@ -2872,7 +2869,6 @@ int main()
 			player.velocity = 0;
 			player.tall = 0;
 			player.lives--;
-			player.score = 0;
 			player.isDead = true;
 			player.collision = false;
 		}
