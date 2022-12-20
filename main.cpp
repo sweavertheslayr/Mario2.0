@@ -1174,6 +1174,7 @@ void restartLevel()
 	player.collision = false;
 }
 
+
 void outputPlatform(float type, int i, int length)
 {
 	for (int j = 0; j < length; j++)
@@ -2948,37 +2949,29 @@ int main()
 		//PIPES
 		if ((level.currentScene[player.iPosY + (level.currentSize - 21)][player.iPosXC] == '*' && player.collideD && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 'k') && (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
 		{
-			player.isInTube = !player.isInTube;
-			if (!player.isInTube)
-			{
-				player.posX = player.tempPosX;
-				player.posY = player.tempPosY;
-				player.velocity = player.tempVelocity;
-				window.renderPosX = window.tempRenderX;
-			}
+			player.tempPosX = player.posX;
+			player.tempPosY = player.posY;
+			player.tempVelocity = player.velocity;
+			window.tempRenderX = window.renderPosX;
 			window.currentLevel = 101;
 			emptyArray(level.current);
 			emptyArray(level.currentScene);
 			setArray(window.currentLevel);
 			findSize(level.current);
-
 			restartLevel();
 		}
 		if ((level.currentScene[player.iPosY + (level.currentSize - 22)][player.iPosXC+1] == '{' && player.collideD && level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == 's') || (level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == 's') && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
 		{
-			player.isInTube = !player.isInTube;
-			if (player.isInTube)
-			{
-				window.currentLevel = 1;
-				emptyArray(level.current);
-				emptyArray(level.currentScene);
-				setArray(window.currentLevel);
-				findSize(level.current);
-				player.tempPosX = player.posX;
-				player.tempPosY = player.posY;
-				window.tempRenderX = window.renderPosX;
-				restartLevel();
-			}
+			window.currentLevel = 1;
+			emptyArray(level.current);
+			emptyArray(level.currentScene);
+			setArray(window.currentLevel);
+			findSize(level.current);
+			restartLevel();
+			player.posX = player.tempPosX;
+			player.posY = player.tempPosY;
+			player.velocity = player.tempVelocity;
+			window.renderPosX = window.tempRenderX;
 		}
 
 
