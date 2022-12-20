@@ -251,8 +251,8 @@ struct Levels {
 	"                                                                                                                                                                                            OOOO         *                                                                                     ",
 	"                                                                                                                                                                                           OOOOO         *                                                                                     ",
 	"                 o   _o_o_                     tk         tk                   _o_              _     __    o  o  o     _          __      O  O          OO  O            __o_            OOOOOO         *                                                                                     ",
-	"                                       tk      |h         |h                                                                              OO  OO        OOO  OO                          OOOOOOO         *                                                                                     ",
-	"                             tk        |h      |h         |h                                                                             OOO  OOO      OOOO  OOO     tk              tk OOOOOOOO         *             tk                                                                      ",
+	"                                       tk      |h         |h                                                                              OO  OO        OOO  OO                          OOOOOOO                                                                                               ",
+	"                             tk        |h      |h         |h                                                                             OOO  OOO      OOOO  OOO     tk              tk OOOOOOOO                       tk                                                                      ",
 	"                             |h        |h      |h         |h                                                                            OOOO  OOOO    OOOOO  OOOO    |h              |hOOOOOOOOO        O              |h                                                                      ",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
@@ -328,6 +328,39 @@ struct Levels {
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               "
+	};
+
+	std::string oneSceneB[30] = {
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  ",
+	"                                                                  "
 	};
 
 	std::string twoA[30] = {
@@ -586,6 +619,9 @@ void setArray(int currentLevel)
 	if (currentLevel == 3) { for (int i = 0; i < 30; i++) { level.current[i] = level.threeA[i];  level.currentScene[i] = level.threeSceneA[i]; } level.type = 0; player.world = 1; player.level = 3; }
 	if (currentLevel == 4) { for (int i = 0; i < 30; i++) { level.current[i] = level.fourA[i];  level.currentScene[i] = level.fourSceneA[i]; } level.type = 2; player.world = 1; player.level = 4; }
 	
+	//level one
+	if (currentLevel == 101) { for (int i = 0; i < 30; i++) { level.current[i] = level.oneB[i]; level.currentScene[i] = level.oneSceneB[i]; } level.type = 1; player.world = 1; player.level = 1; }
+
 	if (level.type == 0)
 	{ sound.currentBackground = sound.runningAbout; }
 	if (level.type == 1)
@@ -1432,6 +1468,8 @@ int main()
 			player.posX += 250 * window.dT;
 			player.iPosY = (player.posY) / window.blockHeight;
 			player.iPosXC = (player.posX - (16 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
+			player.iPosXD = (player.posX - (8 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
+			player.iPosXLD = (player.posX - (24 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
 
 			if (player.runningTime >= player.updateTime)
 			{
@@ -1472,7 +1510,7 @@ int main()
 
 			if ((!player.isGrounded) && (!player.collidePlatform) && window.dT < 0.02)
 			{
-				player.posY -= gravity * window.dT;
+				player.posY += gravity * window.dT;
 			}
 			else
 			{
@@ -1487,6 +1525,12 @@ int main()
 			if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC] == 'v')
 			{
 				player.ending = false;
+				window.currentLevel += 1;
+				emptyArray(level.current);
+				emptyArray(level.currentScene);
+				setArray(window.currentLevel);
+				findSize(level.current);
+				restartLevel();
 				break;
 			}
 		}
