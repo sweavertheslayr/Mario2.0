@@ -194,8 +194,6 @@ struct Player {
 	bool flagging = false;
 	bool ending = false;
 	bool scoring = false;
-	bool isInTube = false;
-
 	//animation
 	float width = 32;
 	float height = 64;
@@ -2968,8 +2966,8 @@ int main()
 			setArray(window.currentLevel);
 			findSize(level.current);
 			restartLevel();
-			player.posX = player.tempPosX;
-			player.posY = player.tempPosY;
+			player.posX = player.tempPosX+6415;
+			player.posY = player.tempPosY+75;
 			player.velocity = player.tempVelocity;
 			window.renderPosX = window.tempRenderX;
 		}
