@@ -49,6 +49,7 @@ struct Sounds {
 	Sound pause;
 	Sound coin;
 	Sound flagpole;
+	Sound clearStage;
 }sound;
 
 struct BadGuy {
@@ -191,6 +192,7 @@ struct Player {
 	bool invincibleFive = false;
 	bool bigging = false;
 	bool flagging = false;
+	bool ending = false;
 
 	//animation
 	float width = 32;
@@ -260,6 +262,39 @@ struct Levels {
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%---%%%%%%%%%%%%%%%---%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%---%%%%%%%%%%%%%%%---%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%--%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+	};
+
+	std::string oneB[30] = {
+	"------------------------------------------------------------------",
+	"------------------------------------------------------------------",
+	"#  ############|h                                                 ",
+	"#  ############|h                                                 ",
+	"#  ############|h                                                 ",
+	"#  ############|h                                                 ",
+	"#  ############|h                                                 ",
+	"#  ############|h                                                 ",
+	"#  ############|h                                                 ",
+	"#  ############|h                                                 ",
+	"#  ############|h                                                 ",
+	"#  ############|h                                                 ",
+	"#  ############|h                                                 ",
+	"#  ############|h                                                 ",
+	"#  ############|h                                                 ",
+	"#              |h                                                 ",
+	"#              |h                                                 ",
+	"#              |h                                                 ",
+	"#  ############|h                                                 ",
+	"#            ##|h                                                 ",
+	"#            yedh                                                 ",
+	"#            sbwh                                                 ",
+	"%%%%%%%%%%%%%%%%%                                                 ",
+	"%%%%%%%%%%%%%%%%%                                                 ",
+	"%%%%%%%%%%%%%%%%%                                                 ",
+	"%%%%%%%%%%%%%%%%%                                                 ",
+	"%%%%%%%%%%%%%%%%%                                                 ",
+	"%%%%%%%%%%%%%%%%%                                                 ",
+	"%%%%%%%%%%%%%%%%%-------------------------------------------------",
+	"%%%%%%%%%%%%%%%%%-------------------------------------------------"
 	};
 
 	std::string oneSceneA[30] = {
@@ -533,6 +568,7 @@ void loadSounds()
 	sound.pause = LoadSound("DevAssets/sounds/pause.wav");
 	sound.coin = LoadSound("DevAssets/sounds/coin.wav");
 	sound.flagpole = LoadSound("DevAssets/sounds/flagpole.wav");
+	sound.clearStage = LoadSound("DevAssets/sounds/clearStage.wav");
 }
 
 void emptyArray(std::string arr[32])
@@ -1381,9 +1417,75 @@ int main()
 			outputEverything();
 			EndDrawing();
 		
-			if (player.iPosY >= 13)
+			if (player.iPosY >= 14)
 			{
 				player.flagging = false;
+				player.ending = true;
+				PlaySoundMulti(sound.clearStage);
+				break;
+			}
+		}
+
+		while (player.ending)
+		{
+			player.runningTime += window.dT;
+			player.posX += 250 * window.dT;
+
+			if (player.runningTime >= player.updateTime)
+			{
+				if (player.currentSprite == 12 || player.currentSprite == 6)
+				{
+					player.frame = 6;
+					a = 1;
+				}
+
+				player.runningTime = 0;
+				player.frame += a;
+				player.currentSprite = player.frame;
+
+				if (player.frame <= 8)
+				{
+					a = 1;
+					player.frame = 8;
+				}
+				else if (player.frame >= 10)
+				{
+					a = -1;
+					player.frame = 10;
+				}
+			}
+
+			//down
+			if ((level.current[player.iPosY + (level.currentSize - 21)][player.iPosXD] == ' ' && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXLD] == ' '))
+			{
+				player.collideD = false;
+				player.isGrounded = false;
+			}
+			else
+			{
+				player.streak = 1;
+				player.collideD = true;
+				player.isGrounded = true;
+			}
+
+			if ((!player.isGrounded) && (!player.collidePlatform) && window.dT < 0.02)
+			{
+				player.velocity -= gravity * window.dT;
+			}
+			else if (!player.collidePlatform)
+			{
+				player.velocity = 0;
+				player.posY = ((player.iPosY) * window.blockHeight);
+			}
+
+			BeginDrawing();
+			(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
+			outputEverything();
+			EndDrawing();
+
+			if (false)
+			{
+				player.ending = false;
 				break;
 			}
 		}
