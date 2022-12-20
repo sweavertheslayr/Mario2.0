@@ -1148,8 +1148,8 @@ void restartLevel()
 	switch (window.currentLevel)
 	{
 	case 1:
-		player.posX = window.blockHeight * 4;
-		player.posY = window.blockHeight * 7;
+		player.posX = window.blockHeight * 3;
+		player.posY = window.blockHeight * 14;
 		break;
 	case 101:
 		player.posX = window.blockHeight * 2;
