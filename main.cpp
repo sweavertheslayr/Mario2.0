@@ -193,6 +193,7 @@ struct Player {
 	bool bigging = false;
 	bool flagging = false;
 	bool ending = false;
+	bool scoring = false;
 
 	//animation
 	float width = 32;
@@ -1144,9 +1145,26 @@ void restartLevel()
 
 	window.mobCount = 0;
 
-	player.posX = window.blockHeight * 4;
+	switch (window.currentLevel)
+	{
+	case 1:
+		player.posX = window.blockHeight * 4;
+		player.posY = window.blockHeight * 7;
+		break;
+	case 101:
+		player.posX = window.blockHeight * 2;
+		player.posY = window.blockHeight * 0;
+		break;
+	case 2:
+		player.posX = window.blockHeight * 4;
+		player.posY = window.blockHeight * 7;
+		break;
+	case 3:
+		player.posX = window.blockHeight * 4;
+		player.posY = window.blockHeight * 7;
+		break;
+	}
 
-	player.posY = window.blockHeight * 7;
 
 	player.velocity = 0;
 
@@ -1465,13 +1483,17 @@ int main()
 		while (player.ending)
 		{
 			player.runningTime += window.dT;
-			player.posX += 250 * window.dT;
-			player.iPosY = (player.posY) / window.blockHeight;
-			player.iPosXC = (player.posX - (16 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
-			player.iPosXD = (player.posX - (8 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
-			player.iPosXLD = (player.posX - (24 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
 
-			if (player.runningTime >= player.updateTime)
+			if (player.posX != -50)
+			{
+				player.posX += 250 * window.dT;
+				player.iPosY = (player.posY) / window.blockHeight;
+				player.iPosXC = (player.posX - (16 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
+				player.iPosXD = (player.posX - (8 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
+				player.iPosXLD = (player.posX - (24 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
+			}
+
+			if (player.runningTime >= player.updateTime && player.ending)
 			{
 				if (player.currentSprite == 12 || player.currentSprite == 6)
 				{
@@ -1496,7 +1518,7 @@ int main()
 			}
 
 			//down
-			if ((level.current[player.iPosY + (level.currentSize - 21)][player.iPosXD] == ' ' && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXLD] == ' '))
+			if ((level.current[player.iPosY + (level.currentSize - 21)][player.iPosXD] == ' ' && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXLD] == ' ') && player.ending)
 			{
 				player.collideD = false;
 				player.isGrounded = false;
@@ -1508,7 +1530,7 @@ int main()
 				player.isGrounded = true;
 			}
 
-			if ((!player.isGrounded) && (!player.collidePlatform) && window.dT < 0.02)
+			if ((!player.isGrounded) && (!player.collidePlatform) && window.dT < 0.02 && player.ending)
 			{
 				player.posY += gravity * window.dT;
 			}
@@ -1524,6 +1546,25 @@ int main()
 
 			if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC] == 'v')
 			{
+				player.posX = -50;
+
+				player.scoring = true;
+			}
+
+			if (player.scoring && player.time > 0)
+			{
+				player.time -= 5;
+				player.score += 50;
+			}
+			else if (player.scoring)
+			{
+				player.time = 0;
+				player.runningTime = 0;
+				player.scoring = false;
+			}
+
+			if (player.time <= 0 && player.runningTime >= 2 * player.updateTime)
+			{
 				player.ending = false;
 				window.currentLevel += 1;
 				emptyArray(level.current);
@@ -1531,7 +1572,6 @@ int main()
 				setArray(window.currentLevel);
 				findSize(level.current);
 				restartLevel();
-				break;
 			}
 		}
 
