@@ -1548,7 +1548,7 @@ int main()
 			if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC] == 'v' && player.time > 0)
 			{
 				player.posX = -50;
-
+				//hello
 				player.scoring = true;
 			}
 
