@@ -194,6 +194,7 @@ struct Player {
 	bool flagging = false;
 	bool ending = false;
 	bool scoring = false;
+	bool isInTube = false;
 
 	//animation
 	float width = 32;
@@ -353,8 +354,8 @@ struct Levels {
 	"                                                                  ",
 	"                                                                  ",
 	"                                                                  ",
-	"                                                                  ",
-	"                                                                  ",
+	"            {                                                     ",
+	"            {                                                     ",
 	"                                                                  ",
 	"                                                                  ",
 	"                                                                  ",
@@ -615,12 +616,13 @@ void emptyArray(std::string arr[32])
 
 void setArray(int currentLevel)
 {
+	//main levels
 	if (currentLevel == 1) { for (int i = 0; i < 30; i++) { level.current[i] = level.oneA[i]; level.currentScene[i] = level.oneSceneA[i]; } level.type = 0; player.world = 1; player.level = 1; }
 	if (currentLevel == 2) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoA[i];  level.currentScene[i] = level.twoSceneA[i]; } level.type = 1; player.world = 1; player.level = 2; }
 	if (currentLevel == 3) { for (int i = 0; i < 30; i++) { level.current[i] = level.threeA[i];  level.currentScene[i] = level.threeSceneA[i]; } level.type = 0; player.world = 1; player.level = 3; }
 	if (currentLevel == 4) { for (int i = 0; i < 30; i++) { level.current[i] = level.fourA[i];  level.currentScene[i] = level.fourSceneA[i]; } level.type = 2; player.world = 1; player.level = 4; }
 	
-	//level one
+	//level one b
 	if (currentLevel == 101) { for (int i = 0; i < 30; i++) { level.current[i] = level.oneB[i]; level.currentScene[i] = level.oneSceneB[i]; } level.type = 1; player.world = 1; player.level = 1; }
 
 	if (level.type == 0)
@@ -2946,6 +2948,14 @@ int main()
 		//PIPES
 		if ((level.currentScene[player.iPosY + (level.currentSize - 21)][player.iPosXC] == '*' && player.collideD && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 'k') && (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
 		{
+			player.isInTube = !player.isInTube;
+			if (!player.isInTube)
+			{
+				player.posX = player.tempPosX;
+				player.posY = player.tempPosY;
+				player.velocity = player.tempVelocity;
+				window.renderPosX = window.tempRenderX;
+			}
 			window.currentLevel = 101;
 			emptyArray(level.current);
 			emptyArray(level.currentScene);
@@ -2953,6 +2963,22 @@ int main()
 			findSize(level.current);
 
 			restartLevel();
+		}
+		if ((level.currentScene[player.iPosY + (level.currentSize - 22)][player.iPosXC+1] == '{' && player.collideD && level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == 's') || (level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == 's') && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
+		{
+			player.isInTube = !player.isInTube;
+			if (player.isInTube)
+			{
+				window.currentLevel = 1;
+				emptyArray(level.current);
+				emptyArray(level.currentScene);
+				setArray(window.currentLevel);
+				findSize(level.current);
+				player.tempPosX = player.posX;
+				player.tempPosY = player.posY;
+				window.tempRenderX = window.renderPosX;
+				restartLevel();
+			}
 		}
 
 
