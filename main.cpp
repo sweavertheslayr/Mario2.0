@@ -1430,6 +1430,8 @@ int main()
 		{
 			player.runningTime += window.dT;
 			player.posX += 250 * window.dT;
+			player.iPosY = (player.posY) / window.blockHeight;
+			player.iPosXC = (player.posX - (16 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
 
 			if (player.runningTime >= player.updateTime)
 			{
@@ -1470,11 +1472,10 @@ int main()
 
 			if ((!player.isGrounded) && (!player.collidePlatform) && window.dT < 0.02)
 			{
-				player.velocity -= gravity * window.dT;
+				player.posY -= gravity * window.dT;
 			}
-			else if (!player.collidePlatform)
+			else
 			{
-				player.velocity = 0;
 				player.posY = ((player.iPosY) * window.blockHeight);
 			}
 
@@ -1483,7 +1484,7 @@ int main()
 			outputEverything();
 			EndDrawing();
 
-			if (false)
+			if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC] == 'v')
 			{
 				player.ending = false;
 				break;
@@ -2852,6 +2853,8 @@ int main()
 			player.coinsStreak = 14;
 		}
 
+
+		//PIPES
 		if ((level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 't' || player.collideD && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 'k') && (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
 		{
 			window.currentLevel += 1;
