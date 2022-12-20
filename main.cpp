@@ -1157,7 +1157,7 @@ void restartLevel()
 		break;
 	case 2:
 		player.posX = window.blockHeight * 4;
-		player.posY = window.blockHeight * 7;
+		player.posY = window.blockHeight * 1;
 		break;
 	case 3:
 		player.posX = window.blockHeight * 4;
@@ -1167,6 +1167,7 @@ void restartLevel()
 
 
 	player.velocity = 0;
+	player.sidewaysVelocity = 0;
 
 	player.collision = false;
 }
@@ -1493,7 +1494,7 @@ int main()
 				player.iPosXLD = (player.posX - (24 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
 			}
 
-			if (player.runningTime >= player.updateTime && player.ending)
+			if (player.runningTime >= player.updateTime && player.time > 0)
 			{
 				if (player.currentSprite == 12 || player.currentSprite == 6)
 				{
@@ -1518,7 +1519,7 @@ int main()
 			}
 
 			//down
-			if ((level.current[player.iPosY + (level.currentSize - 21)][player.iPosXD] == ' ' && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXLD] == ' ') && player.ending)
+			if ((level.current[player.iPosY + (level.currentSize - 21)][player.iPosXD] == ' ' && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXLD] == ' '))
 			{
 				player.collideD = false;
 				player.isGrounded = false;
@@ -1530,7 +1531,7 @@ int main()
 				player.isGrounded = true;
 			}
 
-			if ((!player.isGrounded) && (!player.collidePlatform) && window.dT < 0.02 && player.ending)
+			if ((!player.isGrounded) && (!player.collidePlatform) && window.dT < 0.02)
 			{
 				player.posY += gravity * window.dT;
 			}
@@ -1544,7 +1545,7 @@ int main()
 			outputEverything();
 			EndDrawing();
 
-			if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC] == 'v')
+			if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC] == 'v' && player.time > 0)
 			{
 				player.posX = -50;
 
@@ -1553,8 +1554,8 @@ int main()
 
 			if (player.scoring && player.time > 0)
 			{
-				player.time -= 5;
-				player.score += 50;
+				player.time -= 4;
+				player.score += 20;
 			}
 			else if (player.scoring)
 			{
@@ -1563,7 +1564,7 @@ int main()
 				player.scoring = false;
 			}
 
-			if (player.time <= 0 && player.runningTime >= 2 * player.updateTime)
+			if (player.time <= 0 && player.runningTime >= 2 * player.updateTime && GetSoundsPlaying() == 0)
 			{
 				player.ending = false;
 				window.currentLevel += 1;
