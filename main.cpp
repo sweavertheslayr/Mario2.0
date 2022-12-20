@@ -2859,10 +2859,14 @@ int main()
 
 
 		//PIPES
-		if ((level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 't' || player.collideD && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 'k') && (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
+		if ((level.currentScene[player.iPosY + (level.currentSize - 21)][player.iPosXC] == '.' || player.collideD && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 'k') && (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
 		{
-			window.currentLevel += 1;
-			restartLevel();
+			window.currentLevel = 101;
+			emptyArray(level.current);
+			emptyArray(level.currentScene);
+			setArray(window.currentLevel);
+			findSize(level.current);
+			
 		}
 
 
