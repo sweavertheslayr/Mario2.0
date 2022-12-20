@@ -1679,7 +1679,7 @@ int main()
 			outputEverything();
 			EndDrawing();
 
-			if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC] == 'v' && player.time > 0)
+			if (level.currentScene[player.iPosY - 1 + (level.currentSize - 22)][player.iPosXC] == 'v' && player.time > 0)
 			{
 				player.posX = -50;
 				
@@ -1688,8 +1688,9 @@ int main()
 
 			if (player.scoring && player.time > 0)
 			{
-				player.time -= 4;
-				player.score += 20;
+				player.time -= 2;
+				player.score += 10;
+				PlaySound(sound.coin);
 			}
 			else if (player.scoring)
 			{
