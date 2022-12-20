@@ -1305,7 +1305,6 @@ void restartLevel()
 	player.collision = false;
 }
 
-
 void outputPlatform(float type, int i, int length)
 {
 	for (int j = 0; j < length; j++)
