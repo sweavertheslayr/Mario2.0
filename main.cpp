@@ -352,8 +352,8 @@ struct Levels {
 	"                                                                  ",
 	"                                                                  ",
 	"                                                                  ",
-	"            {                                                     ",
-	"            {                                                     ",
+	"            *                                                     ",
+	"            *                                                     ",
 	"                                                                  ",
 	"                                                                  ",
 	"                                                                  ",
@@ -511,10 +511,10 @@ struct Levels {
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                          G                                                                   Lqd            Lqu                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                                ",
+	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                        G G                                                                                                                                                    ",
-	"                               B                                       w      G G                             P                                         w                                                                                                                                      ",
-	"            w                                                                                           P                                                                                                                                                                                      ",
+	"                               B                                       w      G G                             P                                         w               *                                                                                                                      ",
+	"            w                                                                                           P                                                               *                                                                                                                      ",
 	"                                                                                                                    P                                                                                                                                                                          ",
 	"                  G                                                                                                                                                                                                                                                                            ",
 	"                G              G              K K            K  G G                                G G G           G                          Lqd   J        Lqu                                                                                                                               ",
@@ -821,6 +821,9 @@ void setArray(int currentLevel)
 	
 	//level one b
 	if (currentLevel == 101) { for (int i = 0; i < 30; i++) { level.current[i] = level.oneB[i]; level.currentScene[i] = level.oneSceneB[i]; } level.type = 1; player.world = 1; player.level = 1; }
+	if (currentLevel == 201) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoB[i]; level.currentScene[i] = level.twoSceneB[i]; } level.type = 1; player.world = 1; player.level = 2; }
+	if (currentLevel == 202) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoC[i]; level.currentScene[i] = level.twoSceneC[i]; } level.type = 1; player.world = 1; player.level = 2; }
+	if (currentLevel == 203) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoD[i]; level.currentScene[i] = level.twoSceneD[i]; } level.type = 1; player.world = 1; player.level = 2; }
 
 	if (level.type == 0)
 	{ sound.currentBackground = sound.runningAbout; }
@@ -3168,7 +3171,7 @@ int main()
 
 
 		//PIPES
-		if ((level.currentScene[player.iPosY + (level.currentSize - 21)][player.iPosXC] == '*' && player.collideD && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 'k') && (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
+		if (window.currentLevel = 1 && (level.currentScene[player.iPosY + (level.currentSize - 21)][player.iPosXC] == '*' && player.collideD && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 'k') && (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
 		{
 			player.tempPosX = player.posX;
 			player.tempPosY = player.posY;
@@ -3181,7 +3184,7 @@ int main()
 			findSize(level.current);
 			restartLevel();
 		}
-		if ((level.currentScene[player.iPosY + (level.currentSize - 22)][player.iPosXC+1] == '{' && player.collideD && level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == 's') || (level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == 's') && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
+		if (window.currentLevel = 101 && (level.currentScene[player.iPosY + (level.currentSize - 22)][player.iPosXC+1] == '*' && player.collideR && level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == 's') || (level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == 's') && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
 		{
 			window.currentLevel = 1;
 			emptyArray(level.current);
@@ -3194,7 +3197,20 @@ int main()
 			player.velocity = player.tempVelocity;
 			window.renderPosX = window.tempRenderX;
 		}
-
+		if (window.currentLevel = 2 && (level.currentScene[player.iPosY + (level.currentSize - 22)][player.iPosXC] == '*' && player.collideR && level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC] == 's') && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
+		{
+			std::cout << level.currentScene[player.iPosY + (level.currentSize - 22)][player.iPosXC] << " " << level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC] << std::endl;
+			player.tempPosX = player.posX;
+			player.tempPosY = player.posY;
+			player.tempVelocity = player.velocity;
+			window.tempRenderX = window.renderPosX;
+			window.currentLevel = 203;
+			emptyArray(level.current);
+			emptyArray(level.currentScene);
+			setArray(window.currentLevel);
+			findSize(level.current);
+			restartLevel();
+		}
 
 		//PAUSE
 
