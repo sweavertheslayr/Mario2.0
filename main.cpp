@@ -252,8 +252,8 @@ struct Levels {
 	"                                                                                                                                                                                           OOOOO         *                                                                                     ",
 	"                 o   _o_o_                     tk         tk                   _o_              _     __    o  o  o     _          __      O  O          OO  O            __o_            OOOOOO         *                                                                                     ",
 	"                                       tk      |h         |h                                                                              OO  OO        OOO  OO                          OOOOOOO                                                                                               ",
-	"                             tk        |h      |h         |h                                                                             OOO  OOO      OOOO  OOO     tk              tk OOOOOOOO                       tk                                                                      ",
-	"                             |h        |h      |h         |h                                                                            OOOO  OOOO    OOOOO  OOOO    |h              |hOOOOOOOOO        O              |h                                                                      ",
+	"                             tk        |h      |h         |h                                                                             OOO  OOO      OOOO  OOO     tk              tk OOOOOOOO                                                                                               ",
+	"                             |h        |h      |h         |h                                                                            OOOO  OOOO    OOOOO  OOOO    |h              |hOOOOOOOOO        O                                                                                      ",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
 	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
@@ -319,7 +319,7 @@ struct Levels {
 	"                      w                                   **                    w               B                                                                                                       o                                                                                      ",
 	"                                                                                                                                                                                                        o                                                                                      ",
 	"                                                                                                                                                                                                        o   xcvcx                                                                              ",
-	" 1          2    5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1     O                                                                                     ",
+	" 1          2    5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1                                                                                           ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
@@ -462,6 +462,39 @@ struct Levels {
 	"#%%%%%%%%%%%%%%%%%-------------------------------------------------"
 	};
 
+	std::string twoD[30] = {
+	" -------------------------------------------------------------------------------------------------------------",
+	" -------------------------------------------------------------------------------------------------------------",
+	"                        *                                                                                     ",
+	"                        *                                                                                     ",
+	"                        *                                                                                     ",
+	"                        *                                                                                     ",
+	"                        *                                                                                     ",
+	"                        *                                                                                     ",
+	"                        *                                                                                     ",
+	"                        *                                                                                     ",
+	"                        *                                                                                     ",
+	"                        *                                                                                     ",
+	"                        *                                                                                     ",
+	"                        *                                                                                     ",
+	"             OO         *                                                                                     ",
+	"            OOO         *                                                                                     ",
+	"           OOOO         *                                                                                     ",
+	"          OOOOO         *                                                                                     ",
+	"         OOOOOO         *                                                                                     ",
+	"        OOOOOOO                                                                                               ",
+	"    tk OOOOOOOO                                                                                               ",
+	"    |hOOOOOOOOO        O                                                                                      ",
+	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
+	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+	};
+
 	std::string twoSceneA[30] = {
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
@@ -559,6 +592,39 @@ struct Levels {
 	"                                                                   ",
 	"                                                                   ",
 	"                                                                   "
+	};
+
+	std::string twoSceneD[30] = {
+	"                                                                                                              ",
+	"                                                                                                              ",
+	"                                                                                                              ",
+	"                                                                                                              ",
+	"                                                                                                              ",
+	"                                                                                                              ",
+	"                                                                                                              ",
+	"                                                                                                              ",
+	"                                                                                                              ",
+	"                                                                                                              ",
+	"                                7                                                                             ",
+	"     0                                                                                                        ",
+	"                       j                                                                                      ",
+	"                      ki   7                                                                                  ",
+	"                       o                                                                                      ",
+	"                       o                                                                                      ",
+	"                       o                                                                                      ",
+	"                       o    ,.m                                                                               ",
+	"                       o                                                                                      ",
+	"   P                   o                                                                                      ",
+	"                       o   xcvcx                                                                              ",
+	"                 1               5     6                                                                      ",
+	"                                                                                                              ",
+	"                                                                                                              ",
+	"                                                                                                              ",
+	"                                                                                                              ",
+	"                                                                                                              ",
+	"                                                                                                              ",
+	"                                                                                                              ",
+	"                                                                                                              "
 	};
 
 	std::string threeA[30] = {
@@ -1293,6 +1359,10 @@ void restartLevel()
 		player.posY = window.blockHeight * 1;
 		break;
 	case 3:
+		player.posX = window.blockHeight * 3;
+		player.posY = window.blockHeight * 14;
+		break;
+	case 4:
 		player.posX = window.blockHeight * 4;
 		player.posY = window.blockHeight * 7;
 		break;
@@ -1726,6 +1796,7 @@ int main()
 				setArray(window.currentLevel);
 				findSize(level.current);
 				restartLevel();
+				break;
 			}
 		}
 
@@ -2473,7 +2544,7 @@ int main()
 					mob[i].currentMob = mob[i].mob + 1;
 					if (mob[i].mob == 5)
 					{
-						mob[i].currentMob = 4;
+						mob[i].currentMob = 5;
 					}
 					if (mob[i].mob == 6)
 					{
@@ -3131,6 +3202,7 @@ int main()
 		if (IsKeyPressed(KEY_ESCAPE))
 		{
 			window.pause = !window.pause;
+			pauseMenu = 0;
 
 			if ((!window.pause) && (!window.levelSelect))
 			{
@@ -3139,7 +3211,6 @@ int main()
 				player.posY = player.tempPosY;
 				player.velocity = player.tempVelocity;
 				window.renderPosX = window.tempRenderX;
-				pauseMenu = 0;
 			}
 			else if (!window.levelSelect)
 			{
@@ -3149,7 +3220,6 @@ int main()
 				player.tempPosX = player.posX;
 				player.tempPosY = player.posY;
 				player.tempVelocity = player.velocity;
-
 				player.posX = 1 * window.blockHeight;
 				window.tempRenderX = window.renderPosX;
 				player.sidewaysVelocity = 0;
@@ -3228,12 +3298,15 @@ int main()
 				window.renderPosX = window.tempRenderX;
 				ResumeMusicStream(sound.currentBackground);
 				window.pause = false;
+				pauseMenu = 0;
 				break;
 			case 1:
 				window.levelSelect = true;
+				pauseMenu = 0;
 				break;
 			case 2:
 				window.exit = true;
+				pauseMenu = 0;
 				break;
 			}
 			
@@ -3251,18 +3324,21 @@ int main()
 				restartLevel();
 				window.pause = false;
 				window.levelSelect = false;
+				pauseMenu = 0;
 				break;
 			case 1:
 				window.currentLevel = 2;
 				restartLevel();
 				window.pause = false;
 				window.levelSelect = false;
+				pauseMenu = 0;
 				break;
 			case 2:
 				window.currentLevel = 3;
 				restartLevel();
 				window.pause = false;
 				window.levelSelect = false;
+				pauseMenu = 0;
 				break;
 			}
 		}
