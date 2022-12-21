@@ -2217,8 +2217,30 @@ int main()
 					{
 						mob[i].hitDelay += window.dT;
 						Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 36 * window.scale, (8 * window.scale), (28 * window.scale) };
+						Rectangle boxCollider2{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 24 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 36 * window.scale, (8 * window.scale), (28 * window.scale) };
 
-						if (CheckCollisionRecs(boxCollider, playerCollider) && mob[i].hitDelay >= mob[i].hitDelayTime)
+						if (CheckCollisionRecs(boxCollider, playerCollider) && CheckCollisionRecs(boxCollider2, playerCollider) && mob[i].hitDelay >= mob[i].hitDelayTime)
+						{
+							if (player.direction)
+							{
+								mob[i].direction = false;
+							}
+							else
+							{
+								mob[i].direction = true;
+							}
+							mob[i].movingShell = true;
+							mob[i].hitDelay = 0;
+							mob[i].maxSpeed = 700;
+							mob[i].moving = true;
+							mob[i].stillShell = false;
+							if (!player.isGrounded)
+							{
+								player.velocity = player.jumpVelocity;
+							}
+							PlaySoundMulti(sound.kick);
+						}
+						else if (CheckCollisionRecs(boxCollider, playerCollider) && mob[i].hitDelay >= mob[i].hitDelayTime)
 						{
 							mob[i].movingShell = true;
 							mob[i].hitDelay = 0;
@@ -2234,9 +2256,7 @@ int main()
 						}
 						else
 						{
-							Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 24 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 36 * window.scale, (8 * window.scale), (28 * window.scale) };
-
-							if (CheckCollisionRecs(boxCollider, playerCollider) && mob[i].hitDelay >= mob[i].hitDelayTime)
+							if (CheckCollisionRecs(boxCollider2, playerCollider) && mob[i].hitDelay >= mob[i].hitDelayTime)
 							{
 								mob[i].movingShell = true;
 								mob[i].hitDelay = 0;
