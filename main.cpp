@@ -37,6 +37,7 @@ struct Sounds {
 	Music runningAboutFast;
 	Music underground;
 	Music undergroundFast;
+	Music castle;
 	Sound smallJump;
 	Sound bigJump;
 	Sound die;
@@ -694,36 +695,36 @@ struct Levels {
 	};
 
 	std::string fourA[30]  = {
-		"################################################################################################################################################################################",
-		"################################################################################################################################################################################",
-		"################################################################################################################################################################################",
-		"################################################################################################################################################################################",
-		"################################################################################################################################################################################",
-		"################################################################################################################################################################################",
-		"################################################################################################################################################################################",
-		"################################################################################################################################################################################",
-		"################################################################################################################################################################################",
-		"################################################################################################################################################################################",
-		"################################################################################################################################################################################",
-		"##############################             ##############################################         #       #        #########                   #######              ##       ###",
-		"##############################             ##############################################         c       c        #########                   #######              ##       ###",
-		"#                            #             ##############################################                                                                           ##       ###",
-		"#                            c      o      c               c              c        c                                                                           --            ###",
-		"#####                                                                                                                                                                        ###",
-		"######                                                                                                                                                            <>         ###",
-		"#######                                  ################################################     c       c       c                                                   /###       ###",
-		"################  ##############   #c#   ###################################################################################           #####   #######OOOOOOOOOOOOO###       ###",
-		"################  ##############   ###   ###################################################################################           #####   #######             ###       ###",
-		"################  ##############   ###   ###################################################################################           #####   #######             ###       ###",
-		"################  ##############   ###   #############################################################################################################             #############",
-		"################  ##############   ###   #############################################################################################################             #############",
-		"################  ##############   ###   #######################################################################################################################################",
-		"################  ##############   ###   #######################################################################################################################################",
-		"################  ##############   ###   #######################################################################################################################################",
-		"################  ##############   ###   #######################################################################################################################################",
-		"################  ##############   ###   #######################################################################################################################################",
-		"################--##############---###---#######################################################################################################################################",
-		"################--##############---###---#######################################################################################################################################"
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllll             llllllllllllllllllllllllllllllllllllllllllllll         l       l        lllllllll                   lllllll              ll       lll",
+		"llllllllllllllllllllllllllllll             llllllllllllllllllllllllllllllllllllllllllllll         c       c        lllllllll                   lllllll              ll       lll",
+		"l                            l             llllllllllllllllllllllllllllllllllllllllllllll                                                                           ll       lll",
+		"l                            c      o      c               c              c        c                                                                                         lll",
+		"lllll                                                                                                                                                                        lll",
+		"llllll                                                                                                                                                                       lll",
+		"lllllll                                  llllllllllllllllllllllllllllllllllllllllllllllll     c       c       c                                                    lll       lll",
+		"llllllllllllllll  llllllllllllll   lcl   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll           lllll   lllllllOOOOOOOOOOOOOlll       lll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll           lllll   lllllll             lll       lll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll           lllll   lllllll             lll       lll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll--llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll--llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll"
 	}; 
 	
 	std::string fourSceneA[30] = {
@@ -788,6 +789,7 @@ void loadSounds()
 	sound.runningAboutFast = LoadMusicStream("DevAssets/sounds/runningAboutFast.mp3");
 	sound.underground = LoadMusicStream("DevAssets/sounds/underground.mp3");
 	sound.undergroundFast = LoadMusicStream("DevAssets/sounds/undergroundFast.mp3");
+	sound.castle = LoadMusicStream("DevAssets/sounds/castle.mp3");
 	sound.smallJump = LoadSound("DevAssets/sounds/smallJump.wav");
 	sound.bigJump = LoadSound("DevAssets/sounds/bigJump.wav");
 	sound.die = LoadSound("DevAssets/sounds/die.mp3");
@@ -811,24 +813,26 @@ void emptyArray(std::string arr[32])
 	}
 }
 
-void setArray(int currentLevel)
+void setArray()
 {
 	//main levels
-	if (currentLevel == 1) { for (int i = 0; i < 30; i++) { level.current[i] = level.oneA[i]; level.currentScene[i] = level.oneSceneA[i]; } level.type = 0; player.world = 1; player.level = 1; }
-	if (currentLevel == 2) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoA[i];  level.currentScene[i] = level.twoSceneA[i]; } level.type = 1; player.world = 1; player.level = 2; }
-	if (currentLevel == 3) { for (int i = 0; i < 30; i++) { level.current[i] = level.threeA[i];  level.currentScene[i] = level.threeSceneA[i]; } level.type = 0; player.world = 1; player.level = 3; }
-	if (currentLevel == 4) { for (int i = 0; i < 30; i++) { level.current[i] = level.fourA[i];  level.currentScene[i] = level.fourSceneA[i]; } level.type = 2; player.world = 1; player.level = 4; }
+	if (window.currentLevel == 1) { for (int i = 0; i < 30; i++) { level.current[i] = level.oneA[i]; level.currentScene[i] = level.oneSceneA[i]; } level.type = 0; player.world = 1; player.level = 1; }
+	if (window.currentLevel == 2) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoA[i];  level.currentScene[i] = level.twoSceneA[i]; } level.type = 1; player.world = 1; player.level = 2; }
+	if (window.currentLevel == 3) { for (int i = 0; i < 30; i++) { level.current[i] = level.threeA[i];  level.currentScene[i] = level.threeSceneA[i]; } level.type = 0; player.world = 1; player.level = 3; }
+	if (window.currentLevel == 4) { for (int i = 0; i < 30; i++) { level.current[i] = level.fourA[i];  level.currentScene[i] = level.fourSceneA[i]; } level.type = 2; player.world = 1; player.level = 4; }
 	
 	//not main levels
-	if (currentLevel == 101) { for (int i = 0; i < 30; i++) { level.current[i] = level.oneB[i]; level.currentScene[i] = level.oneSceneB[i]; } level.type = 1; player.world = 1; player.level = 1; }
-	if (currentLevel == 201) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoB[i]; level.currentScene[i] = level.twoSceneB[i]; } level.type = 1; player.world = 1; player.level = 2; }
-	if (currentLevel == 202) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoC[i]; level.currentScene[i] = level.twoSceneC[i]; } level.type = 1; player.world = 1; player.level = 2; }
-	if (currentLevel == 203) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoD[i]; level.currentScene[i] = level.twoSceneD[i]; } level.type = 1; player.world = 1; player.level = 2; }
+	if (window.currentLevel == 101) { for (int i = 0; i < 30; i++) { level.current[i] = level.oneB[i]; level.currentScene[i] = level.oneSceneB[i]; } level.type = 1; player.world = 1; player.level = 1; }
+	if (window.currentLevel == 201) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoB[i]; level.currentScene[i] = level.twoSceneB[i]; } level.type = 1; player.world = 1; player.level = 2; }
+	if (window.currentLevel == 202) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoC[i]; level.currentScene[i] = level.twoSceneC[i]; } level.type = 1; player.world = 1; player.level = 2; }
+	if (window.currentLevel == 203) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoD[i]; level.currentScene[i] = level.twoSceneD[i]; } level.type = 1; player.world = 1; player.level = 2; }
 
 	if (level.type == 0)
 	{ sound.currentBackground = sound.runningAbout; }
 	if (level.type == 1)
 	{ sound.currentBackground = sound.underground; }
+	if (level.type == 2)
+	{ sound.currentBackground = sound.castle; }
 }
 
 void findSize(std::string arr[32])
@@ -1335,7 +1339,7 @@ void restartLevel()
 	player.hitTime = 2.2;
 	emptyArray(level.current);
 	emptyArray(level.currentScene);
-	setArray(window.currentLevel);
+	setArray();
 	findSize(level.current);
 	window.renderPosX = 0;
 	StopMusicStream(sound.currentBackground);
@@ -1360,6 +1364,18 @@ void restartLevel()
 	case 2:
 		player.posX = window.blockHeight * 4;
 		player.posY = window.blockHeight * 1;
+		break;
+	case 201:
+		player.posX = window.blockHeight * 2;
+		player.posY = window.blockHeight * 0;
+		break;
+	case 202:
+		player.posX = window.blockHeight * 2;
+		player.posY = window.blockHeight * 0;
+		break;
+	case 203:
+		player.posX = window.blockHeight * 4;
+		player.posY = window.blockHeight * 12;
 		break;
 	case 3:
 		player.posX = window.blockHeight * 3;
@@ -1529,9 +1545,10 @@ int main()
 	window.width = GetScreenWidth();
 	window.height = GetScreenHeight();
 
+
 	emptyArray(level.current);
 	emptyArray(level.currentScene);
-	setArray(window.currentLevel);
+	setArray();
 	findSize(level.current);
 
 
@@ -1571,7 +1588,7 @@ int main()
 			{
 				emptyArray(level.current);
 				emptyArray(level.currentScene);
-				setArray(window.currentLevel);
+				setArray();
 				findSize(level.current);
 				restartLevel();
 				break;
@@ -1801,7 +1818,7 @@ int main()
 				winTime = 400;
 				emptyArray(level.current);
 				emptyArray(level.currentScene);
-				setArray(window.currentLevel);
+				setArray();
 				findSize(level.current);
 				restartLevel();
 				break;
@@ -1823,7 +1840,18 @@ int main()
 
 		if (player.time == 100)
 		{
-			sound.currentBackground = sound.runningAboutFast;
+			if (level.type == 0)
+			{
+				sound.currentBackground = sound.runningAboutFast;
+			}
+			if (level.type == 1)
+			{
+				sound.currentBackground = sound.undergroundFast;
+			}
+			if (level.type == 2)
+			{
+				sound.currentBackground = sound.castle;
+			}
 			PlayMusicStream(sound.currentBackground);
 		}
 
@@ -3186,7 +3214,7 @@ int main()
 			player.coinsStreak = 14;
 		}
 
-
+		std::cout << window.currentLevel << std::endl;
 		//PIPES
 		if (window.currentLevel == 1 && (level.currentScene[player.iPosY + (level.currentSize - 21)][player.iPosXC] == '*' && player.collideD && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 'k') && (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
 		{
@@ -3197,7 +3225,7 @@ int main()
 			window.currentLevel = 101;
 			emptyArray(level.current);
 			emptyArray(level.currentScene);
-			setArray(window.currentLevel);
+			setArray();
 			findSize(level.current);
 			restartLevel();
 		}
@@ -3206,7 +3234,7 @@ int main()
 			window.currentLevel = 1;
 			emptyArray(level.current);
 			emptyArray(level.currentScene);
-			setArray(window.currentLevel);
+			setArray();
 			findSize(level.current);
 			restartLevel();
 			player.posX = player.tempPosX+6415;
@@ -3224,7 +3252,7 @@ int main()
 			window.currentLevel = 203;
 			emptyArray(level.current);
 			emptyArray(level.currentScene);
-			setArray(window.currentLevel);
+			setArray();
 			findSize(level.current);
 			restartLevel();
 		}
