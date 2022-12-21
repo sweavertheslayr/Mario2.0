@@ -2411,7 +2411,7 @@ int main()
 
 					if (CheckCollisionRecs(boxCollider, playerCollider))
 					{
-						player.tall = 1;
+						player.tall = 1;//ur mom
 						player.bigging = true;
 						player.score += 1000;
 						mob[i].scoreHit = 1000;
