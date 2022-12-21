@@ -1791,6 +1791,7 @@ int main()
 			{
 				player.ending = false;
 				window.currentLevel += 1;
+				winTime = 400;
 				emptyArray(level.current);
 				emptyArray(level.currentScene);
 				setArray(window.currentLevel);
