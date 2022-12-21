@@ -14,7 +14,7 @@ struct Window {
 	int renderPosX = 0;
 	int renderPosY = 0;
 
-	int currentLevel = 1;
+	int currentLevel = 4;
 
 	Font font;
 
@@ -353,8 +353,8 @@ struct Levels {
 	"                                                                  ",
 	"                                                                  ",
 	"                                                                  ",
-	"            *                                                     ",
-	"            *                                                     ",
+	"            ******                                                ",
+	"            ******                                                ",
 	"                                                                  ",
 	"                                                                  ",
 	"                                                                  ",
@@ -464,36 +464,36 @@ struct Levels {
 	};
 
 	std::string twoD[30] = {
-	" -------------------------------------------------------------------------------------------------------------",
-	" -------------------------------------------------------------------------------------------------------------",
-	"                        *                                                                                     ",
-	"                        *                                                                                     ",
-	"                        *                                                                                     ",
-	"                        *                                                                                     ",
-	"                        *                                                                                     ",
-	"                        *                                                                                     ",
-	"                        *                                                                                     ",
-	"                        *                                                                                     ",
-	"                        *                                                                                     ",
-	"                        *                                                                                     ",
-	"                        *                                                                                     ",
-	"                        *                                                                                     ",
-	"             OO         *                                                                                     ",
-	"            OOO         *                                                                                     ",
-	"           OOOO         *                                                                                     ",
-	"          OOOOO         *                                                                                     ",
-	"         OOOOOO         *                                                                                     ",
-	"        OOOOOOO                                                                                               ",
-	"    tk OOOOOOOO                                                                                               ",
-	"    |hOOOOOOOOO        O                                                                                      ",
-	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
-	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
-	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
-	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
-	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
-	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
-	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%",
-	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+	" -------------------------------------------------------------------------------------------------------------------------------------------------------",
+	" -------------------------------------------------------------------------------------------------------------------------------------------------------",
+	"                        *                                                                                                                               ",
+	"                        *                                                                                                                               ",
+	"                        *                                                                                                                               ",
+	"                        *                                                                                                                               ",
+	"                        *                                                                                                                               ",
+	"                        *                                                                                                                               ",
+	"                        *                                                                                                                               ",
+	"                        *                                                                                                                               ",
+	"                        *                                                                                                                               ",
+	"                        *                                                                                                                               ",
+	"                        *                                                                                                                               ",
+	"                        *                                                                                                                               ",
+	"             OO         *                                                                                                                               ",
+	"            OOO         *                                                                                                                               ",
+	"           OOOO         *                                                                                                                               ",
+	"          OOOOO         *                                                                                                                               ",
+	"         OOOOOO         *                                                                                                                               ",
+	"        OOOOOOO                                                                                                                                         ",
+	"    tk OOOOOOOO                                                                                                                                         ",
+	"    |hOOOOOOOOO        O                                                                                                                                ",
+	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                                          ",
+	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                                          ",
+	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                                          ",
+	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                                          ",
+	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                                          ",
+	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                                          ",
+	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%------------------------------------------",
+	"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%------------------------------------------"
 	};
 
 	std::string twoSceneA[30] = {
@@ -596,36 +596,36 @@ struct Levels {
 	};
 
 	std::string twoSceneD[30] = {
-	"                                                                                                              ",
-	"                                                                                                              ",
-	"                                                                                                              ",
-	"                                                                                                              ",
-	"                                                                                                              ",
-	"                                                                                                              ",
-	"                                                                                                              ",
-	"                                                                                                              ",
-	"                                                                                                              ",
-	"                                                                                                              ",
-	"                                7                                                                             ",
-	"     0                                                                                                        ",
-	"                       j                                                                                      ",
-	"                      ki   7                                                                                  ",
-	"                       o                                                                                      ",
-	"                       o                                                                                      ",
-	"                       o                                                                                      ",
-	"                       o    ,.m                                                                               ",
-	"                       o                                                                                      ",
-	"                       o                                                                                      ",
-	"   P                   o   xcvcx                                                                              ",
-	"                 1               5     6                                                                      ",
-	"                                                                                                              ",
-	"                                                                                                              ",
-	"                                                                                                              ",
-	"                                                                                                              ",
-	"                                                                                                              ",
-	"                                                                                                              ",
-	"                                                                                                              ",
-	"                                                                                                              "
+	"                                                                                                                                                        ",
+	"                                                                                                                                                        ",
+	"                                                                                                                                                        ",
+	"                                                                                                                                                        ",
+	"                                                                                                                                                        ",
+	"                                                                                                                                                        ",
+	"                                                                                                                                                        ",
+	"                                                                                                                                                        ",
+	"                                                                                                                                                        ",
+	"                                                                                                                                                        ",
+	"                                7                                                                                                                       ",
+	"     0                                                                                                                                                  ",
+	"                       j                                                                                                                                ",
+	"                      ki   7                                                                                                                            ",
+	"                       o                                                                                                                                ",
+	"                       o                                                                                                                                ",
+	"                       o                                                                                                                                ",
+	"                       o    ,.m                                                                                                                         ",
+	"                       o                                                                                                                                ",
+	"                       o                                                                                                                                ",
+	"   P                   o   xcvcx                                                                                                                        ",
+	"                 1               5     6                                                                                                                ",
+	"                                                                                                                                                        ",
+	"                                                                                                                                                        ",
+	"                                                                                                                                                        ",
+	"                                                                                                                                                        ",
+	"                                                                                                                                                        ",
+	"                                                                                                                                                        ",
+	"                                                                                                                                                        ",
+	"                                                                                                                                                        "
 	};
 
 	std::string threeA[30] = {
@@ -716,9 +716,9 @@ struct Levels {
 		"llllllllllllllll  llllllllllllll   lcl   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll           lllll   lllllllOOOOOOOOOOOOOlll       lll",
 		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll           lllll   lllllll             lll       lll",
 		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll           lllll   lllllll             lll       lll",
-		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllll",
-		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllll",
-		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll--llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllll",
+		"llllllllllllllll--llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllll",
+		"llllllllllllllll  llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
 		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
 		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
 		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
@@ -742,17 +742,17 @@ struct Levels {
 		"                                                                                                                                                                                ",
 		"                                                                                                                                                                                ",
 		"                                                                                                                                                                                ",
+		"                                    w                                                                                                                                           ",
 		"                                                                                                                                                                                ",
 		"                                                                                                                                                                                ",
 		"                                                                                                                                                                                ",
 		"                                                                                                                                                                                ",
 		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
+		"                gg                                                                                                                                                              ",
+		"                                ggg   ggg                                                                                                                                       ",
+		"                f                                                                                                                                                               ",
+		"                f               ff    ff                                                                                                                                        ",
+		"                f               ff    ff                                                                                                                                        ",
 		"                                                                                                                                                                                ",
 		"                                                                                                                                                                                ",
 		"                                                                                                                                                                                ",
@@ -823,9 +823,9 @@ void setArray()
 	
 	//not main levels
 	if (window.currentLevel == 101) { for (int i = 0; i < 30; i++) { level.current[i] = level.oneB[i]; level.currentScene[i] = level.oneSceneB[i]; } level.type = 1; player.world = 1; player.level = 1; }
-	if (window.currentLevel == 201) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoB[i]; level.currentScene[i] = level.twoSceneB[i]; } level.type = 1; player.world = 1; player.level = 2; }
+	if (window.currentLevel == 201) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoB[i]; level.currentScene[i] = level.twoSceneB[i]; } level.type = 0; player.world = 1; player.level = 2; }
 	if (window.currentLevel == 202) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoC[i]; level.currentScene[i] = level.twoSceneC[i]; } level.type = 1; player.world = 1; player.level = 2; }
-	if (window.currentLevel == 203) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoD[i]; level.currentScene[i] = level.twoSceneD[i]; } level.type = 1; player.world = 1; player.level = 2; }
+	if (window.currentLevel == 203) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoD[i]; level.currentScene[i] = level.twoSceneD[i]; } level.type = 0; player.world = 1; player.level = 2; }
 
 	if (level.type == 0)
 	{ sound.currentBackground = sound.runningAbout; }
@@ -1060,6 +1060,18 @@ void outputLevel()
 			{
 				a = 3;
 				b = 3;
+				c = 0;
+			}
+			else if (level.currentScene[i][j] == 'f')
+			{
+				a = 0;
+				b = 4;
+				c = 0;
+			}
+			else if (level.currentScene[i][j] == 'g')
+			{
+				a = 1;
+				b = 4;
 				c = 0;
 			}
 			else if (level.currentScene[i][j] == 'x')
@@ -3214,46 +3226,49 @@ int main()
 		}
 
 		std::cout << window.currentLevel << std::endl;
+
+
 		//PIPES
-		if (window.currentLevel == 1 && (level.currentScene[player.iPosY + (level.currentSize - 21)][player.iPosXC] == '*' && player.collideD && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 'k') && (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
+		if ((level.currentScene[player.iPosY + (level.currentSize - 21)][player.iPosXC] == '*' && player.collideD && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 'k'))
 		{
-			player.tempPosX = player.posX;
-			player.tempPosY = player.posY;
-			player.tempVelocity = player.velocity;
-			window.tempRenderX = window.renderPosX;
-			window.currentLevel = 101;
-			emptyArray(level.current);
-			emptyArray(level.currentScene);
-			setArray();
-			findSize(level.current);
-			restartLevel();
+			if (window.currentLevel == 1 && (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
+			{
+				player.tempPosX = player.posX;
+				player.tempPosY = player.posY;
+				player.tempVelocity = player.velocity;
+				window.tempRenderX = window.renderPosX;
+				window.currentLevel = 101;
+				emptyArray(level.current);
+				emptyArray(level.currentScene);
+				setArray();
+				findSize(level.current);
+				restartLevel();
+			}
 		}
-		if (window.currentLevel == 101 && (level.currentScene[player.iPosY + (level.currentSize - 22)][player.iPosXC+1] == '*' && player.collideR && level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == 's') || (level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == 's') && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
+		else if ((level.currentScene[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == '*' && level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == 's'))
 		{
-			window.currentLevel = 1;
-			emptyArray(level.current);
-			emptyArray(level.currentScene);
-			setArray();
-			findSize(level.current);
-			restartLevel();
-			player.posX = player.tempPosX+6415;
-			player.posY = player.tempPosY+75;
-			player.velocity = player.tempVelocity;
-			window.renderPosX = window.tempRenderX;
-		}
-		if (window.currentLevel == 2 && (level.currentScene[player.iPosY + (level.currentSize - 22)][player.iPosXC] == '*' && player.collideR && level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC] == 's') && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
-		{
-			std::cout << level.currentScene[player.iPosY + (level.currentSize - 22)][player.iPosXC] << " " << level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC] << std::endl;
-			player.tempPosX = player.posX;
-			player.tempPosY = player.posY;
-			player.tempVelocity = player.velocity;
-			window.tempRenderX = window.renderPosX;
-			window.currentLevel = 203;
-			emptyArray(level.current);
-			emptyArray(level.currentScene);
-			setArray();
-			findSize(level.current);
-			restartLevel();
+			if (window.currentLevel == 101 && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
+			{
+				window.currentLevel = 1;
+				emptyArray(level.current);
+				emptyArray(level.currentScene);
+				setArray();
+				findSize(level.current);
+				restartLevel();
+				player.posX = player.tempPosX + 6415;
+				player.posY = player.tempPosY + 75;
+				player.velocity = player.tempVelocity;
+				window.renderPosX = window.tempRenderX;
+			}
+			if (window.currentLevel == 2 && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
+			{
+				window.currentLevel = 203;
+				emptyArray(level.current);
+				emptyArray(level.currentScene);
+				setArray();
+				findSize(level.current);
+				restartLevel();
+			}
 		}
 
 		//PAUSE
