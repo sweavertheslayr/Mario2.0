@@ -3184,7 +3184,7 @@ int main()
 
 
 		//PIPES
-		if (window.currentLevel = 1 && (level.currentScene[player.iPosY + (level.currentSize - 21)][player.iPosXC] == '*' && player.collideD && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 'k') && (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
+		if (window.currentLevel == 1 && (level.currentScene[player.iPosY + (level.currentSize - 21)][player.iPosXC] == '*' && player.collideD && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 'k') && (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
 		{
 			player.tempPosX = player.posX;
 			player.tempPosY = player.posY;
@@ -3197,7 +3197,7 @@ int main()
 			findSize(level.current);
 			restartLevel();
 		}
-		if (window.currentLevel = 101 && (level.currentScene[player.iPosY + (level.currentSize - 22)][player.iPosXC+1] == '*' && player.collideR && level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == 's') || (level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == 's') && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
+		if (window.currentLevel == 101 && (level.currentScene[player.iPosY + (level.currentSize - 22)][player.iPosXC+1] == '*' && player.collideR && level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == 's') || (level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == 's') && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
 		{
 			window.currentLevel = 1;
 			emptyArray(level.current);
@@ -3210,7 +3210,7 @@ int main()
 			player.velocity = player.tempVelocity;
 			window.renderPosX = window.tempRenderX;
 		}
-		if (window.currentLevel = 2 && (level.currentScene[player.iPosY + (level.currentSize - 22)][player.iPosXC] == '*' && player.collideR && level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC] == 's') && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
+		if (window.currentLevel == 2 && (level.currentScene[player.iPosY + (level.currentSize - 22)][player.iPosXC] == '*' && player.collideR && level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC] == 's') && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
 		{
 			std::cout << level.currentScene[player.iPosY + (level.currentSize - 22)][player.iPosXC] << " " << level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC] << std::endl;
 			player.tempPosX = player.posX;
