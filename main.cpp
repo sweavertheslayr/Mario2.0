@@ -1697,7 +1697,7 @@ int main()
 			outputEverything();
 			EndDrawing();
 
-			if (level.currentScene[player.iPosY - 1 + (level.currentSize - 22)][player.iPosXC] == 'v' && player.time > 0)
+			if ((level.currentScene[player.iPosY - 1 + (level.currentSize - 22)][player.iPosXC] == 'v' || level.currentScene[player.iPosY - 1 + (level.currentSize - 22)][player.iPosXC] == 'b') && player.time > 0)
 			{
 				player.posX = -50;
 				
