@@ -1569,7 +1569,11 @@ int main()
 
 			if (GetSoundsPlaying() == 0)
 			{
-				restartLevel(); 
+				emptyArray(level.current);
+				emptyArray(level.currentScene);
+				setArray(window.currentLevel);
+				findSize(level.current);
+				restartLevel();
 				break;
 			}
 		}
