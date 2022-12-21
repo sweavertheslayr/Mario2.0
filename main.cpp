@@ -1551,7 +1551,6 @@ int main()
 	setArray();
 	findSize(level.current);
 
-
 	window.scale = (window.height / (508 + ((level.size - 16) * 16)));
 	window.blockHeight = window.height / level.size;
 	window.blocksWide = window.width / window.blockHeight;
