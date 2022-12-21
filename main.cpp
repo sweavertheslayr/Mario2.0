@@ -1600,6 +1600,25 @@ int main()
 				PlaySoundMulti(sound.flagpole);
 			}
 
+			if (player.runningTime >= player.updateTime)
+			{
+
+				player.runningTime = 0;
+
+				if (player.currentSprite < 14)
+				{
+					player.currentSprite = 14;
+				}
+				else if (player.currentSprite == 14)
+				{
+					player.currentSprite = 15;
+				}
+				else
+				{
+					player.currentSprite = 14;
+				}
+			}
+
 			BeginDrawing();
 			(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
 			outputEverything();
