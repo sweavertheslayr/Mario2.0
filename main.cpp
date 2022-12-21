@@ -2131,10 +2131,6 @@ int main()
 					if (level.current[mob[i].iPosY + 1][mob[i].iPosXD] == '-')
 					{
 						mob[i].loaded = false;
-						if (mob[i].movingShell)
-						{
-							mob[i].shellStreak = 0;
-						}
 					}
 
 					//right
@@ -2147,10 +2143,6 @@ int main()
 					if (mob[i].iPosX == 0)
 					{
 						mob[i].loaded = false;
-						if (mob[i].moving)
-						{
-							mob[i].shellStreak = 0;
-						}
 					}
 					else
 					{
@@ -2403,8 +2395,8 @@ int main()
 									mob[j].shellStreak += 1;
 									mob[i].stillShell = false;
 									mob[i].runningTime = 0;
-									player.score += 100 * mob[i].shellStreak;
-									mob[i].scoreHit = 100 * mob[i].shellStreak;
+									player.score += 100 * mob[j].shellStreak;
+									mob[i].scoreHit = 100 * mob[j].shellStreak;
 									PlaySoundMulti(sound.kick);
 								}
 								mob[i].hit = true;
