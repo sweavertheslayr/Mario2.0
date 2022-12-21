@@ -819,7 +819,7 @@ void setArray(int currentLevel)
 	if (currentLevel == 3) { for (int i = 0; i < 30; i++) { level.current[i] = level.threeA[i];  level.currentScene[i] = level.threeSceneA[i]; } level.type = 0; player.world = 1; player.level = 3; }
 	if (currentLevel == 4) { for (int i = 0; i < 30; i++) { level.current[i] = level.fourA[i];  level.currentScene[i] = level.fourSceneA[i]; } level.type = 2; player.world = 1; player.level = 4; }
 	
-	//level one b
+	//not main levels
 	if (currentLevel == 101) { for (int i = 0; i < 30; i++) { level.current[i] = level.oneB[i]; level.currentScene[i] = level.oneSceneB[i]; } level.type = 1; player.world = 1; player.level = 1; }
 	if (currentLevel == 201) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoB[i]; level.currentScene[i] = level.twoSceneB[i]; } level.type = 1; player.world = 1; player.level = 2; }
 	if (currentLevel == 202) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoC[i]; level.currentScene[i] = level.twoSceneC[i]; } level.type = 1; player.world = 1; player.level = 2; }
