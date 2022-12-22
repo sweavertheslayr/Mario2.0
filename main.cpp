@@ -15,6 +15,7 @@ struct Window {
 	int renderPosY = 0;
 
 	int currentLevel = 1;
+	int coin = 0;
 
 	Font font;
 
@@ -294,7 +295,7 @@ struct Levels {
 	"#%%%%%%%%%%%%%%%%%                                                 ",
 	"#%%%%%%%%%%%%%%%%%                                                 ",
 	"#%%%%%%%%%%%%%%%%%                                                 ",
-	"#%%%%%%%%%%%%%%%%%                                                 ",
+	"#%%%%%%%%%%%%%%%%%                                                o",
 	"#%%%%%%%%%%%%%%%%%-------------------------------------------------",
 	"#%%%%%%%%%%%%%%%%%-------------------------------------------------"
 	};
@@ -348,14 +349,14 @@ struct Levels {
 	"                                                                  ",
 	"                                                                  ",
 	"                                                                  ",
+	"     OOOOO                                                        ",
 	"                                                                  ",
+	"    OOOOOOO                                                       ",
 	"                                                                  ",
+	"    OOOOOOO                                                       ",
 	"                                                                  ",
-	"                                                                  ",
-	"                                                                  ",
-	"                                                                  ",
-	"            ******                                                ",
-	"            ******                                                ",
+	"              *                                                   ",
+	"              *                                                   ",
 	"                                                                  ",
 	"                                                                  ",
 	"                                                                  ",
@@ -512,10 +513,10 @@ struct Levels {
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
 	"                                                                          G                                                                   Lqd            Lqu                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                               ",
-	"                                                                                                                                                                                                                                                                                               ",
+	"                                                                                     OOOOOO                                                                                                                                                                                                    ",
+	"                                          OOOO                                                                                                                                                                                                                                                 ",
 	"                                                                                                                                        G G                                                                                                                                                    ",
-	"                               B                                       w      G G                             P                                         w               *                                                                                                                      ",
+	"                               B         O    O            OOOO      O w   B  G G                             P                                         w               *                                                                                                                      ",
 	"            w                                                                                           P                                                               *                                                                                                                      ",
 	"                                                                                                                    P                                                                                                                                                                          ",
 	"                  G                                                                                                                                                                                                                                                                            ",
@@ -783,8 +784,6 @@ struct Levels {
 	};
 
 }level;
-
-//window.blocksWide + window.renderPosX / window.blockHeight
 
 void loadSounds()
 {
@@ -1274,7 +1273,7 @@ void outputLevel()
 				{
 					block.frame = 6;
 				}
-
+				window.coin++;
 				a = block.frame;
 			
 				block.runningTime = 0;
@@ -1501,6 +1500,10 @@ void outputEverything()
 						DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 2 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (28 * window.scale), (32 * window.scale), RED);
 					}
 				}
+				else if (mob[i].isCoin && mob[i].direction && !mob[i].hit)
+				{
+					DrawRectangleLines( mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (32 * window.scale), (32 * window.scale), GREEN );
+				}
 				else if (!mob[i].hit && !mob[i].isPlatform)
 				{
 					DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (32 * window.scale), (32 * window.scale), GREEN);
@@ -1609,7 +1612,6 @@ beginning:
 				break;
 			}
 		}
-		
 
 		while (player.shrinking)
 		{
@@ -2036,13 +2038,14 @@ beginning:
 						mob[window.mobCount].isCoin = false;
 						window.mobCount += 1;
 					}
-					//mushroom
+					//fire
 					else if (level.currentScene[i][j] == 'F')
 					{
-					mob[window.mobCount].texture = LoadTexture("DevAssets/mobSheet.png");
+					mob[window.mobCount].texture = LoadTexture("DevAssets/fireSheet.png");
 					level.currentScene[i][j] = ' ';
 					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 					mob[window.mobCount].posY = (i)*window.blockHeight;
+					mob[window.mobCount].updateTime = 1/4.0;
 					mob[window.mobCount].mob = 6;
 					mob[window.mobCount].currentMob = 6;
 					mob[window.mobCount].type = level.type;
@@ -2156,6 +2159,36 @@ beginning:
 						mob[window.mobCount].outShell = true;
 						mob[window.mobCount].isCoin = true;
 						window.mobCount += 1;
+					}
+					//other coin
+					else if (level.currentScene[i][j] == 'O')
+					{
+					mob[window.mobCount].texture = LoadTexture("DevAssets/coinSheet.png");
+					level.currentScene[i][j] = ' ';
+					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+					mob[window.mobCount].posY = (i)*window.blockHeight;
+					mob[window.mobCount].mob = 0;
+					mob[window.mobCount].currentMob = 0;
+					mob[window.mobCount].velocity = 0;
+					mob[window.mobCount].type = level.type;
+					mob[window.mobCount].hostile = false;
+					mob[window.mobCount].startY = i * window.blockHeight;
+					mob[window.mobCount].direction = true;
+					mob[window.mobCount].stationary = true;
+					mob[window.mobCount].stillShell = false;
+					mob[window.mobCount].bounds = false;
+					mob[window.mobCount].isPipe = false;
+					mob[window.mobCount].isSmart = false;
+					mob[window.mobCount].movingShell = false;
+					mob[window.mobCount].mobCollide = false;
+					mob[window.mobCount].upDown = false;
+					mob[window.mobCount].isPlatform = false;
+					mob[window.mobCount].flip = false;
+					mob[window.mobCount].gravity = false;
+					mob[window.mobCount].blockCollide = false;
+					mob[window.mobCount].outShell = true;
+					mob[window.mobCount].isCoin = true;
+					window.mobCount += 1;
 					}
 				}
 			}
@@ -2444,9 +2477,17 @@ beginning:
 						}
 					}
 				}
-				else if (mob[i].isCoin)
+				else if (mob[i].isCoin && mob[i].direction && !mob[i].hit)
 				{
-		
+					Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (32 * window.scale), (32 * window.scale) };
+
+					if (CheckCollisionRecs(boxCollider, playerCollider))
+					{
+						mob[i].loaded = false;
+						player.coins += 1;
+						player.score += 100;
+						PlaySoundMulti(sound.coin);
+					}
 				}
 				else if (!mob[i].hit)
 				{
@@ -2680,7 +2721,7 @@ beginning:
 					}
 				}
 		
-				if (mob[i].isCoin)
+				if (mob[i].isCoin && mob[i].direction == false)
 				{
 					if (mob[i].runningTime >= mob[i].updateTime)
 					{
@@ -2698,6 +2739,13 @@ beginning:
 					if (mob[i].posY >= mob[i].startY && mob[i].velocity == -7)
 					{
 						mob[i].loaded = false;
+					}
+				}
+				else if (mob[i].isCoin)
+				{
+					if (block.runningTime >= block.updateTime)
+					{
+						mob[i].frame = window.coin;
 					}
 				}
 		
@@ -2723,7 +2771,16 @@ beginning:
 					}
 					mob[i].runningTime = 0;
 				}
-				if (mob[i].mob == 6)
+
+				if (mob[i].mob == 6 && mob[i].stationary)
+				{
+					if (mob[i].runningTime >= mob[i].updateTime)
+					{
+						mob[i].frame++;
+						mob[i].runningTime = 0;
+					}
+				}
+				else if (mob[i].mob == 6)
 				{
 					if (mob[i].direction)
 					{
@@ -2777,7 +2834,7 @@ beginning:
 		//COLLISION
 
 		//up
-		if (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == ' ' && level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosX] == ' ' && level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXL] == ' ')
+		if (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == ' ')
 		{
 			player.collideU = false;
 		}
