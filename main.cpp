@@ -211,6 +211,7 @@ struct Player {
 	bool isTurning = false;
 	bool isDucking = false;
 	bool isHit = false;
+	bool fire = false;
 	bool isDead = false;
 	bool shrinking = false;
 	float tall = 0;
@@ -1455,7 +1456,7 @@ void outputEverything()
 
 		DrawTexturePro(
 			player.texture,
-			Rectangle{ player.currentSprite * 16, (32 * player.tall), -player.width / 2, -player.width },
+			Rectangle{ player.currentSprite * 16, (32 * (player.tall + player.fire)), -player.width / 2, -player.width },
 			Rectangle{ player.posX, player.posY, ((-player.width) * window.scale), (-player.width * 2 * window.scale) },
 			Vector2{ 0, 0 },
 			0,
@@ -1610,6 +1611,8 @@ int main()
 		while (player.shrinking)
 		{
 			player.runningTime += window.dT;
+
+			player.fire = 0;
 
 			if (player.runningTime >= player.updateTime)
 			{
@@ -2021,6 +2024,35 @@ int main()
 						mob[window.mobCount].isCoin = false;
 						window.mobCount += 1;
 					}
+					//mushroom
+					else if (level.currentScene[i][j] == 'F')
+					{
+					mob[window.mobCount].texture = LoadTexture("DevAssets/mobSheet.png");
+					level.currentScene[i][j] = ' ';
+					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+					mob[window.mobCount].posY = (i)*window.blockHeight;
+					mob[window.mobCount].mob = 6;
+					mob[window.mobCount].currentMob = 6;
+					mob[window.mobCount].type = level.type;
+					mob[window.mobCount].hostile = false;
+					mob[window.mobCount].startY = i * window.blockHeight;
+					mob[window.mobCount].direction = false;
+					mob[window.mobCount].stationary = true;
+					mob[window.mobCount].upDown = false;
+					mob[window.mobCount].bounds = false;
+					mob[window.mobCount].stillShell = false;
+					mob[window.mobCount].isPipe = false;
+					mob[window.mobCount].movingShell = false;
+					mob[window.mobCount].isSmart = false;
+					mob[window.mobCount].isPlatform = false;
+					mob[window.mobCount].mobCollide = false;
+					mob[window.mobCount].flip = false;
+					mob[window.mobCount].gravity = false;
+					mob[window.mobCount].blockCollide = true;
+					mob[window.mobCount].outShell = true;
+					mob[window.mobCount].isCoin = false;
+					window.mobCount += 1;
+					}
 					//platform
 					else if (level.currentScene[i][j] == 'L')
 					{
@@ -2411,12 +2443,27 @@ int main()
 
 					if (CheckCollisionRecs(boxCollider, playerCollider))
 					{
-						player.tall = 1;//ur mom
-						player.bigging = true;
-						player.score += 1000;
-						mob[i].scoreHit = 1000;
-						mob[i].hit = true;
-						PlaySoundMulti(sound.powerup);
+						if (!mob[i].stationary)
+						{
+							if (player.tall == 0)
+							{
+								player.bigging = true;
+							}
+							player.tall = 1;
+							player.score += 1000;
+							mob[i].scoreHit = 1000;
+							mob[i].hit = true;
+							PlaySoundMulti(sound.powerup);
+						}
+						else
+						{
+							player.tall = 1;
+							player.fire = 1;
+							player.score += 1000;
+							mob[i].scoreHit = 1000;
+							mob[i].hit = true;
+							PlaySoundMulti(sound.powerup);
+						}
 					}
 				}
 
@@ -3174,7 +3221,14 @@ int main()
 			}
 			if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'w')
 			{
-				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'M';
+				if (player.tall == 0)
+				{
+					level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'M';
+				}
+				else
+				{
+					level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'F';
+				}
 				level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'c';
 				PlaySoundMulti(sound.newPowerup);
 			}
@@ -3191,9 +3245,18 @@ int main()
 			block.runningTime = 0;
 			block.velocity = block.shiftHeight;
 
+
 			if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'w')
 			{
-				level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'M';
+				if (player.tall == 0)
+				{
+					level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'M';
+				}
+				else
+				{
+					level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 22)][player.iPosXC - 1] = 'F';
+				}
+				level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] = 'c';
 				PlaySoundMulti(sound.newPowerup);
 			}
 			else if (level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == 'B')
@@ -3224,8 +3287,6 @@ int main()
 		{
 			player.coinsStreak = 14;
 		}
-
-		std::cout << window.currentLevel << std::endl;
 
 
 		//PIPES
