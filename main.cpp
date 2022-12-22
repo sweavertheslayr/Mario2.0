@@ -410,13 +410,13 @@ struct Levels {
 	"                                                                   ",
 	"                                                                   ",
 	"                                                                   ",
-	"                  0                                                ",
-	"    0                                                              ",
 	"                                                                   ",
 	"                                                                   ",
 	"                                                                   ",
 	"                                                                   ",
-	"         7                                                         ",
+	"                                                                   ",
+	"                                                                   ",
+	"                                                                   ",
 	"                                                                   ",
 	"            tk                                                     ",
 	"            |h                                                     ",
@@ -540,20 +540,20 @@ struct Levels {
 	"                                                                   ",
 	"                                                                   ",
 	"                                                                   ",
+	"               0                                                   ",
+	"    0                                                              ",
 	"                                                                   ",
 	"                                                                   ",
 	"                                                                   ",
 	"                                                                   ",
-	"                                                                   ",
-	"                                                                   ",
-	"                                                                   ",
+	"          7                                                        ",
 	"                                                                   ",
 	"                                                                   ",
 	"  ,.m                                                              ",
-	"            tk                                                     ",
-	"            |h                                                     ",
-	" xcvcx    yedh                                                     ",
-	"          sbwh                                                     ",
+	"                                                                   ",
+	"                                                                   ",
+	" xcvcx    *                                                        ",
+	"          *                                                        ",
 	"                                                                   ",
 	"                                                                   ",
 	"                                                                   ",
@@ -1381,8 +1381,8 @@ void restartLevel()
 		player.posY = window.blockHeight * 1;
 		break;
 	case 201:
-		player.posX = window.blockHeight * 2;
-		player.posY = window.blockHeight * 0;
+		player.posX = window.blockHeight * 3;
+		player.posY = window.blockHeight * 14;
 		break;
 	case 202:
 		player.posX = window.blockHeight * 2;
@@ -1834,7 +1834,11 @@ beginning:
 			{
 				player.ending = false;
 
-				if (window.currentLevel == 203)
+				if (window.currentLevel == 1)
+				{
+					window.currentLevel = 201;
+				}
+				else if (window.currentLevel == 203)
 				{
 					window.currentLevel = 3;
 				}
@@ -3384,6 +3388,12 @@ beginning:
 			if (window.currentLevel == 2 && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
 			{
 				window.currentLevel = 203;
+				restartLevel();
+				goto beginning;
+			}
+			if (window.currentLevel == 201 && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
+			{
+				window.currentLevel = 2;
 				restartLevel();
 				goto beginning;
 			}
