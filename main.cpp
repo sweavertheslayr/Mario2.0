@@ -14,7 +14,7 @@ struct Window {
 	int renderPosX = 0;
 	int renderPosY = 0;
 
-	int currentLevel = 4;
+	int currentLevel = 1;
 
 	Font font;
 
