@@ -196,6 +196,8 @@ struct Player {
 	bool flagging = false;
 	bool ending = false;
 	bool scoring = false;
+	bool tubingx = false;
+	bool tubingy = false;
 	//animation
 	float width = 32;
 	float height = 64;
@@ -1756,6 +1758,52 @@ beginning:
 			}
 		}
 
+		while (player.tubingy)
+		{
+			player.posY += 200 * window.dT;
+			player.iPosY = (player.posY) / window.blockHeight;
+
+			if (IsMusicStreamPlaying(sound.currentBackground))
+			{
+				StopMusicStream(sound.currentBackground);
+				PlaySoundMulti(sound.pipe);
+			}
+
+			BeginDrawing();
+			(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
+			outputEverything();
+			EndDrawing();
+
+			if (GetSoundsPlaying() == 0)
+			{
+				player.tubingy = false;
+				break;
+			}
+		}
+
+		while (player.tubingx)
+		{
+			player.posX += 200 * window.dT;
+			player.iPosX = (player.posX) / window.blocksWide;
+
+			if (IsMusicStreamPlaying(sound.currentBackground))
+			{
+				StopMusicStream(sound.currentBackground);
+				PlaySoundMulti(sound.pipe);
+			}
+
+			BeginDrawing();
+			(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
+			outputEverything();
+			EndDrawing();
+
+			if (GetSoundsPlaying() == 0)
+			{
+				player.tubingx = false;
+				break;
+			}
+		}
+
 		while (player.ending)
 		{
 			player.runningTime += window.dT;
@@ -3270,6 +3318,7 @@ beginning:
 			player.flagging = true;
 		}
 
+
 		//BLOCK STUFF
 
 		//collide noise
@@ -3372,6 +3421,10 @@ beginning:
 		//PIPES
 		if ((level.currentScene[player.iPosY + (level.currentSize - 21)][player.iPosXC] == '*' && player.collideD && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 'k'))
 		{
+			if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))
+			{
+				player.tubingy = true;
+			}
 			if (window.currentLevel == 1 && (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
 			{
 				player.tempPosX = player.posX;
@@ -3385,6 +3438,10 @@ beginning:
 		}
 		else if ((level.currentScene[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == '*' && level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == 's'))
 		{
+			if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))
+			{
+				player.tubingx = true;
+			}
 			if (window.currentLevel == 101 && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
 			{
 				window.currentLevel = 1;
