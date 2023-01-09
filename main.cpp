@@ -1777,6 +1777,7 @@ beginning:
 			if (GetSoundsPlaying() == 0)
 			{
 				player.tubingy = false;
+				restartLevel();
 				break;
 			}
 		}
