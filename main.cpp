@@ -1321,7 +1321,7 @@ void outputPipes()
 			{
 				a = 10;
 			}
-			else if (level.current[i][j] == '|')
+			else if (level.current[i][j] == '|') 
 			{
 				a = 11;
 			}
@@ -1760,7 +1760,7 @@ beginning:
 
 		while (player.tubingy)
 		{
-			player.posY += 175 * window.dT;
+			player.posY += 150 * window.dT;
 			player.iPosY = (player.posY) / window.blockHeight;
 			if (IsMusicStreamPlaying(sound.currentBackground))
 			{
@@ -1776,6 +1776,10 @@ beginning:
 
 			if (GetSoundsPlaying() == 0)
 			{
+				player.posX = player.tempPosX + 6415;
+				player.posY = player.tempPosY + 75;
+				player.velocity = player.tempVelocity;
+				window.renderPosX = window.tempRenderX;
 				player.tubingy = false;
 				restartLevel();
 				break;
@@ -1784,8 +1788,8 @@ beginning:
 
 		while (player.tubingx)
 		{
-			player.posX += 200 * window.dT;
-			player.iPosX = (player.posX) / window.blocksWide;
+			player.posX += 150 * window.dT;
+			player.iPosX = (player.posX) / window.blockHeight;
 
 			if (IsMusicStreamPlaying(sound.currentBackground))
 			{
@@ -1795,13 +1799,14 @@ beginning:
 
 			BeginDrawing();
 			(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
-			outputPipes();
 			outputEverything();
+			outputPipes();
 			EndDrawing();
 
 			if (GetSoundsPlaying() == 0)
 			{
 				player.tubingx = false;
+				restartLevel();
 				break;
 			}
 		}
@@ -3484,10 +3489,6 @@ beginning:
 			if (window.currentLevel == 101 && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
 			{
 				window.currentLevel = 1;
-				player.posX = player.tempPosX + 6415;
-				player.posY = player.tempPosY + 75;
-				player.velocity = player.tempVelocity;
-				window.renderPosX = window.tempRenderX;
 				goto beginning;
 			}
 			if (window.currentLevel == 2 && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
