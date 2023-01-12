@@ -1329,6 +1329,30 @@ void outputPipes()
 			{
 				a = 12;
 			}
+			else if (level.current[i][j] == 'y')
+			{
+				a = 13;
+			}
+			else if (level.current[i][j] == 's')
+			{
+				a = 14;
+			}
+			else if (level.current[i][j] == 'd')
+			{
+				a = 15;
+			}
+			else if (level.current[i][j] == 'w')
+			{
+				a = 16;
+			}
+			else if (level.current[i][j] == 'e')
+			{
+				a = 17;
+			}
+			else if (level.current[i][j] == 'b')
+			{
+				a = 18;
+			}
 			else
 			{
 				a = 26;
