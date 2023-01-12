@@ -317,7 +317,7 @@ struct Levels {
 	"                    7               0                               7                 0                              7                0                              7            0                                                                                                            ",
 	"                             3                           7                   3                            7                  3                            7                  3                          j 7                                                                                    ",
 	"                                                                                 G                                                                                                                     ki                                                                                      ",
-	"                                                                                                               w                                                                                        o                                                                                      ",
+	"              T                                                                                                w                                                                                        o                                                                                      ",
 	"                                                                                                                                                                                                        o                                                                                      ",
 	"                                                                                                                                                                                                        o                                                                                      ",
 	"                                                                                                                                                                                                        o    ,.m                                                                               ",
@@ -2037,6 +2037,36 @@ beginning:
 						mob[window.mobCount].isPlatform = false;
 						mob[window.mobCount].flip = false;
 						mob[window.mobCount].gravity = true;
+						mob[window.mobCount].blockCollide = true;
+						mob[window.mobCount].outShell = true;
+						mob[window.mobCount].isCoin = false;
+						window.mobCount += 1;
+					}
+					//flying koopas
+					else if (level.currentScene[i][j] == 'T')
+					{
+						mob[window.mobCount].texture = LoadTexture("DevAssets/mobSheet.png");
+						level.currentScene[i][j] = ' ';
+						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+						mob[window.mobCount].posY = (i)*window.blockHeight;
+						mob[window.mobCount].mob = 5;
+						mob[window.mobCount].currentMob = 5;
+						mob[window.mobCount].type = level.type;
+						mob[window.mobCount].hostile = true;
+						mob[window.mobCount].startY = i * window.blockHeight;
+						mob[window.mobCount].direction = true;
+						mob[window.mobCount].bounds = false;
+						mob[window.mobCount].stationary = false;
+						mob[window.mobCount].isPipe = false;
+						mob[window.mobCount].mobCollide = true;
+						mob[window.mobCount].upDown = true;
+						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].isSmart = true;
+						mob[window.mobCount].shellStreak = 0;
+						mob[window.mobCount].movingShell = false;
+						mob[window.mobCount].isPlatform = false;
+						mob[window.mobCount].flip = false;
+						mob[window.mobCount].gravity = false;
 						mob[window.mobCount].blockCollide = true;
 						mob[window.mobCount].outShell = true;
 						mob[window.mobCount].isCoin = false;
