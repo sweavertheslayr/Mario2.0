@@ -2049,8 +2049,8 @@ beginning:
 						level.currentScene[i][j] = ' ';
 						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
 						mob[window.mobCount].posY = (i)*window.blockHeight;
-						mob[window.mobCount].mob = 5;
-						mob[window.mobCount].currentMob = 5;
+						mob[window.mobCount].mob = 7;
+						mob[window.mobCount].currentMob = 7;
 						mob[window.mobCount].type = level.type;
 						mob[window.mobCount].hostile = true;
 						mob[window.mobCount].startY = i * window.blockHeight;
@@ -2134,32 +2134,32 @@ beginning:
 					//fire
 					else if (level.currentScene[i][j] == 'F')
 					{
-					mob[window.mobCount].texture = LoadTexture("DevAssets/fireSheet.png");
-					level.currentScene[i][j] = ' ';
-					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
-					mob[window.mobCount].posY = (i)*window.blockHeight;
-					mob[window.mobCount].updateTime = 1/4.0;
-					mob[window.mobCount].mob = 6;
-					mob[window.mobCount].currentMob = 6;
-					mob[window.mobCount].type = level.type;
-					mob[window.mobCount].hostile = false;
-					mob[window.mobCount].startY = i * window.blockHeight;
-					mob[window.mobCount].direction = false;
-					mob[window.mobCount].stationary = true;
-					mob[window.mobCount].upDown = false;
-					mob[window.mobCount].bounds = false;
-					mob[window.mobCount].stillShell = false;
-					mob[window.mobCount].isPipe = false;
-					mob[window.mobCount].movingShell = false;
-					mob[window.mobCount].isSmart = false;
-					mob[window.mobCount].isPlatform = false;
-					mob[window.mobCount].mobCollide = false;
-					mob[window.mobCount].flip = false;
-					mob[window.mobCount].gravity = false;
-					mob[window.mobCount].blockCollide = true;
-					mob[window.mobCount].outShell = true;
-					mob[window.mobCount].isCoin = false;
-					window.mobCount += 1;
+						mob[window.mobCount].texture = LoadTexture("DevAssets/fireSheet.png");
+						level.currentScene[i][j] = ' ';
+						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+						mob[window.mobCount].posY = (i)*window.blockHeight;
+						mob[window.mobCount].updateTime = 1/4.0;
+						mob[window.mobCount].mob = 6;
+						mob[window.mobCount].currentMob = 6;
+						mob[window.mobCount].type = level.type;
+						mob[window.mobCount].hostile = false;
+						mob[window.mobCount].startY = i * window.blockHeight;
+						mob[window.mobCount].direction = false;
+						mob[window.mobCount].stationary = true;
+						mob[window.mobCount].upDown = false;
+						mob[window.mobCount].bounds = false;
+						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].isPipe = false;
+						mob[window.mobCount].movingShell = false;
+						mob[window.mobCount].isSmart = false;
+						mob[window.mobCount].isPlatform = false;
+						mob[window.mobCount].mobCollide = false;
+						mob[window.mobCount].flip = false;
+						mob[window.mobCount].gravity = false;
+						mob[window.mobCount].blockCollide = true;
+						mob[window.mobCount].outShell = true;
+						mob[window.mobCount].isCoin = false;
+						window.mobCount += 1;
 					}
 					//platform
 					else if (level.currentScene[i][j] == 'L')
@@ -2256,32 +2256,32 @@ beginning:
 					//other coin
 					else if (level.currentScene[i][j] == 'O')
 					{
-					mob[window.mobCount].texture = LoadTexture("DevAssets/coinSheet.png");
-					level.currentScene[i][j] = ' ';
-					mob[window.mobCount].posX = (j + 2) * window.blockHeight;
-					mob[window.mobCount].posY = (i)*window.blockHeight;
-					mob[window.mobCount].mob = 0;
-					mob[window.mobCount].currentMob = 0;
-					mob[window.mobCount].velocity = 0;
-					mob[window.mobCount].type = level.type;
-					mob[window.mobCount].hostile = false;
-					mob[window.mobCount].startY = i * window.blockHeight;
-					mob[window.mobCount].direction = true;
-					mob[window.mobCount].stationary = true;
-					mob[window.mobCount].stillShell = false;
-					mob[window.mobCount].bounds = false;
-					mob[window.mobCount].isPipe = false;
-					mob[window.mobCount].isSmart = false;
-					mob[window.mobCount].movingShell = false;
-					mob[window.mobCount].mobCollide = false;
-					mob[window.mobCount].upDown = false;
-					mob[window.mobCount].isPlatform = false;
-					mob[window.mobCount].flip = false;
-					mob[window.mobCount].gravity = false;
-					mob[window.mobCount].blockCollide = false;
-					mob[window.mobCount].outShell = true;
-					mob[window.mobCount].isCoin = true;
-					window.mobCount += 1;
+						mob[window.mobCount].texture = LoadTexture("DevAssets/coinSheet.png");
+						level.currentScene[i][j] = ' ';
+						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+						mob[window.mobCount].posY = (i)*window.blockHeight;
+						mob[window.mobCount].mob = 0;
+						mob[window.mobCount].currentMob = 0;
+						mob[window.mobCount].velocity = 0;
+						mob[window.mobCount].type = level.type;
+						mob[window.mobCount].hostile = false;
+						mob[window.mobCount].startY = i * window.blockHeight;
+						mob[window.mobCount].direction = true;
+						mob[window.mobCount].stationary = true;
+						mob[window.mobCount].stillShell = false;
+						mob[window.mobCount].bounds = false;
+						mob[window.mobCount].isPipe = false;
+						mob[window.mobCount].isSmart = false;
+						mob[window.mobCount].movingShell = false;
+						mob[window.mobCount].mobCollide = false;
+						mob[window.mobCount].upDown = false;
+						mob[window.mobCount].isPlatform = false;
+						mob[window.mobCount].flip = false;
+						mob[window.mobCount].gravity = false;
+						mob[window.mobCount].blockCollide = false;
+						mob[window.mobCount].outShell = true;
+						mob[window.mobCount].isCoin = true;
+						window.mobCount += 1;
 					}
 				}
 			}
@@ -2800,6 +2800,10 @@ beginning:
 					{
 						mob[i].currentMob = 6;
 					}
+					if (mob[i].mob == 7)
+					{
+						mob[i].currentMob = 7;
+					}
 				}
 				if (level.type == 2)
 				{
@@ -2811,6 +2815,10 @@ beginning:
 					if (mob[i].mob == 6)
 					{
 						mob[i].currentMob = 6;
+					}
+					if (mob[i].mob == 7)
+					{
+						mob[i].currentMob = 7;
 					}
 				}
 		
