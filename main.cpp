@@ -1760,9 +1760,8 @@ beginning:
 
 		while (player.tubingy)
 		{
-			player.posY += 200 * window.dT;
+			player.posY += 175 * window.dT;
 			player.iPosY = (player.posY) / window.blockHeight;
-
 			if (IsMusicStreamPlaying(sound.currentBackground))
 			{
 				StopMusicStream(sound.currentBackground);
@@ -1772,6 +1771,7 @@ beginning:
 			BeginDrawing();
 			(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
 			outputEverything();
+			outputPipes();
 			EndDrawing();
 
 			if (GetSoundsPlaying() == 0)
@@ -1795,6 +1795,7 @@ beginning:
 
 			BeginDrawing();
 			(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
+			outputPipes();
 			outputEverything();
 			EndDrawing();
 
@@ -3433,7 +3434,6 @@ beginning:
 				player.tempVelocity = player.velocity;
 				window.tempRenderX = window.renderPosX;
 				window.currentLevel = 101;
-				restartLevel();
 				goto beginning;
 			}
 		}
@@ -3446,7 +3446,6 @@ beginning:
 			if (window.currentLevel == 101 && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
 			{
 				window.currentLevel = 1;
-				restartLevel();
 				player.posX = player.tempPosX + 6415;
 				player.posY = player.tempPosY + 75;
 				player.velocity = player.tempVelocity;
