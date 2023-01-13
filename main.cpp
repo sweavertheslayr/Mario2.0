@@ -319,10 +319,10 @@ struct Levels {
 	"                                                                                 G                                                                                                                     ki                                                                                      ",
 	"              T                                                                                                w                                                                                        o                                                                                      ",
 	"                                                                                                                                                                                                        o                                                                                      ",
-	"                                                                                                                                                                                                        o                                                                                      ",
-	"                                                                                                                                                                                                        o    ,.m                                                                               ",
-	"                      w                                   **                    w               B                                                                                                       o                                                                                      ",
-	"                                                                                                                                                                                                        o                                                                                      ",
+	"                                                     ***********                                                                                                                                        o                                                                                      ",
+	"                                                     ***********                                                                                                                                        o    ,.m                                                                               ",
+	"                      w                              ************               w               B                                                                                                       o                                                                                      ",
+	"                                                     ***********                                                                                                                                        o                                                                                      ",
 	"                                                                                                                                                                                                        o   xcvcx                                                                              ",
 	" 1          2    5     G6                G 9      1  G G     2    5       6                 9     1G G      K2    5 G G  6   G G  G G       9      1            6  5      6     G G                1                                                                                           ",
 	"                                                                                                                                                                                                                                                                                               ",
@@ -1820,6 +1820,7 @@ beginning:
 			{
 				StopMusicStream(sound.currentBackground);
 				PlaySoundMulti(sound.pipe);
+				player.posY -= 8 * window.scale;
 			}
 
 			BeginDrawing();
@@ -3489,7 +3490,7 @@ beginning:
 
 
 		//PIPES
-		if ((level.currentScene[player.iPosY + (level.currentSize - 21)][player.iPosXC] == '*' && player.collideD && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 'k'))
+		if ((level.currentScene[player.iPosY + (level.currentSize - 21)][player.iPosX] == '*') && player.collideD && (level.current[player.iPosY + (level.currentSize - 21)][player.iPosXL] == '*'))
 		{
 			if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))
 			{
