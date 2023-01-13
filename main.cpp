@@ -17,6 +17,9 @@ struct Window {
 	int currentLevel = 1;
 	int coin = 0;
 
+	int gotoY = 0;
+	int gotoX = 0;
+
 	Font font;
 
 	float dT = 0;
@@ -1800,23 +1803,23 @@ beginning:
 
 			if (GetSoundsPlaying() == 0)
 			{
-				player.posX = player.tempPosX + 6415;
-				player.posY = player.tempPosY + 75;
-				player.velocity = player.tempVelocity;
-				window.renderPosX = window.tempRenderX;
 				player.tubingy = false;
-				restartLevel();
 				break;
 			}
 		}
 
 		while (player.tubingx)
 		{
+			if (player.tall)
+			{
+				player.currentSprite = 13;
+			}
 			player.posX += 150 * window.dT;
 			player.iPosX = (player.posX) / window.blockHeight;
 
 			if (IsMusicStreamPlaying(sound.currentBackground))
 			{
+				player.posY -= 8*window.scale;
 				StopMusicStream(sound.currentBackground);
 				PlaySoundMulti(sound.pipe);
 			}
