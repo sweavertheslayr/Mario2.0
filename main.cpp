@@ -1805,10 +1805,6 @@ beginning:
 
 			if (GetSoundsPlaying() == 0)
 			{
-				player.posX = player.tempPosX + 6415;
-				player.posY = player.tempPosY + 75;
-				player.velocity = player.tempVelocity;
-				window.renderPosX = window.tempRenderX;
 				player.tubingy = false;
 				restartLevel();
 				break;
