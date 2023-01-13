@@ -3539,6 +3539,10 @@ beginning:
 				{
 				case 1:
 					window.currentLevel = 101;
+					break;
+				case 2:
+					window.currentLevel = 202;
+					break;
 				}
 			}
 		}
@@ -3547,22 +3551,19 @@ beginning:
 			if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))
 			{
 				player.tubingx = true;
-			}
-			if (window.currentLevel == 101 && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
-			{
-				window.currentLevel = 102;
-				goto beginning;
-			}
-			if (window.currentLevel == 2 && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
-			{
-				window.currentLevel = 203;
-				restartLevel();
-				goto beginning;
-			}
-			if (window.currentLevel == 201 && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
-			{
-				window.currentLevel = 2;
-				restartLevel();
+
+				switch (window.currentLevel)
+				{
+				case 101:
+					window.currentLevel = 102;
+					break;
+				case 2:
+					window.currentLevel = 203;
+					break;
+				case 201:
+					window.currentLevel = 2;
+					break;
+				}
 				goto beginning;
 			}
 		}
@@ -3699,7 +3700,7 @@ beginning:
 				pauseMenu = 0;
 				break;
 			case 1:
-				window.currentLevel = 2;
+				window.currentLevel = 201;
 				restartLevel();
 				window.pause = false;
 				window.levelSelect = false;
