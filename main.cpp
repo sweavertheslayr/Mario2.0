@@ -754,7 +754,7 @@ struct Levels {
 		"                                                                                                                                                                                ",
 		"                                                                                                                                                                                ",
 		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
+		"                                                                                                                                                            ~                   ",
 		"                gg                                                                                                                                                              ",
 		"                                ggg   ggg                                                                                                             ggggggggggggg             ",
 		"                f                                                                                                                                                               ",
@@ -789,6 +789,32 @@ struct Levels {
 	};
 
 }level;
+
+struct baddestGuy 
+{
+	float width = 32;
+	float height = 32;
+
+	float frame = 0;
+
+	bool collideD = false;
+	bool collideR = false;
+	bool collideL = false;
+
+	float velocity = 0;
+	float speed = 0;
+	float maxSpeed = 80;
+
+	float posX = 0;
+	float posY = 2 * window.blockHeight;
+
+	int iPosX = 0;
+	int iPosXD = 0;
+	int iPosY = 0;
+
+	Texture2D texture;
+	
+}bowser;
 
 void loadSounds()
 {
@@ -2320,6 +2346,12 @@ beginning:
 						mob[window.mobCount].outShell = true;
 						mob[window.mobCount].isCoin = true;
 						window.mobCount += 1;
+					}
+					//bowser
+					else if (level.currentScene[i][j] == '~')
+					{
+						bowser.texture = LoadTexture("DevAssets/bigBadGuySheet.png");
+
 					}
 				}
 			}
