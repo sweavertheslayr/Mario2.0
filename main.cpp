@@ -1853,6 +1853,7 @@ beginning:
 				player.posY -= 8*window.scale;
 				StopMusicStream(sound.currentBackground);
 				PlaySoundMulti(sound.pipe);
+				player.posY -= 8 * window.scale;
 			}
 
 			BeginDrawing();
@@ -3528,20 +3529,17 @@ beginning:
 
 
 		//PIPES
-		if ((level.currentScene[player.iPosY + (level.currentSize - 21)][player.iPosXC] == '*' && player.collideD && level.current[player.iPosY + (level.currentSize - 21)][player.iPosXC] == 'k'))
+		if ((level.currentScene[player.iPosY + (level.currentSize - 21)][player.iPosXD] == '*') && player.collideD && (level.currentScene[player.iPosY + (level.currentSize - 21)][player.iPosXL] == '*'))
 		{
 			if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))
 			{
 				player.tubingy = true;
-			}
-			if (window.currentLevel == 1 && (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)))
-			{
-				player.tempPosX = player.posX;
-				player.tempPosY = player.posY;
-				player.tempVelocity = player.velocity;
-				window.tempRenderX = window.renderPosX;
-				window.currentLevel = 101;
-				goto beginning;
+
+				switch (window.currentLevel)
+				{
+				case 1:
+					window.currentLevel = 101;
+				}
 			}
 		}
 		else if ((level.currentScene[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == '*' && level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == 's'))
