@@ -823,7 +823,7 @@ void emptyArray(std::string arr[32])
 void setArray()
 {
 	//main levels
-	if (window.currentLevel == 1) { for (int i = 0; i < 30; i++) { level.current[i] = level.oneA[i]; level.currentScene[i] = level.oneSceneA[i]; } level.type = 0; player.world = 1; player.level = 1; }
+	if (window.currentLevel == 1 || window.currentLevel == 102) { for (int i = 0; i < 30; i++) { level.current[i] = level.oneA[i]; level.currentScene[i] = level.oneSceneA[i]; } level.type = 0; player.world = 1; player.level = 1; }
 	if (window.currentLevel == 2) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoA[i];  level.currentScene[i] = level.twoSceneA[i]; } level.type = 1; player.world = 1; player.level = 2; }
 	if (window.currentLevel == 3) { for (int i = 0; i < 30; i++) { level.current[i] = level.threeA[i];  level.currentScene[i] = level.threeSceneA[i]; } level.type = 0; player.world = 1; player.level = 3; }
 	if (window.currentLevel == 4) { for (int i = 0; i < 30; i++) { level.current[i] = level.fourA[i];  level.currentScene[i] = level.fourSceneA[i]; } level.type = 2; player.world = 1; player.level = 4; }
@@ -1404,6 +1404,11 @@ void restartLevel()
 	case 101:
 		player.posX = window.blockHeight * 2;
 		player.posY = window.blockHeight * 0;
+		break;
+	case 102:
+		window.currentLevel = 1;
+		player.posX = window.blockHeight * 166;
+		player.posY = window.blockHeight * 11;
 		break;
 	case 2:
 		player.posX = window.blockHeight * 4;
@@ -3515,7 +3520,7 @@ beginning:
 			}
 			if (window.currentLevel == 101 && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
 			{
-				window.currentLevel = 1;
+				window.currentLevel = 102;
 				goto beginning;
 			}
 			if (window.currentLevel == 2 && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
