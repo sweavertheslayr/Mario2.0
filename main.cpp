@@ -800,6 +800,7 @@ struct baddestGuy
 	bool collideD = false;
 	bool collideR = false;
 	bool collideL = false;
+	bool direction = false;
 
 	float velocity = 0;
 	float speed = 0;
@@ -2352,6 +2353,12 @@ beginning:
 					else if (level.currentScene[i][j] == '~')
 					{
 						bowser.texture = LoadTexture("DevAssets/bigBadGuySheet.png");
+						level.currentScene[i][j] = ' ';
+						bowser.posX = (j + 2) * window.blockHeight;
+						bowser.posY = (i)*window.blockHeight;
+						bowser.velocity = 0;
+						bowser.direction = false;
+
 
 					}
 				}
