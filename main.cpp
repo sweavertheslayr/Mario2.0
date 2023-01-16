@@ -523,7 +523,7 @@ struct Levels {
 	"                                                                                                                                        G G                                                                                                                                                    ",
 	"                               B         O    O            OOOO      O w   B  G G                             P                                         w               *                                                                                                                      ",
 	"            w                                                                                           P                                                               *                                                                                                                      ",
-	"                                                                                                                    P                                                                                                                                                                          ",
+	"                                                                                                         **         P                                                                                                                                                                          ",
 	"                  G                                                                                                                                                                                                                                                                            ",
 	"                G              G              K K            K  G G                                G G G           G                          Lqd   J        Lqu                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
@@ -1836,6 +1836,7 @@ beginning:
 			if (GetSoundsPlaying() == 0)
 			{
 				player.tubingy = false;
+				restartLevel();
 				break;
 			}
 		}
@@ -3546,7 +3547,12 @@ beginning:
 				{
 				case 1:
 					window.currentLevel = 101;
+					break;
+				case 2:
+					window.currentLevel = 202;
+					break;
 				}
+				goto beginning;
 			}
 		}
 		else if ((level.currentScene[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == '*' && level.current[player.iPosY + (level.currentSize - 22)][player.iPosXC + 1] == 's'))
@@ -3554,22 +3560,19 @@ beginning:
 			if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT))
 			{
 				player.tubingx = true;
-			}
-			if (window.currentLevel == 101 && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
-			{
-				window.currentLevel = 102;
-				goto beginning;
-			}
-			if (window.currentLevel == 2 && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
-			{
-				window.currentLevel = 203;
-				restartLevel();
-				goto beginning;
-			}
-			if (window.currentLevel == 201 && (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)))
-			{
-				window.currentLevel = 2;
-				restartLevel();
+
+				switch (window.currentLevel)
+				{
+				case 101:
+					window.currentLevel = 102;
+					break;
+				case 2:
+					window.currentLevel = 203;
+					break;
+				case 201:
+					window.currentLevel = 2;
+					break;
+				}
 				goto beginning;
 			}
 		}
@@ -3706,7 +3709,7 @@ beginning:
 				pauseMenu = 0;
 				break;
 			case 1:
-				window.currentLevel = 2;
+				window.currentLevel = 201;
 				restartLevel();
 				window.pause = false;
 				window.levelSelect = false;
