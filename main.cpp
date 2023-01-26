@@ -790,31 +790,32 @@ struct Levels {
 
 }level;
 
-struct baddestGuy 
-{
-	float width = 32;
-	float height = 32;
-
-	float frame = 0;
-
-	bool collideD = false;
-	bool collideR = false;
-	bool collideL = false;
-
-	float velocity = 0;
-	float speed = 0;
-	float maxSpeed = 80;
-
-	float posX = 0;
-	float posY = 2 * window.blockHeight;
-
-	int iPosX = 0;
-	int iPosXD = 0;
-	int iPosY = 0;
-
-	Texture2D texture;
-	
-}bowser;
+//struct baddestGuy 
+//{
+//	float width = 32;
+//	float height = 32;
+//
+//	float frame = 0;
+//
+//	bool collideD = false;
+//	bool collideR = false;
+//	bool collideL = false;
+//	bool direction = false;
+//
+//	float velocity = 0;
+//	float speed = 0;
+//	float maxSpeed = 80;
+//
+//	float posX = 0;
+//	float posY = 2 * window.blockHeight;
+//
+//	int iPosX = 0;
+//	int iPosXD = 0;
+//	int iPosY = 0;
+//
+//	Texture2D texture;
+//	
+//}bowser;
 
 void loadSounds()
 {
@@ -2108,35 +2109,35 @@ beginning:
 						window.mobCount += 1;
 					}
 					//flying koopas
-					else if (level.currentScene[i][j] == 'T')
-					{
-						mob[window.mobCount].texture = LoadTexture("DevAssets/mobSheet.png");
-						level.currentScene[i][j] = ' ';
-						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
-						mob[window.mobCount].posY = (i)*window.blockHeight;
-						mob[window.mobCount].mob = 7;
-						mob[window.mobCount].currentMob = 7;
-						mob[window.mobCount].type = level.type;
-						mob[window.mobCount].hostile = true;
-						mob[window.mobCount].startY = i * window.blockHeight;
-						mob[window.mobCount].direction = true;
-						mob[window.mobCount].bounds = false;
-						mob[window.mobCount].stationary = false;
-						mob[window.mobCount].isPipe = false;
-						mob[window.mobCount].mobCollide = true;
-						mob[window.mobCount].upDown = true;
-						mob[window.mobCount].stillShell = false;
-						mob[window.mobCount].isSmart = true;
-						mob[window.mobCount].shellStreak = 0;
-						mob[window.mobCount].movingShell = false;
-						mob[window.mobCount].isPlatform = false;
-						mob[window.mobCount].flip = false;
-						mob[window.mobCount].gravity = false;
-						mob[window.mobCount].blockCollide = true;
-						mob[window.mobCount].outShell = true;
-						mob[window.mobCount].isCoin = false;
-						window.mobCount += 1;
-					}
+					//else if (level.currentScene[i][j] == 'T')
+					//{
+					//	mob[window.mobCount].texture = LoadTexture("DevAssets/mobSheet.png");
+					//	level.currentScene[i][j] = ' ';
+					//	mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+					//	mob[window.mobCount].posY = (i)*window.blockHeight;
+					//	mob[window.mobCount].mob = 7;
+					//	mob[window.mobCount].currentMob = 7;
+					//	mob[window.mobCount].type = level.type;
+					//	mob[window.mobCount].hostile = true;
+					//	mob[window.mobCount].startY = i * window.blockHeight;
+					//	mob[window.mobCount].direction = true;
+					//	mob[window.mobCount].bounds = false;
+					//	mob[window.mobCount].stationary = false;
+					//	mob[window.mobCount].isPipe = false;
+					//	mob[window.mobCount].mobCollide = true;
+					//	mob[window.mobCount].upDown = true;
+					//	mob[window.mobCount].stillShell = false;
+					//	mob[window.mobCount].isSmart = true;
+					//	mob[window.mobCount].shellStreak = 0;
+					//	mob[window.mobCount].movingShell = false;
+					//	mob[window.mobCount].isPlatform = false;
+					//	mob[window.mobCount].flip = false;
+					//	mob[window.mobCount].gravity = false;
+					//	mob[window.mobCount].blockCollide = true;
+					//	mob[window.mobCount].outShell = true;
+					//	mob[window.mobCount].isCoin = false;
+					//	window.mobCount += 1;
+					//}
 					//tube thing 
 					else if (level.currentScene[i][j] == 'P')
 					{
@@ -2197,35 +2198,35 @@ beginning:
 						window.mobCount += 1;
 					}
 					//fire
-					else if (level.currentScene[i][j] == 'F')
-					{
-						mob[window.mobCount].texture = LoadTexture("DevAssets/fireSheet.png");
-						level.currentScene[i][j] = ' ';
-						mob[window.mobCount].posX = (j + 2) * window.blockHeight;
-						mob[window.mobCount].posY = (i)*window.blockHeight;
-						mob[window.mobCount].updateTime = 1/4.0;
-						mob[window.mobCount].mob = 6;
-						mob[window.mobCount].currentMob = 6;
-						mob[window.mobCount].type = level.type;
-						mob[window.mobCount].hostile = false;
-						mob[window.mobCount].startY = i * window.blockHeight;
-						mob[window.mobCount].direction = false;
-						mob[window.mobCount].stationary = true;
-						mob[window.mobCount].upDown = false;
-						mob[window.mobCount].bounds = false;
-						mob[window.mobCount].stillShell = false;
-						mob[window.mobCount].isPipe = false;
-						mob[window.mobCount].movingShell = false;
-						mob[window.mobCount].isSmart = false;
-						mob[window.mobCount].isPlatform = false;
-						mob[window.mobCount].mobCollide = false;
-						mob[window.mobCount].flip = false;
-						mob[window.mobCount].gravity = false;
-						mob[window.mobCount].blockCollide = true;
-						mob[window.mobCount].outShell = true;
-						mob[window.mobCount].isCoin = false;
-						window.mobCount += 1;
-					}
+					//else if (level.currentScene[i][j] == 'F')
+					//{
+					//	mob[window.mobCount].texture = LoadTexture("DevAssets/fireSheet.png");
+					//	level.currentScene[i][j] = ' ';
+					//	mob[window.mobCount].posX = (j + 2) * window.blockHeight;
+					//	mob[window.mobCount].posY = (i)*window.blockHeight;
+					//	mob[window.mobCount].updateTime = 1/4.0;
+					//	mob[window.mobCount].mob = 6;
+					//	mob[window.mobCount].currentMob = 6;
+					//	mob[window.mobCount].type = level.type;
+					//	mob[window.mobCount].hostile = false;
+					//	mob[window.mobCount].startY = i * window.blockHeight;
+					//	mob[window.mobCount].direction = false;
+					//	mob[window.mobCount].stationary = true;
+					//	mob[window.mobCount].upDown = false;
+					//	mob[window.mobCount].bounds = false;
+					//	mob[window.mobCount].stillShell = false;
+					//	mob[window.mobCount].isPipe = false;
+					//	mob[window.mobCount].movingShell = false;
+					//	mob[window.mobCount].isSmart = false;
+					//	mob[window.mobCount].isPlatform = false;
+					//	mob[window.mobCount].mobCollide = false;
+					//	mob[window.mobCount].flip = false;
+					//	mob[window.mobCount].gravity = false;
+					//	mob[window.mobCount].blockCollide = true;
+					//	mob[window.mobCount].outShell = true;
+					//	mob[window.mobCount].isCoin = false;
+					//	window.mobCount += 1;
+					//}
 					//platform
 					else if (level.currentScene[i][j] == 'L')
 					{
@@ -2349,11 +2350,17 @@ beginning:
 						window.mobCount += 1;
 					}
 					//bowser
-					else if (level.currentScene[i][j] == '~')
-					{
-						bowser.texture = LoadTexture("DevAssets/bigBadGuySheet.png");
-
-					}
+					//else if (level.currentScene[i][j] == '~')
+					//{
+					//	bowser.texture = LoadTexture("DevAssets/bigBadGuySheet.png");
+					//	level.currentScene[i][j] = ' ';
+					//	bowser.posX = (j + 2) * window.blockHeight;
+					//	bowser.posY = (i)*window.blockHeight;
+					//	bowser.velocity = 0;
+					//	bowser.direction = false;
+					//
+					//
+					//}
 				}
 			}
 		}
