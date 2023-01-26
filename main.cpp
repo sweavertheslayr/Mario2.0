@@ -2351,17 +2351,17 @@ beginning:
 						window.mobCount += 1;
 					}
 					//bowser
-					else if (level.currentScene[i][j] == '~')
-					{
-						bowser.texture = LoadTexture("DevAssets/bigBadGuySheet.png");
-						level.currentScene[i][j] = ' ';
-						bowser.posX = (j + 2) * window.blockHeight;
-						bowser.posY = (i)*window.blockHeight;
-						bowser.velocity = 0;
-						bowser.direction = false;
-
-
-					}
+					//else if (level.currentScene[i][j] == '~')
+					//{
+					//	bowser.texture = LoadTexture("DevAssets/bigBadGuySheet.png");
+					//	level.currentScene[i][j] = ' ';
+					//	bowser.posX = (j + 2) * window.blockHeight;
+					//	bowser.posY = (i)*window.blockHeight;
+					//	bowser.velocity = 0;
+					//	bowser.direction = false;
+					//
+					//
+					//}
 				}
 			}
 		}
