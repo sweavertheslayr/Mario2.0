@@ -3619,7 +3619,7 @@ beginning:
 			block.frame = 6;
 			if (pauseMenu == 0)
 			{
-				pauseMenu = 2;
+				pauseMenu = 3;
 			}
 			else
 			{
@@ -3632,7 +3632,7 @@ beginning:
 		{
 			block.runningTime = 0;
 			block.frame = 6;
-			if (pauseMenu == 2)
+			if (pauseMenu == 3)
 			{
 				pauseMenu = 0;
 			}
@@ -3645,27 +3645,35 @@ beginning:
 		//determine selected
 		if (window.pause && pauseMenu == 0)
 		{
-			level.pause[6][20] = 'o';
+			level.pause[5][20] = 'o';
 		}
 		else if (window.pause)
 		{
-			level.pause[6][20] = 'q';
+			level.pause[5][20] = 'q';
 		}
 		if (window.pause && pauseMenu == 1)
 		{
-			level.pause[8][20] = 'o';
+			level.pause[7][20] = 'o';
 		}
 		else if (window.pause)
 		{
-			level.pause[8][20] = 'q';
+			level.pause[7][20] = 'q';
 		}
 		if (window.pause && pauseMenu == 2)
 		{
-			level.pause[10][20] = 'o';
+			level.pause[9][20] = 'o';
 		}
 		else if (window.pause)
 		{
-			level.pause[10][20] = 'q';
+			level.pause[9][20] = 'q';
+		}
+		if (window.pause && pauseMenu == 3)
+		{
+			level.pause[11][20] = 'o';
+		}
+		else if (window.pause)
+		{
+			level.pause[11][20] = 'q';
 		}
 
 		//select
@@ -3686,6 +3694,10 @@ beginning:
 				pauseMenu = 0;
 				break;
 			case 2:
+				window.exit = true;
+				pauseMenu = 0;
+				break;
+			case 3:
 				window.exit = true;
 				pauseMenu = 0;
 				break;
