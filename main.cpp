@@ -1583,17 +1583,19 @@ void outputEverything()
 		{
 			levelSelection();
 
-			DrawTextEx(window.font, "level 1", Vector2{ 13 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
-			DrawTextEx(window.font, "level 2", Vector2{ 13 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
-			DrawTextEx(window.font, "level 3", Vector2{ 13 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
+			DrawTextEx(window.font, "level 1", Vector2{ 13 * window.blockHeight + 10, 5 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
+			DrawTextEx(window.font, "level 2", Vector2{ 13 * window.blockHeight + 10, 7 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
+			DrawTextEx(window.font, "level 3", Vector2{ 13 * window.blockHeight + 10, 9 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
+			DrawTextEx(window.font, "level 4", Vector2{ 13 * window.blockHeight + 10, 11 * window.blockHeight }, window.blockHeight / 1.2, 0, WHITE);
 		}
 	}
 	else if (window.pause)
 	{
 		outputPause();
-		DrawTextEx(window.font, "resume", Vector2{ 13 * window.blockHeight + 10, 6 * window.blockHeight }, window.blockHeight, 0, WHITE);
-		DrawTextEx(window.font, "levels", Vector2{ 13 * window.blockHeight + 10, 8 * window.blockHeight }, window.blockHeight, 0, WHITE);
-		DrawTextEx(window.font, "quit", Vector2{ 13 * window.blockHeight + 10, 10 * window.blockHeight }, window.blockHeight, 0, WHITE);
+		DrawTextEx(window.font, "resume", Vector2{ 13 * window.blockHeight + 10, 5 * window.blockHeight }, window.blockHeight, 0, WHITE);
+		DrawTextEx(window.font, "levels", Vector2{ 13 * window.blockHeight + 10, 7 * window.blockHeight }, window.blockHeight, 0, WHITE);
+		DrawTextEx(window.font, "save", Vector2{ 13 * window.blockHeight + 10, 9 * window.blockHeight }, window.blockHeight, 0, WHITE);
+		DrawTextEx(window.font, "quit", Vector2{ 13 * window.blockHeight + 10, 11 * window.blockHeight }, window.blockHeight, 0, WHITE);
 	}
 }
 
@@ -3733,7 +3735,15 @@ beginning:
 				window.levelSelect = false;
 				pauseMenu = 0;
 				break;
+			case 3:
+				window.currentLevel = 4;
+				restartLevel();
+				window.pause = false;
+				window.levelSelect = false;
+				pauseMenu = 0;
+				break;
 			}
+
 		}
 
 		//DEATH
