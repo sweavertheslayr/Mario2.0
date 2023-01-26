@@ -1633,7 +1633,6 @@ int main()
 	window.width = GetScreenWidth();
 	window.height = GetScreenHeight();
 
-
 	emptyArray(level.current);
 	emptyArray(level.currentScene);
 	setArray();
