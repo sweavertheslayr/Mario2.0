@@ -201,6 +201,7 @@ struct Player {
 	bool scoring = false;
 	bool tubingx = false;
 	bool tubingy = false;
+
 	//animation
 	float width = 32;
 	float height = 64;
@@ -443,7 +444,7 @@ struct Levels {
 	"##  ############|h                                                 ",
 	"##  ############|h                                                 ",
 	"##  ############|h                                                 ",
-	"##  ############|h                                                 ",
+	"##  o###########|h                                                 ",
 	"##  ############|h                                                 ",
 	"##  ############|h                                                 ",
 	"##  ############|h                                                 ",
@@ -587,11 +588,11 @@ struct Levels {
 	"                                                                   ",
 	"                                                                   ",
 	"                                                                   ",
-	"                                                                   ",
+	"    OOOOOOOO                                                       ",
 	"             B                                                     ",
 	"                                                                   ",
-	"                                                                   ",
-	"                                                                   ",
+	"              *                                                    ",
+	"   OOOOOOOOO  *                                                    ",
 	"                                                                   ",
 	"                                                                   ",
 	"                                                                   ",
@@ -702,69 +703,69 @@ struct Levels {
 	};
 
 	std::string fourA[30]  = {
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllll             llllllllllllllllllllllllllllllllllllllllllllll         l       l        lllllllll                   lllllll              ll       lll",
-		"llllllllllllllllllllllllllllll             llllllllllllllllllllllllllllllllllllllllllllll         c       c        lllllllll                   lllllll              ll       lll",
-		"l                            l             llllllllllllllllllllllllllllllllllllllllllllll                                                                           ll       lll",
-		"l                            c      o      c               c              c        c                                                                                         lll",
-		"lllll                                                                                                                                                                        lll",
-		"llllll                                                                                                                                                                       lll",
-		"lllllll                                  llllllllllllllllllllllllllllllllllllllllllllllll     c       c       c                                                    lll       lll",
-		"llllllllllllllll  llllllllllllll   lcl   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll           lllll   lllllllOOOOOOOOOOOOOlll       lll",
-		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll           lllll   lllllll             lll       lll",
-		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll           lllll   lllllll             lll       lll",
-		"llllllllllllllll--llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll-------------lllllllllllll",
-		"llllllllllllllll--llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll-------------lllllllllllll",
-		"llllllllllllllll  llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllll",
-		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllll",
-		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllll",
-		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllll",
-		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllll",
-		"llllllllllllllll--llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll-------------lllllllllllll",
-		"llllllllllllllll--llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll-------------llllllllllllo"
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllll             llllllllllllllllllllllllllllllllllllllllllllll         l       l        lllllllll                   lllllll              ll       lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllll             llllllllllllllllllllllllllllllllllllllllllllll         c       c        lllllllll                   lllllll              ll       lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"l                            l             llllllllllllllllllllllllllllllllllllllllllllll                                                                           ll       lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"l                            c      o      c               c              c        c                                                                                         lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"lllll                                                                                                                                                                        lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllll                                                                                                                                                                       lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"lllllll                                  llllllllllllllllllllllllllllllllllllllllllllllll     c       c       c                                                    lll       lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll   lcl   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll           lllll   lllllllOOOOOOOOOOOOOlll       lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll           lllll   lllllll             lll       lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll           lllll   lllllll             lll       lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll--llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll-------------lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll--llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll-------------lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll--llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll-------------lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll--llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll-------------llllllllllllollllllllllllllllllllllllllllllllllllllllllllllllllllllllll"
 	}; 
 	
 	std::string fourSceneA[30] = {
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                    w                                                                                                                                           ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                            ~                   ",
-		"                gg                                                                                                                                                              ",
-		"                                ggg   ggg                                                                                                             ggggggggggggg             ",
-		"                f                                                                                                                                                               ",
-		"                f               ff    ff                                                                                                              ffffffffffff              ",
-		"                f               ff    ff                                                                                                              ffffffffffff              ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                "
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                            Lq<$                                                                          ",
+		"                                    w                                                                                                                                                                                                     ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                            ~                                                                             ",
+		"                gg                                                                                                                                                                                                                        ",
+		"                                ggg   ggg                                                                                                             ggggggggggggg                                                                       ",
+		"                f                                                                                                                                                                                                                         ",
+		"                f               ff    ff                                                                                                              ffffffffffff                                                                        ",
+		"                f               ff    ff                                                                                                              ffffffffffff                                                                        ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          "
 	};
 
 	std::string pause[18] = {
@@ -790,32 +791,41 @@ struct Levels {
 
 }level;
 
-//struct baddestGuy 
-//{
-//	float width = 32;
-//	float height = 32;
-//
-//	float frame = 0;
-//
-//	bool collideD = false;
-//	bool collideR = false;
-//	bool collideL = false;
-//	bool direction = false;
-//
-//	float velocity = 0;
-//	float speed = 0;
-//	float maxSpeed = 80;
-//
-//	float posX = 0;
-//	float posY = 2 * window.blockHeight;
-//
-//	int iPosX = 0;
-//	int iPosXD = 0;
-//	int iPosY = 0;
-//
-//	Texture2D texture;
-//	
-//}bowser;
+struct baddestGuy 
+{
+	float width = 32;
+	float height = 32;
+
+	float frame = 0;
+
+	float runningTime = 0;
+	float updateTime = 1.0 / 6.0;
+
+	bool collideD = false;
+	bool collideR = false;
+	bool collideL = false;
+
+	float velocity = 0;
+	float speed = 0;
+	float maxSpeed = 80;
+
+	float posX = 0;
+	float posY = 2 * window.blockHeight;
+
+	int iPosX = 0;
+	int iPosXD = 0;
+	int iPosY = 0;
+
+	bool exist = false;
+	bool fire = false;
+	float direction = false;
+
+	float jumpTime = 0;
+	float nextJump = 6;
+
+	Texture2D texture;
+	
+}bowser;
 
 void loadSounds()
 {
@@ -851,7 +861,7 @@ void setArray()
 {
 	//main levels
 	if (window.currentLevel == 1 || window.currentLevel == 102) { for (int i = 0; i < 30; i++) { level.current[i] = level.oneA[i]; level.currentScene[i] = level.oneSceneA[i]; } level.type = 0; player.world = 1; player.level = 1; }
-	if (window.currentLevel == 2) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoA[i];  level.currentScene[i] = level.twoSceneA[i]; } level.type = 1; player.world = 1; player.level = 2; }
+	if (window.currentLevel == 2 || window.currentLevel == 204) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoA[i];  level.currentScene[i] = level.twoSceneA[i]; } level.type = 1; player.world = 1; player.level = 2; }
 	if (window.currentLevel == 3) { for (int i = 0; i < 30; i++) { level.current[i] = level.threeA[i];  level.currentScene[i] = level.threeSceneA[i]; } level.type = 0; player.world = 1; player.level = 3; }
 	if (window.currentLevel == 4) { for (int i = 0; i < 30; i++) { level.current[i] = level.fourA[i];  level.currentScene[i] = level.fourSceneA[i]; } level.type = 2; player.world = 1; player.level = 4; }
 	
@@ -1422,6 +1432,8 @@ void restartLevel()
 
 	window.mobCount = 0;
 
+	bowser.exist = false;
+
 	switch (window.currentLevel)
 	{
 	case 1:
@@ -1453,6 +1465,10 @@ void restartLevel()
 		player.posX = window.blockHeight * 4;
 		player.posY = window.blockHeight * 12;
 		break;
+	case 204:
+		player.posX = window.blockHeight * 11;
+		player.posY = window.blockHeight * 117;
+		break;
 	case 3:
 		player.posX = window.blockHeight * 3;
 		player.posY = window.blockHeight * 14;
@@ -1460,6 +1476,9 @@ void restartLevel()
 	case 4:
 		player.posX = window.blockHeight * 4;
 		player.posY = window.blockHeight * 7;
+		bowser.posX = window.blockHeight * 158;
+		bowser.posY = window.blockHeight * 9;
+		bowser.exist = true;
 		break;
 	}
 
@@ -1486,6 +1505,7 @@ void outputPlatform(float type, int i, int length)
 
 void outputEverything()
 {
+	Color colour = WHITE;
 	//OUTPUT LEVEL
 	if ((!window.pause && !window.levelSelect) || player.isDead)
 	{
@@ -1511,11 +1531,28 @@ void outputEverything()
 
 		outputPipes();
 
-		DrawTextEx(window.font, TextFormat("world %i-%i", player.world, player.level), Vector2{ 0 * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
-		DrawTextEx(window.font, TextFormat("score: %i", player.score), Vector2{ (window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
-		DrawTextEx(window.font, TextFormat("coins: %i", player.coins), Vector2{ (2 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
-		DrawTextEx(window.font, TextFormat("time: %i", player.time), Vector2{ (3 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
-		DrawTextEx(window.font, TextFormat("lives: %i", player.lives), Vector2{ (4 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
+
+		DrawTextEx(window.font, TextFormat("world %i-%i", player.world, player.level), Vector2{ 0 * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, colour);
+		DrawTextEx(window.font, TextFormat("score: %i", player.score), Vector2{ (window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, colour);
+		DrawTextEx(window.font, TextFormat("coins: %i", player.coins), Vector2{ (2 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, colour);
+		DrawTextEx(window.font, TextFormat("time: %i", player.time), Vector2{ (3 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, colour);
+		DrawTextEx(window.font, TextFormat("lives: %i", player.lives), Vector2{ (4 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, colour);
+
+		if (bowser.exist)
+		{
+			DrawTexturePro(
+				bowser.texture,
+				Rectangle{ bowser.direction * 32, bowser.frame * 32, bowser.width, bowser.height },
+				Rectangle{ bowser.posX - window.renderPosX, bowser.posY, bowser.width * 2 * window.scale, bowser.height * 2 * window.scale - 4 * window.scale },
+				Vector2{ 0, 0 },
+				0,
+				WHITE);
+			
+			if (bowser.fire)
+			{
+				bowser.frame -= 2;
+			}
+		}
 
 		DrawTexturePro(
 			player.texture,
@@ -1569,6 +1606,10 @@ void outputEverything()
 				{
 					DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (32 * window.scale), (32 * window.scale), GREEN);
 				}
+				if (bowser.exist)
+				{
+					DrawRectangleLines(bowser.posX - window.renderPosX, bowser.posY, bowser.width * 2 * window.scale, bowser.height * 2 * window.scale - 4 * window.scale, RED);
+				}
 			}
 		}
 	}
@@ -1611,6 +1652,7 @@ int main()
 
 	window.font = LoadFont("DevAssets/super-mario-bros-nes.ttf");
 	player.texture = LoadTexture("DevAssets/marioLargeRunSheet.png");
+	bowser.texture = LoadTexture("DevAssets/bigBadGuySheet.png");
 	block.texture = LoadTexture("DevAssets/blockSheet.png");
 	scenery.texture = LoadTexture("DevAssets/sceneryOneSheet.png");
 	scenery.texture2 = LoadTexture("DevAssets/castleSheet.png");
@@ -1662,11 +1704,17 @@ beginning:
 
 		while (player.isDead)
 		{
+			player.posY += player.velocity * window.dT;
+
 			if (IsMusicStreamPlaying(sound.currentBackground))
 			{
 				StopMusicStream(sound.currentBackground);
 				PlaySoundMulti(sound.die);
+				player.tempPosY = ((player.iPosY - 3) * window.blockHeight);
+				player.velocity = -500;
 			}
+
+			player.velocity += 25;
 
 			player.currentSprite = 13;
 			BeginDrawing();
@@ -1817,6 +1865,51 @@ beginning:
 				break;
 			}
 		}
+
+		//while (player.winning)
+		//{
+		//	player.runningTime += window.dT;
+		//	player.posY += 250 * window.dT;
+		//	player.iPosY = (player.posY) / window.blockHeight;
+		//
+		//	if (IsMusicStreamPlaying(sound.currentBackground))
+		//	{
+		//		StopMusicStream(sound.currentBackground);
+		//		PlaySoundMulti(sound.flagpole);
+		//	}
+		//
+		//	if (player.runningTime >= player.updateTime)
+		//	{
+		//
+		//		player.runningTime = 0;
+		//
+		//		if (player.currentSprite < 14)
+		//		{
+		//			player.currentSprite = 14;
+		//		}
+		//		else if (player.currentSprite == 14)
+		//		{
+		//			player.currentSprite = 15;
+		//		}
+		//		else
+		//		{
+		//			player.currentSprite = 14;
+		//		}
+		//	}
+		//
+		//	BeginDrawing();
+		//	(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
+		//	outputEverything();
+		//	EndDrawing();
+		//
+		//	if (player.iPosY >= 14)
+		//	{
+		//		player.flagging = false;
+		//		player.ending = true;
+		//		PlaySoundMulti(sound.clearStage);
+		//		break;
+		//	}
+		//}
 
 		while (player.tubingy)
 		{
@@ -2287,6 +2380,10 @@ beginning:
 						{
 							mob[window.mobCount].length = 3;
 						}
+						if (level.currentScene[i][j + 1] == '"')
+						{
+							mob[window.mobCount].length = 2;
+						}
 						window.mobCount += 1;
 					}
 					//coin
@@ -2351,18 +2448,6 @@ beginning:
 						mob[window.mobCount].isCoin = true;
 						window.mobCount += 1;
 					}
-					//bowser
-					//else if (level.currentScene[i][j] == '~')
-					//{
-					//	bowser.texture = LoadTexture("DevAssets/bigBadGuySheet.png");
-					//	level.currentScene[i][j] = ' ';
-					//	bowser.posX = (j + 2) * window.blockHeight;
-					//	bowser.posY = (i)*window.blockHeight;
-					//	bowser.velocity = 0;
-					//	bowser.direction = false;
-					//
-					//
-					//}
 				}
 			}
 		}
@@ -2985,6 +3070,86 @@ beginning:
 			}
 		}
 
+		//BOWSER
+
+
+		if (bowser.exist)
+		{
+			bowser.posY -= bowser.velocity;
+			bowser.iPosX = (bowser.posX - window.renderPosX) / window.blockHeight;
+			bowser.iPosY = bowser.posY / window.blockHeight;
+			//movement
+			bowser.runningTime += window.dT;
+			bowser.jumpTime += window.dT;
+
+			if (bowser.posX >= window.blockHeight * 158)
+			{
+				bowser.speed = -100;
+			}
+			else if (bowser.posX <= window.blockHeight * 155)
+			{
+				bowser.speed = 100;
+			}
+			bowser.posX += bowser.speed * window.dT;
+
+
+			//jumping
+			//if (bowser.jumpTime >= bowser.nextJump)
+			//{
+			//	bowser.jumpTime = 0;
+			//	bowser.velocity = 20 * window.dT;
+			//}
+			//
+			//if (level.current[bowser.iPosY + 8][bowser.iPosX] == ' ')
+			//{
+			//	bowser.collideD = false;
+			//}
+			//else
+			//{
+			//	bowser.collideD = true;
+			//}
+			//
+			//if (!bowser.collideD)
+			//{
+			//	bowser.velocity -= 10;
+			//}
+			//else
+			//{
+			//	bowser.velocity = 0;
+			//}
+
+			//animation
+			if (bowser.runningTime >= bowser.updateTime)
+			{
+				bowser.runningTime = 0;
+				bowser.frame++;
+
+				if (bowser.frame == 2)
+				{
+					bowser.frame = 0;
+				}
+
+				if (bowser.fire)
+				{
+					bowser.frame += 2;
+				}
+			}
+
+			//collision
+			Rectangle bowserRect = { bowser.posX - window.renderPosX, bowser.posY, bowser.width * 2 * window.scale, bowser.height * 2 * window.scale - 4 * window.scale };
+			Rectangle playerCollider{ player.posX - player.width * window.scale + 4 * window.scale, player.posY - player.width * player.spriteHeight * window.scale, ((player.width - 8) * window.scale), (player.width * player.spriteHeight * window.scale) };
+
+
+			if (CheckCollisionRecs(bowserRect, playerCollider))
+			{
+				player.collision = true;
+			}
+		}
+
+
+
+
+
 
 		//PLAYER INFO
 		if (window.dT < 0.1)
@@ -3572,6 +3737,9 @@ beginning:
 					break;
 				case 201:
 					window.currentLevel = 2;
+					break;
+				case 202:
+					window.currentLevel = 204;
 					break;
 				}
 				goto beginning;
