@@ -1466,8 +1466,9 @@ void restartLevel()
 		player.posY = window.blockHeight * 12;
 		break;
 	case 204:
-		player.posX = window.blockHeight * 11;
-		player.posY = window.blockHeight * 117;
+		window.currentLevel = 2;
+		player.posX = window.blockHeight * 117;
+		player.posY = window.blockHeight * 11;
 		break;
 	case 3:
 		player.posX = window.blockHeight * 3;
