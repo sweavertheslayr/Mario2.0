@@ -135,14 +135,14 @@ struct Block {
 	float velocity = 0;
 	float shiftHeight = window.blockHeight;
 	float runningTime = 0;
-	float updateTime = 1.0/4.0;
-	float updateTime2 = 1.0/8.0;
+	float updateTime = 1.0 / 4.0;
+	float updateTime2 = 1.0 / 8.0;
 	float frame = 6;
 }block;
 
 struct Player {
 	//cords
-	float posX = 3*window.blockHeight;
+	float posX = 3 * window.blockHeight;
 	float posY = 0;
 
 	int tempPosX = 0;
@@ -160,7 +160,7 @@ struct Player {
 	float hitTime = 4;
 	float invisTime = 0;
 	float rehitTime = 2.0;
-	float visTime = 1/6.0;
+	float visTime = 1 / 6.0;
 
 	//stuff
 	int score = 0;
@@ -201,6 +201,7 @@ struct Player {
 	bool scoring = false;
 	bool tubingx = false;
 	bool tubingy = false;
+
 	//animation
 	float width = 32;
 	float height = 64;
@@ -443,7 +444,7 @@ struct Levels {
 	"##  ############|h                                                 ",
 	"##  ############|h                                                 ",
 	"##  ############|h                                                 ",
-	"##  ############|h                                                 ",
+	"##  o###########|h                                                 ",
 	"##  ############|h                                                 ",
 	"##  ############|h                                                 ",
 	"##  ############|h                                                 ",
@@ -523,7 +524,7 @@ struct Levels {
 	"                                                                                                                                        G G                                                                                                                                                    ",
 	"                               B         O    O            OOOO      O w   B  G G                             P                                         w               *                                                                                                                      ",
 	"            w                                                                                           P                                                               *                                                                                                                      ",
-	"                                                                                                         **                                                                                                                                                                                    ",
+	"                                                                                                         **         P                                                                                                                                                                          ",
 	"                  G                                                                                                                                                                                                                                                                            ",
 	"                G              G              K K            K  G G                                G G G           G                          Lqd   J        Lqu                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
@@ -587,11 +588,11 @@ struct Levels {
 	"                                                                   ",
 	"                                                                   ",
 	"                                                                   ",
-	"                                                                   ",
+	"    OOOOOOOO                                                       ",
 	"             B                                                     ",
 	"                                                                   ",
-	"                                                                   ",
-	"                                                                   ",
+	"              *                                                    ",
+	"   OOOOOOOOO  *                                                    ",
 	"                                                                   ",
 	"                                                                   ",
 	"                                                                   ",
@@ -701,121 +702,130 @@ struct Levels {
 	"                    pp    pppppp  p  ppp  ppppp     pp       ppp   ppp  p     ppp                 pp    pppppp   p  pp    pp                                                  "
 	};
 
-	std::string fourA[30]  = {
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
-		"llllllllllllllllllllllllllllll             llllllllllllllllllllllllllllllllllllllllllllll         l       l        lllllllll                   lllllll              ll       lll",
-		"llllllllllllllllllllllllllllll             llllllllllllllllllllllllllllllllllllllllllllll         c       c        lllllllll                   lllllll              ll       lll",
-		"l                            l             llllllllllllllllllllllllllllllllllllllllllllll                                                                           ll       lll",
-		"l                            c      o      c               c              c        c                                                                                         lll",
-		"lllll                                                                                                                                                                        lll",
-		"llllll                                                                                                                                                                       lll",
-		"lllllll                                  llllllllllllllllllllllllllllllllllllllllllllllll     c       c       c                                                    lll       lll",
-		"llllllllllllllll  llllllllllllll   lcl   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll           lllll   lllllllOOOOOOOOOOOOOlll       lll",
-		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll           lllll   lllllll             lll       lll",
-		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll           lllll   lllllll             lll       lll",
-		"llllllllllllllll--llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll-------------lllllllllllll",
-		"llllllllllllllll--llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll-------------lllllllllllll",
-		"llllllllllllllll  llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllll",
-		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllll",
-		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllll",
-		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllll",
-		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllll",
-		"llllllllllllllll--llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll-------------lllllllllllll",
-		"llllllllllllllll--llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll-------------llllllllllllo"
-	}; 
-	
+	std::string fourA[30] = {
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllll             llllllllllllllllllllllllllllllllllllllllllllll         l       l        lllllllll                   lllllll              ll       lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllllllllllllllllll             llllllllllllllllllllllllllllllllllllllllllllll         c       c        lllllllll                   lllllll              ll       lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"l                            l             llllllllllllllllllllllllllllllllllllllllllllll                                                                           ll       lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"l                            c      o      c               c              c        c                                                                                         lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"lllll                                                                                                                                                                        lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllll                                                                                                                                                                       lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"lllllll                                  llllllllllllllllllllllllllllllllllllllllllllllll     c       c       c                                                    lll       lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll   lcl   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll           lllll   lllllllOOOOOOOOOOOOOlll       lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll           lllll   lllllll             lll       lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll           lllll   lllllll             lll       lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll--llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll-------------lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll--llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll-------------lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll  llllllllllllll   lll   lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll             lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll--llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll-------------lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll",
+		"llllllllllllllll--llllllllllllll---lll---lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll-------------llllllllllllollllllllllllllllllllllllllllllllllllllllllllllllllllllllll"
+	};
+
 	std::string fourSceneA[30] = {
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                    w                                                                                                                                           ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                            ~                   ",
-		"                gg                                                                                                                                                              ",
-		"                                ggg   ggg                                                                                                             ggggggggggggg             ",
-		"                f                                                                                                                                                               ",
-		"                f               ff    ff                                                                                                              ffffffffffff              ",
-		"                f               ff    ff                                                                                                              ffffffffffff              ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                ",
-		"                                                                                                                                                                                "
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                            Lq<$                                                                          ",
+		"                                    w                                                                                                                                                                                                     ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                            ~                                                                             ",
+		"                gg                                                                                                                                                                                                                        ",
+		"                                ggg   ggg                                                                                                             ggggggggggggg                                                                       ",
+		"                f                                                                                                                                                                                                                         ",
+		"                f               ff    ff                                                                                                              ffffffffffff                                                                        ",
+		"                f               ff    ff                                                                                                              ffffffffffff                                                                        ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          ",
+		"                                                                                                                                                                                                                                          "
 	};
 
 	std::string pause[18] = {
-	"OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",
-	"################################################################################",
-	"################################################################################",
-	"##################################OOOOOOOOOOOO##################################",
-	"##################################O          O##################################",
-	"##################################O  q       O##################################",
-	"##################################O          O##################################",
-	"##################################O  q       O##################################",
-	"##################################O          O##################################",
-	"##################################O  q       O##################################",
-	"##################################O          O##################################",
-	"##################################O  q       O##################################",
-	"##################################O          O##################################",
-	"##################################OOOOOOOOOOOO##################################",
-	"################################################################################",
-	"################################################################################",
-	"################################################################################",
-	"OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+	"OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO",
+	"##############################################",
+	"##############################################",
+	"#################OOOOOOOOOOOO#################",
+	"#################O          O#################",
+	"#################O  q       O#################",
+	"#################O          O#################",
+	"#################O  q       O#################",
+	"#################O          O#################",
+	"#################O  q       O#################",
+	"#################O          O#################",
+	"#################O  q       O#################",
+	"#################O          O#################",
+	"#################OOOOOOOOOOOO#################",
+	"##############################################",
+	"##############################################",
+	"##############################################",
+	"OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
 	};
 
 }level;
 
-//struct baddestGuy 
-//{
-//	float width = 32;
-//	float height = 32;
-//
-//	float frame = 0;
-//
-//	bool collideD = false;
-//	bool collideR = false;
-//	bool collideL = false;
-//	bool direction = false;
-//
-//	float velocity = 0;
-//	float speed = 0;
-//	float maxSpeed = 80;
-//
-//	float posX = 0;
-//	float posY = 2 * window.blockHeight;
-//
-//	int iPosX = 0;
-//	int iPosXD = 0;
-//	int iPosY = 0;
-//
-//	Texture2D texture;
-//	
-//}bowser;
+struct baddestGuy
+{
+	float width = 32;
+	float height = 32;
+
+	float frame = 0;
+
+	float runningTime = 0;
+	float updateTime = 1.0 / 6.0;
+
+	bool collideD = false;
+	bool collideR = false;
+	bool collideL = false;
+
+	float velocity = 0;
+	float speed = 0;
+	float maxSpeed = 80;
+
+	float posX = 0;
+	float posY = 2 * window.blockHeight;
+
+	int iPosX = 0;
+	int iPosXD = 0;
+	int iPosY = 0;
+
+	bool exist = false;
+	bool fire = false;
+	float direction = false;
+
+	float jumpTime = 0;
+	float nextJump = 6;
+
+	Texture2D texture;
+
+}bowser;
 
 void loadSounds()
 {
@@ -851,10 +861,10 @@ void setArray()
 {
 	//main levels
 	if (window.currentLevel == 1 || window.currentLevel == 102) { for (int i = 0; i < 30; i++) { level.current[i] = level.oneA[i]; level.currentScene[i] = level.oneSceneA[i]; } level.type = 0; player.world = 1; player.level = 1; }
-	if (window.currentLevel == 2) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoA[i];  level.currentScene[i] = level.twoSceneA[i]; } level.type = 1; player.world = 1; player.level = 2; }
+	if (window.currentLevel == 2 || window.currentLevel == 204) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoA[i];  level.currentScene[i] = level.twoSceneA[i]; } level.type = 1; player.world = 1; player.level = 2; }
 	if (window.currentLevel == 3) { for (int i = 0; i < 30; i++) { level.current[i] = level.threeA[i];  level.currentScene[i] = level.threeSceneA[i]; } level.type = 0; player.world = 1; player.level = 3; }
 	if (window.currentLevel == 4) { for (int i = 0; i < 30; i++) { level.current[i] = level.fourA[i];  level.currentScene[i] = level.fourSceneA[i]; } level.type = 2; player.world = 1; player.level = 4; }
-	
+
 	//not main levels
 	if (window.currentLevel == 101) { for (int i = 0; i < 30; i++) { level.current[i] = level.oneB[i]; level.currentScene[i] = level.oneSceneB[i]; } level.type = 1; player.world = 1; player.level = 1; }
 	if (window.currentLevel == 201) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoB[i]; level.currentScene[i] = level.twoSceneB[i]; } level.type = 0; player.world = 1; player.level = 2; }
@@ -862,11 +872,17 @@ void setArray()
 	if (window.currentLevel == 203) { for (int i = 0; i < 30; i++) { level.current[i] = level.twoD[i]; level.currentScene[i] = level.twoSceneD[i]; } level.type = 0; player.world = 1; player.level = 2; }
 
 	if (level.type == 0)
-	{ sound.currentBackground = sound.runningAbout; }
+	{
+		sound.currentBackground = sound.runningAbout;
+	}
 	if (level.type == 1)
-	{ sound.currentBackground = sound.underground; }
+	{
+		sound.currentBackground = sound.underground;
+	}
 	if (level.type == 2)
-	{ sound.currentBackground = sound.castle; }
+	{
+		sound.currentBackground = sound.castle;
+	}
 }
 
 void findSize(std::string arr[32])
@@ -1157,7 +1173,7 @@ void outputLevel()
 				DrawTexturePro(
 					scenery.texture,
 					Rectangle{ (80 * a), b * 35, 80, 35 },
-					Rectangle{ (j)*window.blockHeight - (window.blockHeight * 1) - window.renderPosX, (i - 1)*window.blockHeight - (8 * window.scale) - ((level.currentSize - (level.currentSize - 7)) * window.blockHeight), (160 * window.scale), (70 * window.scale) },
+					Rectangle{ (j)*window.blockHeight - (window.blockHeight * 1) - window.renderPosX, (i - 1) * window.blockHeight - (8 * window.scale) - ((level.currentSize - (level.currentSize - 7)) * window.blockHeight), (160 * window.scale), (70 * window.scale) },
 					Vector2{ 0, 0 },
 					0,
 					WHITE);
@@ -1307,7 +1323,7 @@ void outputLevel()
 				}
 				window.coin++;
 				a = block.frame;
-			
+
 				block.runningTime = 0;
 			}
 
@@ -1325,7 +1341,7 @@ void outputLevel()
 				DrawTexturePro(
 					block.texture,
 					Rectangle{ (level.type) * 16, ((16 * a) + 1), 16, 16 },
-					Rectangle{ (j) * window.blockHeight - (window.blockHeight * 1) - window.renderPosX, ((i) * window.blockHeight - b - ((level.currentSize - (level.currentSize - 7)) * window.blockHeight)), (32 * window.scale * 19/20), (32 * window.scale * 19/20) },
+					Rectangle{ (j)*window.blockHeight - (window.blockHeight * 1) - window.renderPosX, ((i)*window.blockHeight - b - ((level.currentSize - (level.currentSize - 7)) * window.blockHeight)), (32 * window.scale * 19 / 20), (32 * window.scale * 19 / 20) },
 					Vector2{ 0, 0 },
 					0,
 					WHITE);
@@ -1351,7 +1367,7 @@ void outputPipes()
 			{
 				a = 10;
 			}
-			else if (level.current[i][j] == '|') 
+			else if (level.current[i][j] == '|')
 			{
 				a = 11;
 			}
@@ -1411,7 +1427,7 @@ void restartLevel()
 	emptyArray(level.currentScene);
 	setArray();
 	findSize(level.current);
-	window.renderPosX = 0; 
+	window.renderPosX = 0;
 	window.renderPosDistance = 0;
 	StopMusicStream(sound.currentBackground);
 	PlayMusicStream(sound.currentBackground);
@@ -1421,6 +1437,8 @@ void restartLevel()
 	}
 
 	window.mobCount = 0;
+
+	bowser.exist = false;
 
 	switch (window.currentLevel)
 	{
@@ -1454,9 +1472,8 @@ void restartLevel()
 		player.posY = window.blockHeight * 12;
 		break;
 	case 204:
-		window.currentLevel = 2;
-		player.posX = window.blockHeight * 117;
-		player.posY = window.blockHeight * 11;
+		player.posX = window.blockHeight * 11;
+		player.posY = window.blockHeight * 117;
 		break;
 	case 3:
 		player.posX = window.blockHeight * 3;
@@ -1465,6 +1482,9 @@ void restartLevel()
 	case 4:
 		player.posX = window.blockHeight * 4;
 		player.posY = window.blockHeight * 7;
+		bowser.posX = window.blockHeight * 158;
+		bowser.posY = window.blockHeight * 9;
+		bowser.exist = true;
 		break;
 	}
 
@@ -1491,6 +1511,7 @@ void outputPlatform(float type, int i, int length)
 
 void outputEverything()
 {
+	Color colour = WHITE;
 	//OUTPUT LEVEL
 	if ((!window.pause && !window.levelSelect) || player.isDead)
 	{
@@ -1516,11 +1537,28 @@ void outputEverything()
 
 		outputPipes();
 
-		DrawTextEx(window.font, TextFormat("world %i-%i", player.world, player.level), Vector2{ 0 * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
-		DrawTextEx(window.font, TextFormat("score: %i", player.score), Vector2{ (window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
-		DrawTextEx(window.font, TextFormat("coins: %i", player.coins), Vector2{ (2 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
-		DrawTextEx(window.font, TextFormat("time: %i", player.time), Vector2{ (3 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
-		DrawTextEx(window.font, TextFormat("lives: %i", player.lives), Vector2{ (4 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, WHITE);
+
+		DrawTextEx(window.font, TextFormat("world %i-%i", player.world, player.level), Vector2{ 0 * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, colour);
+		DrawTextEx(window.font, TextFormat("score: %i", player.score), Vector2{ (window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, colour);
+		DrawTextEx(window.font, TextFormat("coins: %i", player.coins), Vector2{ (2 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, colour);
+		DrawTextEx(window.font, TextFormat("time: %i", player.time), Vector2{ (3 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, colour);
+		DrawTextEx(window.font, TextFormat("lives: %i", player.lives), Vector2{ (4 * window.blocksWide / 5) * window.blockHeight + 10, 10 }, window.blockHeight / 2., 0, colour);
+
+		if (bowser.exist)
+		{
+			DrawTexturePro(
+				bowser.texture,
+				Rectangle{ bowser.direction * 32, bowser.frame * 32, bowser.width, bowser.height },
+				Rectangle{ bowser.posX - window.renderPosX, bowser.posY, bowser.width * 2 * window.scale, bowser.height * 2 * window.scale - 4 * window.scale },
+				Vector2{ 0, 0 },
+				0,
+				WHITE);
+
+			if (bowser.fire)
+			{
+				bowser.frame -= 2;
+			}
+		}
 
 		DrawTexturePro(
 			player.texture,
@@ -1568,11 +1606,15 @@ void outputEverything()
 				}
 				else if (mob[i].isCoin && mob[i].direction && !mob[i].hit)
 				{
-					DrawRectangleLines( mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (32 * window.scale), (32 * window.scale), GREEN );
+					DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (32 * window.scale), (32 * window.scale), GREEN);
 				}
 				else if (!mob[i].hit && !mob[i].isPlatform)
 				{
 					DrawRectangleLines(mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (32 * window.scale), (32 * window.scale), GREEN);
+				}
+				if (bowser.exist)
+				{
+					DrawRectangleLines(bowser.posX - window.renderPosX, bowser.posY, bowser.width * 2 * window.scale, bowser.height * 2 * window.scale - 4 * window.scale, RED);
 				}
 			}
 		}
@@ -1616,6 +1658,7 @@ int main()
 
 	window.font = LoadFont("DevAssets/super-mario-bros-nes.ttf");
 	player.texture = LoadTexture("DevAssets/marioLargeRunSheet.png");
+	bowser.texture = LoadTexture("DevAssets/bigBadGuySheet.png");
 	block.texture = LoadTexture("DevAssets/blockSheet.png");
 	scenery.texture = LoadTexture("DevAssets/sceneryOneSheet.png");
 	scenery.texture2 = LoadTexture("DevAssets/castleSheet.png");
@@ -1662,16 +1705,22 @@ int main()
 
 	while (!window.exit)
 	{
-beginning:
+	beginning:
 		window.dT = GetFrameTime();
 
 		while (player.isDead)
 		{
+			player.posY += player.velocity * window.dT;
+
 			if (IsMusicStreamPlaying(sound.currentBackground))
 			{
 				StopMusicStream(sound.currentBackground);
 				PlaySoundMulti(sound.die);
+				player.tempPosY = ((player.iPosY - 3) * window.blockHeight);
+				player.velocity = -500;
 			}
+
+			player.velocity += 25;
 
 			player.currentSprite = 13;
 			BeginDrawing();
@@ -1734,7 +1783,7 @@ beginning:
 				break;
 			}
 		}
-		
+
 
 		while (player.bigging)
 		{
@@ -1777,7 +1826,7 @@ beginning:
 				break;
 			}
 		}
-		
+
 		while (player.flagging)
 		{
 			player.runningTime += window.dT;
@@ -1813,7 +1862,7 @@ beginning:
 			(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
 			outputEverything();
 			EndDrawing();
-		
+
 			if (player.iPosY >= 14)
 			{
 				player.flagging = false;
@@ -1822,6 +1871,51 @@ beginning:
 				break;
 			}
 		}
+
+		//while (player.winning)
+		//{
+		//	player.runningTime += window.dT;
+		//	player.posY += 250 * window.dT;
+		//	player.iPosY = (player.posY) / window.blockHeight;
+		//
+		//	if (IsMusicStreamPlaying(sound.currentBackground))
+		//	{
+		//		StopMusicStream(sound.currentBackground);
+		//		PlaySoundMulti(sound.flagpole);
+		//	}
+		//
+		//	if (player.runningTime >= player.updateTime)
+		//	{
+		//
+		//		player.runningTime = 0;
+		//
+		//		if (player.currentSprite < 14)
+		//		{
+		//			player.currentSprite = 14;
+		//		}
+		//		else if (player.currentSprite == 14)
+		//		{
+		//			player.currentSprite = 15;
+		//		}
+		//		else
+		//		{
+		//			player.currentSprite = 14;
+		//		}
+		//	}
+		//
+		//	BeginDrawing();
+		//	(level.type == 0) ? ClearBackground(Color{ 92, 148, 252, 255 }) : ClearBackground(Color{ BLACK });
+		//	outputEverything();
+		//	EndDrawing();
+		//
+		//	if (player.iPosY >= 14)
+		//	{
+		//		player.flagging = false;
+		//		player.ending = true;
+		//		PlaySoundMulti(sound.clearStage);
+		//		break;
+		//	}
+		//}
 
 		while (player.tubingy)
 		{
@@ -1858,7 +1952,7 @@ beginning:
 
 			if (IsMusicStreamPlaying(sound.currentBackground))
 			{
-				player.posY -= 8*window.scale;
+				player.posY -= 8 * window.scale;
 				StopMusicStream(sound.currentBackground);
 				PlaySoundMulti(sound.pipe);
 				player.posY -= 8 * window.scale;
@@ -1945,7 +2039,7 @@ beginning:
 			if ((level.currentScene[player.iPosY - 1 + (level.currentSize - 22)][player.iPosXC] == 'v' || level.currentScene[player.iPosY - 1 + (level.currentSize - 22)][player.iPosXC] == 'b') && player.time > 0)
 			{
 				player.posX = -50;
-				
+
 				player.scoring = true;
 			}
 
@@ -2045,7 +2139,7 @@ beginning:
 						mob[window.mobCount].isPlatform = false;
 						mob[window.mobCount].bounds = false;
 						mob[window.mobCount].isPipe = false;
-						mob[window.mobCount].flip = false; 
+						mob[window.mobCount].flip = false;
 						mob[window.mobCount].isSmart = false;
 						mob[window.mobCount].gravity = true;
 						mob[window.mobCount].blockCollide = true;
@@ -2260,7 +2354,7 @@ beginning:
 						mob[window.mobCount].blockCollide = false;
 						mob[window.mobCount].outShell = true;
 						mob[window.mobCount].isCoin = false;
-		
+
 						if (level.currentScene[i][j + 2] == 'u')
 						{
 							mob[window.mobCount].directionUp = true;
@@ -2287,10 +2381,14 @@ beginning:
 							mob[window.mobCount].start = i;
 							mob[window.mobCount].stop = ((int)level.currentScene[i][j + 3]) - 32;
 						}
-		
+
 						if (level.currentScene[i][j + 1] == 'q')
 						{
 							mob[window.mobCount].length = 3;
+						}
+						if (level.currentScene[i][j + 1] == '"')
+						{
+							mob[window.mobCount].length = 2;
 						}
 						window.mobCount += 1;
 					}
@@ -2356,22 +2454,10 @@ beginning:
 						mob[window.mobCount].isCoin = true;
 						window.mobCount += 1;
 					}
-					//bowser
-					//else if (level.currentScene[i][j] == '~')
-					//{
-					//	bowser.texture = LoadTexture("DevAssets/bigBadGuySheet.png");
-					//	level.currentScene[i][j] = ' ';
-					//	bowser.posX = (j + 2) * window.blockHeight;
-					//	bowser.posY = (i)*window.blockHeight;
-					//	bowser.velocity = 0;
-					//	bowser.direction = false;
-					//
-					//
-					//}
 				}
 			}
 		}
-		
+
 		for (int i = 0; i < window.mobCount; i++)
 		{
 			if (mob[i].loaded && !window.pause && !window.levelSelect)
@@ -2383,7 +2469,7 @@ beginning:
 					mob[i].posY += mob[i].velocity * window.dT;
 					mob[i].runningTime += window.dT;
 				}
-		
+
 				if (mob[i].stationary)
 				{
 					mob[i].maxSpeed = 0;
@@ -2400,14 +2486,14 @@ beginning:
 				{
 					mob[i].maxSpeed = 160;
 				}
-		
+
 				mob[i].iPosX = ((mob[i].posX) / window.blockHeight);
 				mob[i].iPosXD = ((mob[i].posX) / window.blockHeight) - 0.5;
-		
+
 				mob[i].iPosY = (mob[i].posY / window.blockHeight);
-		
+
 				//COLLISION
-		
+
 				if (mob[i].blockCollide)
 				{
 					//down
@@ -2424,22 +2510,22 @@ beginning:
 							player.score += 100 * player.streak;
 							mob[i].scoreHit = 100 * player.streak;
 						}
-		
+
 						mob[i].collideD = true;
 						mob[i].posY = mob[i].iPosY * window.blockHeight;
 					}
-		
+
 					if (level.current[mob[i].iPosY + 1][mob[i].iPosXD] == '-')
 					{
 						mob[i].loaded = false;
 					}
-		
+
 					//right
 					if (level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || (level.current[mob[i].iPosY - 1][mob[i].iPosX] != ' ' && (mob[i].mob == 3 || mob[i].mob == 5) && !mob[i].moving))
 					{
 						mob[i].direction = true;
 					}
-		
+
 					//left
 					if (mob[i].iPosX == 0)
 					{
@@ -2452,7 +2538,7 @@ beginning:
 							mob[i].direction = false;
 						}
 					}
-		
+
 					if (mob[i].movingShell)
 					{
 						if ((level.current[mob[i].iPosY][mob[i].iPosX] != ' ' || level.current[mob[i].iPosY + 1][mob[i].iPosX] != ' ') && !mob[i].collideD)
@@ -2464,7 +2550,7 @@ beginning:
 							mob[i].direction = false;
 						}
 					}
-		
+
 					if (mob[i].isSmart && !mob[i].movingShell)
 					{
 						if ((level.current[mob[i].iPosY + 1][mob[i].iPosX] == ' ') && mob[i].collideD)
@@ -2477,13 +2563,13 @@ beginning:
 						}
 					}
 				}
-		
+
 				Rectangle playerCollider{ player.posX - player.width * window.scale + 4 * window.scale, player.posY - player.width * player.spriteHeight * window.scale, ((player.width - 8) * window.scale), (player.width * player.spriteHeight * window.scale) };
 				//CHARACTER COLLISION
 				if (mob[i].hostile)
 				{
 					Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 4 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (24 * window.scale), (16 * window.scale) };
-					
+
 					//player
 					if (!mob[i].hit && !mob[i].isPipe)
 					{
@@ -2494,18 +2580,18 @@ beginning:
 							mob[i].scoreHit = 100 * player.streak;
 							player.streak += 1;
 							player.velocity = player.jumpVelocity;
-		
+
 							if ((mob[i].mob == 3 || mob[i].mob == 5))
 							{
 								mob[i].stillShell = true;
 							}
-		
+
 							PlaySoundMulti(sound.kick);
 						}
 						else if (player.hitTime > player.rehitTime && !player.invincibleFive)
 						{
 							Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale) };
-		
+
 							if (CheckCollisionRecs(boxCollider, playerCollider))
 							{
 								player.collision = true;
@@ -2518,7 +2604,7 @@ beginning:
 						mob[i].hitDelay += window.dT;
 						Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 36 * window.scale, (8 * window.scale), (28 * window.scale) };
 						Rectangle boxCollider2{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 24 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 36 * window.scale, (8 * window.scale), (28 * window.scale) };
-		
+
 						if (CheckCollisionRecs(boxCollider, playerCollider) && CheckCollisionRecs(boxCollider2, playerCollider) && mob[i].hitDelay >= mob[i].hitDelayTime)
 						{
 							if (player.direction)
@@ -2593,7 +2679,7 @@ beginning:
 						else if (player.hitTime > player.rehitTime && !player.invincibleFive)
 						{
 							Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale) };
-		
+
 							if (CheckCollisionRecs(boxCollider, playerCollider))
 							{
 								player.collision = true;
@@ -2604,7 +2690,7 @@ beginning:
 					else if (mob[i].isPipe)
 					{
 						Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight) + 2 * window.scale, mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (28 * window.scale), (32 * window.scale) };
-		
+
 						if (CheckCollisionRecs(boxCollider, playerCollider) && player.hitTime > player.rehitTime && !player.invincibleFive)
 						{
 							player.collision = true;
@@ -2616,7 +2702,7 @@ beginning:
 				{
 					Rectangle boxCollider{ mob[i].posX - (2 * window.blockHeight), mob[i].posY - (5 * window.blockHeight) + 9, (32 * window.scale) + ((mob[i].length - 1) * window.blockHeight), 4 * window.scale };
 					Rectangle playerCollider{ player.posX + window.renderPosX, player.posY, player.width * window.scale, player.height / 2 * window.scale };
-		
+
 					if (CheckCollisionRecs(boxCollider, playerCollider))
 					{
 						if (player.velocity > 0)
@@ -2627,12 +2713,12 @@ beginning:
 					else
 					{
 						Rectangle playerCollider{ player.posX + window.renderPosX, player.posY + (32 * window.scale), player.width * window.scale, player.height / 2 * window.scale };
-		
+
 						if (CheckCollisionRecs(boxCollider, playerCollider) && (!player.bufferCollide))
 						{
 							player.platform = i;
 							player.collidePlatform = true;
-		
+
 							if (mob[i].directionUp && !mob[i].boundsSide)
 							{
 								player.velocity = 80;
@@ -2645,7 +2731,7 @@ beginning:
 							{
 								player.velocity = 0;
 							}
-		
+
 							player.posY = mob[i].posY - (7 * window.blockHeight) + 2;
 						}
 						else if (i == player.platform)
@@ -2670,7 +2756,7 @@ beginning:
 				else if (!mob[i].hit)
 				{
 					Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 32 * window.scale, (32 * window.scale), (32 * window.scale) };
-		
+
 					if (CheckCollisionRecs(boxCollider, playerCollider))
 					{
 						if (!mob[i].stationary)
@@ -2696,7 +2782,7 @@ beginning:
 						}
 					}
 				}
-		
+
 				//other mobs
 				Rectangle boxCollider{ mob[i].posX - window.renderPosX - (2 * window.blockHeight), mob[i].posY - (8 * window.blockHeight) - 8 + 48 * window.scale, (32 * window.scale), (16 * window.scale) };
 				for (int j = 0; j < window.mobCount; j++)
@@ -2729,7 +2815,7 @@ beginning:
 									mob[j].scoreHit = 100 * mob[i].shellStreak;
 									PlaySoundMulti(sound.kick);
 								}
-		
+
 								mob[j].hit = true;
 							}
 							else if (mob[j].movingShell)
@@ -2761,22 +2847,22 @@ beginning:
 						}
 					}
 				}
-		
+
 				//MOVEMENT
-		
+
 				if (mob[i].gravity)
 				{
 					//down
 					if (!mob[i].collideD)
 					{
 						if (window.dT < 0.1)
-						mob[i].velocity += gravity * window.dT;
+							mob[i].velocity += gravity * window.dT;
 					}
 					else
 					{
 						mob[i].velocity = 0;
 					}
-		
+
 					//right + left
 					if (mob[i].direction)
 					{
@@ -2807,7 +2893,7 @@ beginning:
 						if (mob[i].directionUp)
 						{
 							mob[i].velocity = -120;
-		
+
 							if (mob[i].iPosY < 4)
 							{
 								mob[i].posY = 28 * window.blockHeight;
@@ -2816,7 +2902,7 @@ beginning:
 						else
 						{
 							mob[i].velocity = 120;
-		
+
 							if (mob[i].iPosY > 28)
 							{
 								mob[i].posY = 4 * window.blockHeight;
@@ -2830,7 +2916,7 @@ beginning:
 							if (mob[i].direction)
 							{
 								mob[i].speed = -120;
-		
+
 								if (mob[i].iPosX < mob[i].start)
 								{
 									mob[i].direction = false;
@@ -2839,7 +2925,7 @@ beginning:
 							else
 							{
 								mob[i].speed = 120;
-		
+
 								if (mob[i].iPosX > mob[i].start + mob[i].stop - 1)
 								{
 									mob[i].direction = true;
@@ -2859,7 +2945,7 @@ beginning:
 							else
 							{
 								mob[i].velocity = 120;
-		
+
 								if (mob[i].iPosY > mob[i].start + mob[i].stop - 1)
 								{
 									mob[i].directionUp = true;
@@ -2868,7 +2954,7 @@ beginning:
 						}
 					}
 				}
-		
+
 				//ANIMATE
 				if (level.type == 0)
 				{
@@ -2906,7 +2992,7 @@ beginning:
 						mob[i].currentMob = 7;
 					}
 				}
-		
+
 				if (mob[i].isCoin && mob[i].direction == false)
 				{
 					if (mob[i].runningTime >= mob[i].updateTime)
@@ -2914,14 +3000,14 @@ beginning:
 						mob[i].frame++;
 						mob[i].runningTime = 0;
 					}
-		
+
 					if (mob[i].posY < mob[i].startY - 3 * window.blockHeight)
 					{
 						mob[i].velocity = -7;
 					}
-		
+
 					mob[i].posY -= mob[i].velocity;
-		
+
 					if (mob[i].posY >= mob[i].startY && mob[i].velocity == -7)
 					{
 						mob[i].loaded = false;
@@ -2934,13 +3020,13 @@ beginning:
 						mob[i].frame = window.coin;
 					}
 				}
-		
+
 				if (mob[i].runningTime >= mob[i].updateTime && !mob[i].hit && !mob[i].isCoin)
 				{
 					if (mob[i].direction)
 					{
 						mob[i].frame++;
-		
+
 						if (mob[i].frame > 1)
 						{
 							mob[i].frame = 0;
@@ -2949,7 +3035,7 @@ beginning:
 					else
 					{
 						mob[i].frame++;
-		
+
 						if (mob[i].frame > 3)
 						{
 							mob[i].frame = 2;
@@ -2990,6 +3076,86 @@ beginning:
 			}
 		}
 
+		//BOWSER
+
+
+		if (bowser.exist)
+		{
+			bowser.posY -= bowser.velocity;
+			bowser.iPosX = (bowser.posX - window.renderPosX) / window.blockHeight;
+			bowser.iPosY = bowser.posY / window.blockHeight;
+			//movement
+			bowser.runningTime += window.dT;
+			bowser.jumpTime += window.dT;
+
+			if (bowser.posX >= window.blockHeight * 158)
+			{
+				bowser.speed = -100;
+			}
+			else if (bowser.posX <= window.blockHeight * 155)
+			{
+				bowser.speed = 100;
+			}
+			bowser.posX += bowser.speed * window.dT;
+
+
+			//jumping
+			//if (bowser.jumpTime >= bowser.nextJump)
+			//{
+			//	bowser.jumpTime = 0;
+			//	bowser.velocity = 20 * window.dT;
+			//}
+			//
+			//if (level.current[bowser.iPosY + 8][bowser.iPosX] == ' ')
+			//{
+			//	bowser.collideD = false;
+			//}
+			//else
+			//{
+			//	bowser.collideD = true;
+			//}
+			//
+			//if (!bowser.collideD)
+			//{
+			//	bowser.velocity -= 10;
+			//}
+			//else
+			//{
+			//	bowser.velocity = 0;
+			//}
+
+			//animation
+			if (bowser.runningTime >= bowser.updateTime)
+			{
+				bowser.runningTime = 0;
+				bowser.frame++;
+
+				if (bowser.frame == 2)
+				{
+					bowser.frame = 0;
+				}
+
+				if (bowser.fire)
+				{
+					bowser.frame += 2;
+				}
+			}
+
+			//collision
+			Rectangle bowserRect = { bowser.posX - window.renderPosX, bowser.posY, bowser.width * 2 * window.scale, bowser.height * 2 * window.scale - 4 * window.scale };
+			Rectangle playerCollider{ player.posX - player.width * window.scale + 4 * window.scale, player.posY - player.width * player.spriteHeight * window.scale, ((player.width - 8) * window.scale), (player.width * player.spriteHeight * window.scale) };
+
+
+			if (CheckCollisionRecs(bowserRect, playerCollider))
+			{
+				player.collision = true;
+			}
+		}
+
+
+
+
+
 
 		//PLAYER INFO
 		if (window.dT < 0.1)
@@ -3002,7 +3168,7 @@ beginning:
 			player.iPosXL = (player.posX - (28 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
 			player.iPosXLD = (player.posX - (24 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
 			player.iPosXC = (player.posX - (16 * window.scale)) / window.blockHeight + (window.renderPosX / window.blockHeight) + 1;
-			player.hitTime += window.dT; 
+			player.hitTime += window.dT;
 			player.coinsTime += window.dT;
 		}
 
@@ -3051,7 +3217,7 @@ beginning:
 		if ((level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosX] != ' ') || (level.current[player.iPosY - 1 + (level.currentSize - 21)][player.iPosX] != ' ') && !player.collideU)
 		{
 			player.collideR = true;
-		
+
 			if (!player.collideU && player.sidewaysVelocity >= 0)
 			{
 				player.sidewaysVelocity = 0;
@@ -3098,7 +3264,7 @@ beginning:
 		{
 			player.collideL = false;
 		}
-		
+
 		//right + falling
 		if (!player.isGrounded && (level.current[player.iPosY + (level.currentSize - 21)][player.iPosX] != ' ') && player.sidewaysVelocity >= 0)
 		{
@@ -3114,7 +3280,7 @@ beginning:
 		{
 			player.collideR = false;
 		}
-		
+
 		//left + falling
 		if (!player.isGrounded && (level.current[player.iPosY + (level.currentSize - 21)][player.iPosXL] != ' ') && player.sidewaysVelocity <= 0)
 		{
@@ -3446,7 +3612,7 @@ beginning:
 		//BLOCK STUFF
 
 		//collide noise
-		if (player.collideU && (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] != 'o' &&  level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] != 'B'))
+		if (player.collideU && (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] != 'o' && level.currentScene[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] != 'B'))
 		{
 			if (player.tall == 1 && (level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '_' || level.current[player.iPosY - player.spriteHeight + (level.currentSize - 21)][player.iPosXC] == '#'))
 			{
@@ -3578,6 +3744,9 @@ beginning:
 				case 201:
 					window.currentLevel = 2;
 					break;
+				case 202:
+					window.currentLevel = 204;
+					break;
 				}
 				goto beginning;
 			}
@@ -3633,7 +3802,7 @@ beginning:
 				pauseMenu--;
 			}
 		}
-		
+
 		//pan down
 		if (window.pause && (IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)))
 		{
@@ -3709,7 +3878,7 @@ beginning:
 				pauseMenu = 0;
 				break;
 			}
-			
+
 			if (window.exit)
 			{
 				break;
@@ -3809,7 +3978,7 @@ beginning:
 		}
 	}
 
-	for(int i = 0; i < window.mobCount; i++)
+	for (int i = 0; i < window.mobCount; i++)
 	{
 		UnloadTexture(mob[i].texture);
 	}
