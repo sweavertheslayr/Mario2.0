@@ -523,7 +523,7 @@ struct Levels {
 	"                                                                                                                                        G G                                                                                                                                                    ",
 	"                               B         O    O            OOOO      O w   B  G G                             P                                         w               *                                                                                                                      ",
 	"            w                                                                                           P                                                               *                                                                                                                      ",
-	"                                                                                                         **         P                                                                                                                                                                          ",
+	"                                                                                                         **                                                                                                                                                                                    ",
 	"                  G                                                                                                                                                                                                                                                                            ",
 	"                G              G              K K            K  G G                                G G G           G                          Lqd   J        Lqu                                                                                                                               ",
 	"                                                                                                                                                                                                                                                                                               ",
@@ -1452,6 +1452,11 @@ void restartLevel()
 	case 203:
 		player.posX = window.blockHeight * 4;
 		player.posY = window.blockHeight * 12;
+		break;
+	case 204:
+		window.currentLevel = 2;
+		player.posX = window.blockHeight * 117;
+		player.posY = window.blockHeight * 11;
 		break;
 	case 3:
 		player.posX = window.blockHeight * 3;
